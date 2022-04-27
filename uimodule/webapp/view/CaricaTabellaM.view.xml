@@ -7,7 +7,7 @@
             <f:DynamicPageTitle>
                 <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
-                        <Title text="{i18n>TitoloCTZTPM}" class="sapUiTinyMarginTop"/>
+                        <Title text="{i18n>TitoloCTZTPM} prova" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
