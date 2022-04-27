@@ -1,0 +1,143 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" controllerName="PM030.APP1.controller.Strategia">
+<NavContainer
+			id="navCon"
+			class="navContainerControl sapUiSmallMarginBottom">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"></Button>
+                        <Title text="{i18n>TitoloStrategia}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                    <fb:FilterBar useToolbar="true" search="onSearchResult" showRestoreButton="true" showClearButton="true">
+                        <fb:filterGroupItems>
+              <fb:FilterGroupItem id="FIStrategia" visible="true" groupName="__$INTERNAL$" name="Strategia" label="{i18n>Strategia}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                <fb:control>
+                  <MultiComboBox id="cbSTRATEGIA" items="{ path: '/Strategia', filters: [{ path: 'ID', operator: 'NE', value1: 0 }]}" showSecondaryValues="true">
+                    <core:ListItem key="{ID}" text="{STRATEGIA}" additionalText="{STRATEGIA_DESC}"/>
+                  </MultiComboBox>
+                </fb:control>
+              </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                     <OverflowToolbar style="Clear">
+                      <ToolbarSpacer/>
+                      <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    </OverflowToolbar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbStrategia" growing="true"
+    growingThreshold="100" growingScrollToLoad="false" items="{ path: '/Strategia', filters: [{ path: 'ID', operator: 'NE', value1: 0 }]}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" >
+                  <columns>
+                        <Column id="Strategia1" width="7em" hAlign="Center"><Text text="{i18n>ID}"/></Column>
+                        <Column id="Strategia2" width="25em"><Text text="{i18n>STRATEGIA}"/></Column>
+                        <Column id="Strategia3" ><Text text="{i18n>STRATEGIA_DESC}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
+                            <cells>
+                                <Text text="{ID}"/>
+                                <Text text="{STRATEGIA}"/>
+                                <Text text="{STRATEGIA_DESC}"/>                         
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+             </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+        <f:dependents>
+      <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
+    </f:dependents>
+    </f:DynamicPage>
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd"></Button>
+                        <Title id="TitleDetail"  class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                 
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+        <form:Form editable="true">
+                               <form:layout>
+				<form:ResponsiveGridLayout
+					labelSpanXL="3"
+					labelSpanL="3"
+					labelSpanM="3"
+					labelSpanS="12"
+					adjustLabelSpan="false"
+					emptySpanXL="4"
+					emptySpanL="4"
+					emptySpanM="4"
+					emptySpanS="0"
+					columnsXL="1"
+					columnsL="1"
+					columnsM="1"
+					singleContainerFullSize="false" />
+			</form:layout>
+      <form:formContainers>
+            <form:FormContainer ariaLabelledBy="Title2">
+              <form:formElements>
+              <form:FormElement label="{i18n>ID}">
+                  <form:fields>
+                    <Input value="{sDetail>/ID}" id="IDStrategia" enabled="false"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>STRATEGIA}">
+                  <form:fields>
+                    <Input value="{sDetail>/STRATEGIA}" type="Text" maxLength="30"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>STRATEGIA_DESC}" >
+                  <form:fields>
+                    <Input value="{sDetail>/STRATEGIA_DESC}" type="Text" maxLength="50"/>
+                  </form:fields>
+                </form:FormElement>
+              </form:formElements>
+            </form:FormContainer>
+          </form:formContainers>
+        </form:Form>
+        </f:content>
+    </f:DynamicPage>
+   
+  </NavContainer>
+</mvc:View>

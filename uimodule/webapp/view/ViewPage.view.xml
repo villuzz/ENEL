@@ -1,0 +1,40 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" controllerName="PM030.APP1.controller.ViewPage">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding">
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Title text="{i18n>TitoloGTA}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbTabelle" items="{path: 'mTabelle>/'}" sticky="HeaderToolbar,ColumnHeaders" >
+                  <columns>
+                        <Column id="col200"><Text text="{i18n>Nome}"/></Column>
+                        <Column id="col201"><Text text="{i18n>Descrizione}"/></Column>
+                        <Column id="col202"><Text text="{i18n>Tipo}"/></Column>                        
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Navigation" press="onPressLine"> 
+                            <cells>
+                                <ObjectIdentifier title="{mTabelle>Nome}"/>
+                                <Text text="{mTabelle>Descrizione}"/>
+                                <Text text="{mTabelle>Tipo}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

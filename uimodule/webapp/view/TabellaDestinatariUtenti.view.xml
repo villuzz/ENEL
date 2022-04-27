@@ -1,0 +1,185 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" controllerName="PM030.APP1.controller.TabellaDestinatariUtenti">
+<NavContainer
+			id="navCon"
+			class="navContainerControl sapUiSmallMarginBottom">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Title text="{i18n>TitoloTDU}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button press="handleNav" class="sapUiTinyMarginBegin" text="{i18n>Modifica}" enabled="{tabCheckModel>/editEnabled}">
+                      <layoutData>
+                        <FlexItemData growFactor="1" />
+                      </layoutData>
+                      <customData>
+                        <core:CustomData
+                          key="target"
+                          value="p1" />
+                      </customData>
+			              </Button>
+                    <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://home" press="onBack" class="sapUiTinyMarginBegin" tooltip="{i18n>TitoloGTA}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                    <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
+                        <fb:filterGroupItems>
+
+                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/>
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="centroDiLavoro" visible="true" groupName="__$INTERNAL$" name="cdl" label="{i18n>CentroDiLavoro}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/CentroDiLavoro}" maxLength="8"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="destinatario" visible="true" groupName="__$INTERNAL$" name="dest" label="{i18n>Destinatario}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Destinatario}" maxLength="12"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="ragg" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Raggruppamento}" maxLength="10"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="utente" visible="true" groupName="__$INTERNAL$" name="ut" label="{i18n>Utente}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Utente}" maxLength="12"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbTabellaDestinatariUtenti" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                  <columns>
+                        <Column width="15em" id="col15" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
+                        <Column width="15em" id="col16" app:property="CentroDiLavoro"><Text text="{i18n>CentroDiLavoro}"/></Column>
+                        <Column width="15em" id="col17" app:property="Destinatario"><Text text="{i18n>Destinatario}"/></Column>
+                        <Column width="15em" id="col18" app:property="Utente"><Text text="{i18n>Utente}"/></Column>
+                        <Column width="15em" id="col19" app:property="AOP"><Text text="{i18n>AOP}"/></Column>
+                        <Column width="15em" id="col20" app:property="AF"><Text text="{i18n>AF}"/></Column>                            
+                        <Column width="15em" id="col21" app:property="ZAP"><Text text="{i18n>ZAP}"/></Column>
+                        <Column width="15em" id="col22" app:property="Raggruppamento"><Text text="{i18n>Raggruppamento}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
+                            <cells>
+                                <Text text="{mManutenzione>Divisione}"/>
+                                <Text text="{mManutenzione>CentroDiLavoro}"/>
+                                <Text text="{mManutenzione>Destinatario}"/>
+                                <Text text="{mManutenzione>Utente}"/>
+                                <Text text="{mManutenzione>AOP}"/>
+                                <Text text="{mManutenzione>AF}"/>
+                                <Text text="{mManutenzione>ZAP}"/>
+                                <Text text="{mManutenzione>Raggruppamento}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+             </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+    <Page
+			id="p1"
+			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
+      <VBox class="sapUiSmallMargin">
+        <form:Form id="FormToolbar"
+          editable="true"
+          ariaLabelledBy="Title1">
+          <form:toolbar>
+            <Toolbar id="TB1">
+              <Title text="{i18n>editPage2}"/>
+            </Toolbar>
+          </form:toolbar>
+          <form:layout>
+          <form:ResponsiveGridLayout
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="3"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="4"
+            emptySpanL="4"
+            emptySpanM="4"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false" />
+          </form:layout>
+          <form:formContainers>
+            <form:FormContainer ariaLabelledBy="Title2">
+              <form:formElements>
+                <form:FormElement label="{i18n>Divisione}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>CentroDiLavoro}" >
+                  <form:fields>
+                    <Input value="{mManutenzione>CentroDiLavoro}" type="Text" maxLength="8"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Destinatario}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Destinatario}" type="Text" maxLength="12"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Utente}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Utente}" type="Text" maxLength="12"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>AOP}">
+                  <Input value="{mManutenzione>AOP}" type="Text" maxLength="10"/>
+                </form:FormElement>
+                 <form:FormElement label="{i18n>AF}">
+                  <Input value="{mManutenzione>AF}" type="Text" maxLength="30"/>
+                </form:FormElement>
+                 <form:FormElement label="{i18n>ZAP}">
+                  <Input value="{mManutenzione>ZAP}" type="Text" maxLength="2"/>
+                </form:FormElement>
+                 <form:FormElement label="{i18n>Raggruppamento}">
+                  <Input value="{mManutenzione>Raggruppamento}" type="Text" maxLength="10"/>
+                </form:FormElement>
+              </form:formElements>
+            </form:FormContainer>
+          </form:formContainers>
+        </form:Form>
+            <Toolbar>
+              	<ToolbarSpacer/>
+                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
+				        <ToolbarSpacer/> 
+            </Toolbar>
+        </VBox>
+		</Page>
+  </NavContainer>
+</mvc:View>

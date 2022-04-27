@@ -1,0 +1,251 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" controllerName="PM030.APP1.controller.VisualizzazioneAttribuzioneOdmApp">
+<NavContainer
+			id="navCon"
+			class="navContainerControl sapUiSmallMarginBottom">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"></Button>
+                        <Title text="{i18n>TitoloVAOA}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                    <fb:FilterBar useToolbar="true" search="onSearchResult" showRestoreButton="true" showClearButton="true">
+                        <fb:filterGroupItems>
+
+                            <fb:FilterGroupItem id="index" visible="true" groupName="__$INTERNAL$" name="ind" label="{i18n>Index}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <Input type="Text" value="{FilterModel>/Index}" maxLength="4"/>
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="cont" visible="true" groupName="__$INTERNAL$" name="cont" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/Cont}" maxLength="4"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="appuntamenti" visible="true" groupName="__$INTERNAL$" name="app" label="{i18n>Appuntamenti}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/Appuntamenti}" maxLength="5"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="odm" visible="true" groupName="__$INTERNAL$" name="odm" label="{i18n>Odm}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/Odm}" maxLength="12"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="statoODM" visible="true" groupName="__$INTERNAL$" name="sodm" label="{i18n>StatoODM}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/StatoODM}" maxLength="4"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="dettaglioConferma" visible="true" groupName="__$INTERNAL$" name="dc" label="{i18n>DettaglioConferma}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/DettaglioConferma}" maxLength="40"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                     <OverflowToolbar style="Clear">
+                      <ToolbarSpacer/>
+                      <Button text="Elimina pianificazione appuntamento" icon="sap-icon://delete" press="onElimina" class="sapUiTinyMarginBegin"/>
+                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    </OverflowToolbar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbVisualizzazioneAttribuzioneOdmApp" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                  <columns>
+                        <Column width="15em" id="col69" app:property="Cont"><Text text="{i18n>Cont}"/></Column>
+                        <Column width="15em" id="col70" app:property="Index"><Text text="{i18n>Index}"/></Column>
+                        <Column width="15em" id="col71" app:property="Appuntamenti"><Text text="{i18n>Appuntamenti}"/></Column>
+                        <Column width="15em" id="col72" app:property="Odm"><Text text="{i18n>Odm}"/></Column>
+                        <Column width="15em" id="col73" app:property="NOper"><Text text="{i18n>NOper}"/></Column>
+                        <Column width="15em" id="col74" app:property="NOper1"><Text text="{i18n>NOper1}"/></Column>
+                        <Column width="15em" id="col75" app:property="NOper2"><Text text="{i18n>NOper2}"/></Column>
+                        <Column width="15em" id="col76" app:property="NOper3"><Text text="{i18n>NOper3}"/></Column>
+                        <Column width="15em" id="col77" app:property="NOper4"><Text text="{i18n>NOper4}"/></Column>
+                        <Column width="15em" id="col78" app:property="NOper5"><Text text="{i18n>NOper5}"/></Column>
+                        <Column width="15em" id="col80" app:property="Adm"><Text text="{i18n>Adm}"/></Column>
+                        <Column width="15em" id="col81" app:property="StatoODM"><Text text="{i18n>StatoODM}"/></Column>
+                        <Column width="15em" id="col82" app:property="DettaglioConferma"><Text text="{i18n>DettaglioConferma}"/></Column>
+                        <Column width="15em" id="col83" app:property="DataPianificazione"><Text text="{i18n>DataPianificazione}"/></Column>
+                        <Column width="15em" id="col84" app:property="FineCardine"><Text text="{i18n>FineCardine}"/></Column>
+                        <Column width="15em" id="col85" app:property="ScadNaturale"><Text text="{i18n>ScadNaturale}"/></Column>
+                        <Column width="15em" id="col86" app:property="Aggregatore"><Text text="{i18n>Aggregatore}"/></Column>
+                        <Column width="15em" id="col87" app:property="DescrizioneAggregatore"><Text text="{i18n>DescrizioneAggregatore}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
+                            <cells>
+                                <Text text="{mManutenzione>Cont}"/>
+                                <Text text="{mManutenzione>Index}"/>
+                                <Text text="{mManutenzione>Appuntamenti}"/>
+                                <Text text="{mManutenzione>Odm}"/>
+                                <Text text="{mManutenzione>NOper}"/>
+                                <Text text="{mManutenzione>NOper1}"/>
+                                <Text text="{mManutenzione>NOper2}"/>
+                                <Text text="{mManutenzione>NOper3}"/>
+                                <Text text="{mManutenzione>NOper4}"/>
+                                <Text text="{mManutenzione>NOper5}"/>
+                                <Text text="{mManutenzione>Adm}"/>
+                                <Text text="{mManutenzione>StatoODM}"/>
+                                <Text text="{mManutenzione>DettaglioConferma}"/>
+                                <Text text="{path: 'mManutenzione>DataPianificazione',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'dd/MM/yyyy'
+                                            }}"/>
+                                <Text text="{path: 'mManutenzione>FineCardine',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'dd/MM/yyyy'
+                                            }}"/>
+                                <Text text="{path: 'mManutenzione>ScadNaturale',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'dd/MM/yyyy'
+                                            }}"/>
+                                <Text text="{mManutenzione>Aggregatore}"/>
+                                <Text text="{mManutenzione>DescrizioneAggregatore}"/>                                  
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+             </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+    <Page
+			id="p1"
+			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
+      <VBox class="sapUiSmallMargin">
+        <form:Form id="FormToolbar"
+          editable="true"
+          ariaLabelledBy="Title1">
+          <form:toolbar>
+            <Toolbar id="TB1">
+              <Title text="{i18n>editPage2}"/>
+            </Toolbar>
+          </form:toolbar>
+          <form:layout>
+          <form:ResponsiveGridLayout
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="3"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="4"
+            emptySpanL="4"
+            emptySpanM="4"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false" />
+          </form:layout>
+          <form:formContainers>
+            <form:FormContainer ariaLabelledBy="Title2">
+              <form:formElements>
+                <form:FormElement label="{i18n>Cont}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Cont}" type="Number" maxLength="4"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Index}" >
+                  <form:fields>
+                    <Input value="{mManutenzione>Index}" type="Number" maxLength="12"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Appuntamenti}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Appuntamenti}" type="Number" maxLength="5"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Odm}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Odm}" type="Number" maxLength="12"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>NOper}">
+                  <Input value="{mManutenzione>NOper}" type="Number" maxLength="8"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>NOper1}">
+                  <Input value="{mManutenzione>NOper1}" type="Number" maxLength="8"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>NOper2}">
+                  <Input value="{mManutenzione>NOper2}" type="Number" maxLength="8"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>NOper3}">
+                  <Input value="{mManutenzione>NOper3}" type="Number" maxLength="8"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>NOper4}">
+                  <Input value="{mManutenzione>NOper4}" type="Number" maxLength="8"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>NOper5}">
+                  <Input value="{mManutenzione>NOper5}" type="Number" maxLength="8"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Adm}">
+                  <Input value="{mManutenzione>Adm}" type="Number" maxLength="12"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>StatoODM}">
+                  <Input value="{mManutenzione>StatoODM}" type="Text" maxLength="4"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>DettaglioConferma}">
+                  <Input value="{mManutenzione>DettaglioConferma}" type="Text" maxLength="40"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>DataPianificazione}">
+                  <DatePicker placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>DataPianificazione}"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>FineCardine}">
+                  <DatePicker placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>FineCardine}"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>ScadNaturale}">
+                  <DatePicker placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>ScadNaturale}"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Aggregatore}">
+                  <Input value="{mManutenzione>Aggregatore}" type="Number" maxLength="12"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>DescrizioneAggregatore}">
+                  <Input value="{mManutenzione>DescrizioneAggregatore}" type="Text" maxLength="40"/>
+                </form:FormElement>
+              </form:formElements>
+            </form:FormContainer>
+          </form:formContainers>
+        </form:Form>
+            <Toolbar>
+              	<ToolbarSpacer/>
+                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
+				        <ToolbarSpacer/> 
+            </Toolbar>
+        </VBox>
+		</Page>
+  </NavContainer>
+</mvc:View>

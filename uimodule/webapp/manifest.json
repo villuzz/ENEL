@@ -24,7 +24,7 @@
   "sap.cloud": {
     "public": true,
     "service": "cloud.service"
-  },  
+  },
   "sap.ui": {
     "technology": "UI5",
     "icons": {
@@ -62,13 +62,9 @@
       },
       "": {
         "dataSource": "mainService",
-        "preload": true,
+        "preload": false,
         "settings": {
-          "synchronizationMode": "None",
-          "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true,
-          "groupId": "$direct"
+          "useBatch": false
         }
       }
     },
@@ -96,6 +92,132 @@
           "target": [
             "TargetMainView"
           ]
+        },
+        {
+          "name": "ViewPage",
+          "pattern": "",
+          "target": [
+            "ViewPage"
+          ]
+        },
+        {
+          "name": "TabellaProgressivoAzioniTipo",
+          "pattern": "TabellaProgressivoAzioniTipo",
+          "target": [
+            "TabellaProgressivoAzioniTipo"
+          ]
+        },
+        {
+          "name": "TabellaRaggruppamento",
+          "pattern": "TabellaRaggruppamento",
+          "target": [
+            "TabellaRaggruppamento"
+          ]
+        },
+        {
+          "name": "TabellaDestinatariCdl",
+          "pattern": "TabellaDestinatariCdl",
+          "target": [
+            "TabellaDestinatariCdl"
+          ]
+        },
+        {
+          "name": "TabellaDestinatariUtenti",
+          "pattern": "TabellaDestinatariUtenti",
+          "target": [
+            "TabellaDestinatariUtenti"
+          ]
+        },
+        {
+          "name": "TabellaClasseAzioneTipo",
+          "pattern": "TabellaClasseAzioneTipo",
+          "target": [
+            "TabellaClasseAzioneTipo"
+          ]
+        },
+        {
+          "name": "TabellaSistemaAzioneTipo",
+          "pattern": "TabellaSistemaAzioneTipo",
+          "target": [
+            "TabellaSistemaAzioneTipo"
+          ]
+        },
+        {
+          "name": "GestioneAzioneTipo",
+          "pattern": "GestioneAzioneTipo",
+          "target": [
+            "GestioneAzioneTipo"
+          ]
+        },
+        {
+          "name": "TabellaAggregazioniAzioniTipo",
+          "pattern": "TabellaAggregazioniAzioniTipo",
+          "target": [
+            "TabellaAggregazioniAzioniTipo"
+          ]
+        },
+        {
+          "name": "TabellaTipoDiGestione",
+          "pattern": "TabellaTipoDiGestione",
+          "target": [
+            "TabellaTipoDiGestione"
+          ]
+        },
+        {
+          "name": "TabellaFinalita",
+          "pattern": "TabellaFinalita",
+          "target": [
+            "TabellaFinalita"
+          ]
+        },
+        {
+          "name": "TabellaGruppoDiControllo",
+          "pattern": "TabellaGruppoDiControllo",
+          "target": [
+            "TabellaGruppoDiControllo"
+          ]
+        },
+        {
+          "name": "VisualizzazioneAttribuzioneOdmApp",
+          "pattern": "VisualizzazioneAttribuzioneOdmApp",
+          "target": [
+            "VisualizzazioneAttribuzioneOdmApp"
+          ]
+        },
+        {
+          "name": "DefinizioneAttivitaDiManutenzione",
+          "pattern": "DefinizioneAttivitaDiManutenzione",
+          "target": [
+            "DefinizioneAttivitaDiManutenzione"
+          ]
+        },
+        {
+          "name": "CaricaTabellaM",
+          "pattern": "CaricaTabellaM",
+          "target": [
+            "CaricaTabellaM"
+          ]
+        },
+        {
+          "name": "CaricaTabellaS",
+          "pattern": "CaricaTabellaS",
+          "target": [
+            "CaricaTabellaS"
+          ]
+        },
+        {
+          "name": "SedeTecnica",
+          "pattern": "SedeTecnica",
+          "target": [
+            "SedeTecnica"
+          ]
+        },
+        {
+          "name": "Strategia",
+          "pattern": "Strategia",
+          "target": [
+            "Strategia"
+          ]
         }
       ],
       "targets": {
@@ -105,6 +227,132 @@
           "clearControlAggregation": false,
           "viewId": "MainView",
           "viewName": "MainView"
+        },
+        "ViewPage": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "ViewPage",
+          "viewName": "ViewPage"
+        },
+        "Strategia": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "Strategia",
+          "viewName": "Strategia"
+        },
+        "SedeTecnica": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "SedeTecnica",
+          "viewName": "SedeTecnica"
+        },
+        "TabellaProgressivoAzioniTipo": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaProgressivoAzioniTipo",
+          "viewName": "TabellaProgressivoAzioniTipo"
+        },
+        "TabellaRaggruppamento": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaRaggruppamento",
+          "viewName": "TabellaRaggruppamento"
+        },
+        "TabellaDestinatariCdl": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaDestinatariCdl",
+          "viewName": "TabellaDestinatariCdl"
+        },
+        "TabellaDestinatariUtenti": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaDestinatariUtenti",
+          "viewName": "TabellaDestinatariUtenti"
+        },
+        "TabellaClasseAzioneTipo": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaClasseAzioneTipo",
+          "viewName": "TabellaClasseAzioneTipo"
+        },
+        "TabellaSistemaAzioneTipo": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaSistemaAzioneTipo",
+          "viewName": "TabellaSistemaAzioneTipo"
+        },
+        "GestioneAzioneTipo": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "GestioneAzioneTipo",
+          "viewName": "GestioneAzioneTipo"
+        },
+        "TabellaAggregazioniAzioniTipo": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaAggregazioniAzioniTipo",
+          "viewName": "TabellaAggregazioniAzioniTipo"
+        },
+        "TabellaTipoDiGestione": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaTipoDiGestione",
+          "viewName": "TabellaTipoDiGestione"
+        },
+        "TabellaFinalita": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaFinalita",
+          "viewName": "TabellaFinalita"
+        },
+        "TabellaGruppoDiControllo": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TabellaGruppoDiControllo",
+          "viewName": "TabellaGruppoDiControllo"
+        },
+        "VisualizzazioneAttribuzioneOdmApp": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "VisualizzazioneAttribuzioneOdmApp",
+          "viewName": "VisualizzazioneAttribuzioneOdmApp"
+        },
+        "DefinizioneAttivitaDiManutenzione": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "DefinizioneAttivitaDiManutenzione",
+          "viewName": "DefinizioneAttivitaDiManutenzione"
+        },
+        "CaricaTabellaM": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "CaricaTabellaM",
+          "viewName": "CaricaTabellaM"
+        },
+        "CaricaTabellaS": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "CaricaTabellaS",
+          "viewName": "CaricaTabellaS"
         }
       }
     },

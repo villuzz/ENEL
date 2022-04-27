@@ -1,0 +1,181 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" controllerName="PM030.APP1.controller.TabellaAggregazioniAzioniTipo">
+<NavContainer
+			id="navCon"
+			class="navContainerControl sapUiSmallMarginBottom">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Title text="{i18n>TitoloAZT}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button press="handleNav" class="sapUiTinyMarginBegin" text="{i18n>Modifica}" enabled="{tabCheckModel>/editEnabled}">
+                      <layoutData>
+                        <FlexItemData growFactor="1" />
+                      </layoutData>
+                      <customData>
+                        <core:CustomData
+                          key="target"
+                          value="p1" />
+                      </customData>
+			              </Button>
+                    <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://home" press="onBack" class="sapUiTinyMarginBegin" tooltip="{i18n>TitoloGTA}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                    <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
+                        <fb:filterGroupItems>
+
+                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/>
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="sis" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Sistema}" maxLength="2"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="classe" visible="true" groupName="__$INTERNAL$" name="clas" label="{i18n>Classe}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Classe}" maxLength="2"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="nProAggr" visible="true" groupName="__$INTERNAL$" name="npa" label="{i18n>NProAggr}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/NProAggr}" maxLength="5"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="titoloAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="taa" label="{i18n>TitoloAzioneAggregativo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/TitoloAzioneAggregativo}" maxLength="40"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="componenteAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="caa" label="{i18n>ComponenteAzioneAggregativo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/ComponenteAzioneAggregativo}" maxLength="60"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbTabellaAggregazioniAzioniTipo" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                  <columns>
+                        <Column width="15em" id="col51" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
+                        <Column width="15em" id="col52" app:property="Sistema"><Text text="{i18n>Sistema}"/></Column>
+                        <Column width="15em" id="col53" app:property="Classe"><Text text="{i18n>Classe}"/></Column>
+                        <Column width="15em" id="col54" app:property="NProAggr"><Text text="{i18n>NProAggr}"/></Column>
+                        <Column width="15em" id="col55" app:property="TitoloAzioneAggregativo"><Text text="{i18n>TitoloAzioneAggregativo}"/></Column>
+                        <Column width="15em" id="col56" app:property="ComponenteAzioneAggregativo"><Text text="{i18n>ComponenteAzioneAggregativo}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
+                            <cells>
+                                <Text text="{mManutenzione>Divisione}"/>
+                                <Text text="{mManutenzione>Sistema}"/>
+                                <Text text="{mManutenzione>Classe}"/>
+                                <Text text="{mManutenzione>NProAggr}"/>
+                                <Text text="{mManutenzione>TitoloAzioneAggregativo}"/>
+                                <Text text="{mManutenzione>ComponenteAzioneAggregativo}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+             </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+    <Page
+			id="p1"
+			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
+      <VBox class="sapUiSmallMargin">
+        <form:Form id="FormToolbar"
+          editable="true"
+          ariaLabelledBy="Title1">
+          <form:toolbar>
+            <Toolbar id="TB1">
+              <Title text="{i18n>editPage2}"/>
+            </Toolbar>
+          </form:toolbar>
+          <form:layout>
+          <form:ResponsiveGridLayout
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="3"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="4"
+            emptySpanL="4"
+            emptySpanM="4"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false" />
+          </form:layout>
+          <form:formContainers>
+            <form:FormContainer ariaLabelledBy="Title2">
+              <form:formElements>
+                <form:FormElement label="{i18n>Divisione}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Sistema}" >
+                  <form:fields>
+                    <Input value="{mManutenzione>Sistema}" type="Text" maxLength="2"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Classe}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Classe}" type="Text" maxLength="2"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>NProAggr}">
+                  <form:fields>
+                    <Input value="{mManutenzione>NProAggr}" type="Number" maxLength="5"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>TitoloAzioneAggregativo}">
+                  <Input value="{mManutenzione>TitoloAzioneAggregativo}" type="Text" maxLength="40"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>ComponenteAzioneAggregativo}">
+                  <Input value="{mManutenzione>ComponenteAzioneAggregativo}" type="Text" maxLength="60"/>
+                </form:FormElement>
+              </form:formElements>
+            </form:FormContainer>
+          </form:formContainers>
+        </form:Form>
+            <Toolbar>
+              	<ToolbarSpacer/>
+                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
+				        <ToolbarSpacer/> 
+            </Toolbar>
+        </VBox>
+		</Page>
+  </NavContainer>
+</mvc:View>

@@ -1,0 +1,205 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" controllerName="PM030.APP1.controller.CaricaTabellaM">
+<NavContainer
+			id="navCon"
+			class="navContainerControl sapUiSmallMarginBottom">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Title text="{i18n>TitoloCTZTPM}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button press="handleNav" class="sapUiTinyMarginBegin" text="{i18n>Modifica}" enabled="{tabCheckModel>/editEnabled}">
+                      <layoutData>
+                        <FlexItemData growFactor="1" />
+                      </layoutData>
+                      <customData>
+                        <core:CustomData
+                          key="target"
+                          value="p1" />
+                      </customData>
+			              </Button>
+                    <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://home" press="onBack" class="sapUiTinyMarginBegin" tooltip="{i18n>TitoloGTA}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                    <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
+                        <fb:filterGroupItems>
+                            
+                            <fb:FilterGroupItem id="Azione" visible="true" groupName="__$INTERNAL$" name="ind" label="{i18n>Azione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/Azione}" maxLength="12"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="materiale" visible="true" groupName="__$INTERNAL$" name="mat" label="{i18n>Materiale}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Materiale}" maxLength="18"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <Input type="Text" value="{FilterModel>/Divisione}" maxLength="4"/>
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbCaricaTabellaM" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                  <columns>
+                        <Column width="15em" id="col91" app:property="IndexAzioni"><Text text="{i18n>Azione}"/></Column>
+                        <Column width="15em" id="col92" app:property="Materiale"><Text text="{i18n>Materiale}"/></Column>
+                        <Column width="15em" id="col93" app:property="TestoBreveMat"><Text text="{i18n>TestoBreveMat}"/></Column>
+                        <Column width="15em" id="col94" app:property="QuantFabbisogno"><Text text="{i18n>QuantFabbisogno}"/></Column>
+                        <Column width="15em" id="col95" app:property="Unita" ><Text text="{i18n>Unita}"/></Column>
+                        <Column width="15em" id="col96" app:property="Magazzino"><Text text="{i18n>Magazzino}"/></Column>
+                        <Column width="15em" id="col97" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
+                        <Column width="15em" id="col98" app:property="Partita"><Text text="{i18n>Partita}"/></Column>
+                        <Column width="15em" id="col99" app:property="PrezzoLordo"><Text text="{i18n>PrezzoLordo}"/></Column>
+                        <Column width="15em" id="col100" app:property="Divisa"><Text text="{i18n>Divisa}"/></Column>
+                        <Column width="15em" id="col101" app:property="GrupAcq"><Text text="{i18n>GrupAcq}"/></Column>
+                        <Column width="15em" id="col102" app:property="OrgAcq"><Text text="{i18n>OrgAcq}"/></Column>
+                        <Column width="15em" id="col103" app:property="Richiedente"><Text text="{i18n>Richiedente}"/></Column>
+                        <Column width="15em" id="col104" app:property="GrupMerci"><Text text="{i18n>GrupMerci}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
+                            <cells>
+                                <Text text="{mManutenzione>Azione}"/>
+                                <Text text="{mManutenzione>Materiale}"/>
+                                <Text text="{mManutenzione>TestoBreveMat}"/>
+                                <Text text="{mManutenzione>QuantFabbisogno}"/>
+                                <Text text="{mManutenzione>Unita}"/>
+                                <Text text="{mManutenzione>Magazzino}"/>
+                                <Text text="{mManutenzione>Divisione}"/>
+                                <Text text="{mManutenzione>Partita}"/>
+                                <Text text="{mManutenzione>PrezzoLordo}"/>
+                                <Text text="{mManutenzione>Divisa}"/>
+                                <Text text="{mManutenzione>GrupAcq}"/>
+                                <Text text="{mManutenzione>OrgAcq}"/>
+                                <Text text="{mManutenzione>Richiedente}"/>
+                                <Text text="{mManutenzione>GrupMerci}"/>                                  
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+             </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+    <Page
+			id="p1"
+			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
+      <VBox class="sapUiSmallMargin">
+        <form:Form id="FormToolbar"
+          editable="true"
+          ariaLabelledBy="Title1">
+          <form:toolbar>
+            <Toolbar id="TB1">
+              <Title text="{i18n>editPage2}"/>
+            </Toolbar>
+          </form:toolbar>
+          <form:layout>
+          <form:ResponsiveGridLayout
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="3"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="4"
+            emptySpanL="4"
+            emptySpanM="4"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false" />
+          </form:layout>
+          <form:formContainers>
+            <form:FormContainer ariaLabelledBy="Title2">
+              <form:formElements>
+                <form:FormElement label="{i18n>IndexAzioni}">
+                  <form:fields>
+                    <Input value="{mManutenzione>IndexAzioni}" type="Number" maxLength="12"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Materiale}" >
+                  <form:fields>
+                    <Input value="{mManutenzione>Materiale}" type="Text" maxLength="12"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>TestoBreveMat}">
+                  <form:fields>
+                    <Input value="{mManutenzione>TestoBreveMat}" type="Text" maxLength="40"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>QuantFabbisogno}">
+                  <form:fields>
+                    <Input value="{mManutenzione>QuantFabbisogno}" type="Number" maxLength="13"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Unita}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Unita}" type="Number" maxLength="3"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Magazzino}">
+                  <Input value="{mManutenzione>Magazzino}" type="Text" maxLength="4"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Divisione}">
+                  <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Partita}">
+                  <Input value="{mManutenzione>Partita}" type="Text" maxLength="10"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>PrezzoLordo}">
+                  <Input value="{mManutenzione>PrezzoLordo}" type="Number" maxLength="11"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Divisa}">
+                  <Input value="{mManutenzione>Divisa}" type="Text" maxLength="5"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>GrupAcq}">
+                  <Input value="{mManutenzione>GrupAcq}" type="Text" maxLength="3"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>OrgAcq}">
+                  <Input value="{mManutenzione>OrgAcq}" type="Text" maxLength="4"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Richiedente}">
+                  <Input value="{mManutenzione>Richiedente}" type="Text" maxLength="12"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>GrupMerci}">
+                  <Input value="{mManutenzione>GrupMerci}" type="Text" maxLength="9"/>
+                </form:FormElement>
+              </form:formElements>
+            </form:FormContainer>
+          </form:formContainers>
+        </form:Form>
+            <Toolbar>
+              	<ToolbarSpacer/>
+                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
+				        <ToolbarSpacer/> 
+            </Toolbar>
+        </VBox>
+		</Page>
+  </NavContainer>
+</mvc:View>

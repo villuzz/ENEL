@@ -1,0 +1,305 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" controllerName="PM030.APP1.controller.GestioneAzioneTipo">
+<NavContainer
+			id="navCon"
+			class="navContainerControl sapUiSmallMarginBottom">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Title text="{i18n>TitoloGAT}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button press="handleNav" class="sapUiTinyMarginBegin" text="{i18n>Modifica}" enabled="{tabCheckModel>/editEnabled}">
+                      <layoutData>
+                        <FlexItemData growFactor="1" />
+                      </layoutData>
+                      <customData>
+                        <core:CustomData
+                          key="target"
+                          value="p1" />
+                      </customData>
+			              </Button>
+                    <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                    <Button icon="sap-icon://home" press="onBack" class="sapUiTinyMarginBegin" tooltip="{i18n>TitoloGTA}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                    <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
+                        <fb:filterGroupItems>
+
+                            <fb:FilterGroupItem id="inizioValidita" visible="true" groupName="__$INTERNAL$" name="iv" label="{i18n>InizioValidita}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <DatePicker id="ddr1" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{FilterModel>/InizioValidita}"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>                        
+
+                            <fb:FilterGroupItem id="fineValidita" visible="true" groupName="__$INTERNAL$" name="fv" label="{i18n>FineValidita}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <DatePicker id="ddr2" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{FilterModel>/FineValidita}"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/>
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="sis" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Sistema}" maxLength="2"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="classe" visible="true" groupName="__$INTERNAL$" name="clas" label="{i18n>Classe}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/Classe}" maxLength="2"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="progressivo" visible="true" groupName="__$INTERNAL$" name="pr" label="{i18n>Progressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/Progressivo}" maxLength="5"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="descrizioneProgressivo" visible="true" groupName="__$INTERNAL$" name="dp" label="{i18n>DescrizioneProgressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/DescrizioneProgressivo}" maxLength="80"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="componenteTipo" visible="true" groupName="__$INTERNAL$" name="ct" label="{i18n>ComponenteTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/ComponenteTipo}" maxLength="40"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="FlagValidita" visible="true" groupName="__$INTERNAL$" name="fl" label="{i18n>FlagValidita}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <CheckBox selected="{FilterModel>/FlagValidita}" />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="tipoGestione" visible="true" groupName="__$INTERNAL$" name="tg" label="{i18n>TipoGestione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/TipoGestione}" maxLength="3"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="finalita" visible="true" groupName="__$INTERNAL$" name="fin" label="{i18n>Finalita}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/Finalita}" maxLength="3"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="gruppoControllo" visible="true" groupName="__$INTERNAL$" name="gc" label="{i18n>GruppoControllo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Text" value="{FilterModel>/GruppoControllo}" maxLength="3"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="aggreg" visible="true" groupName="__$INTERNAL$" name="agg" label="{i18n>Aggreg}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input type="Number" value="{FilterModel>/Aggreg}" maxLength="5"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbGestioneAzioneTipo" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                  <columns>
+                        <Column width="15em" id="col31" app:property="InizioValidita"><Text text="{i18n>InizioValidita}"/></Column>
+                        <Column width="15em" id="col32" app:property="FineValidita"><Text text="{i18n>FineValidita}"/></Column>
+                        <Column width="15em" id="col33" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
+                        <Column width="15em" id="col34" app:property="Sistema"><Text text="{i18n>Sistema}"/></Column>
+                        <Column width="15em" id="col35" app:property="Classe"><Text text="{i18n>Classe}"/></Column>
+                        <Column width="15em" id="col36" app:property="Progressivo"><Text text="{i18n>Progressivo}"/></Column>
+                        <Column width="15em" id="col37" app:property="TipoComponente"><Text text="{i18n>TipoComponente}"/></Column>
+                        <Column width="15em" id="col38" app:property="DescrizioneProgressivo"><Text text="{i18n>DescrizioneProgressivo}"/></Column>
+                        <Column width="15em" id="col39" app:property="Frequenza"><Text text="{i18n>Frequenza}"/></Column>
+                        <Column width="15em" id="col40" app:property="DurataCiclo"><Text text="{i18n>DurataCiclo}"/></Column>
+                        <Column width="15em" id="col41" app:property="FlagValidita"><Text text="{i18n>FlagValidita}"/></Column>
+                        <Column width="15em" id="col42" app:property="TipoGestione"><Text text="{i18n>TipoGestione}"/></Column>
+                        <Column width="15em" id="col43" app:property="Finalita"><Text text="{i18n>Finalita}"/></Column>
+                        <Column width="15em" id="col44" app:property="GruppoControllo"><Text text="{i18n>GruppoControllo}"/></Column>
+                        <Column width="15em" id="col45" app:property="Aggreg"><Text text="{i18n>Aggreg}"/></Column>
+                        <Column width="15em" id="col46" app:property="TestoEs"><Text text="{i18n>TestoEs}"/></Column>
+                        <Column width="15em" id="col47" app:property="OpenText"><Text text="{i18n>OpenText}"/></Column>
+                        <Column width="15em" id="col48" app:property="EditData"><Text text="{i18n>EditData}"/></Column>
+                        <Column width="15em" id="col49" app:property="EditUser"><Text text="{i18n>EditUser}"/></Column>
+                        <Column width="15em" id="col50" app:property="EditOra"><Text text="{i18n>EditOra}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
+                            <cells>
+                                <Text text="{path: 'mManutenzione>InizioValidita',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'dd/MM/yyyy'
+                                            }}"/>
+                                <Text text="{path: 'mManutenzione>FineValidita',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'dd/MM/yyyy'
+                                            }}"/>
+                                <Text text="{mManutenzione>Divisione}"/>
+                                <Text text="{mManutenzione>Sistema}"/>
+                                <Text text="{mManutenzione>Classe}"/>
+                                <Text text="{mManutenzione>Progressivo}"/>
+                                <Text text="{mManutenzione>TipoComponente}"/>
+                                <Text text="{mManutenzione>DescrizioneProgressivo}"/>
+                                <Text text="{mManutenzione>Frequenza}"/>
+                                <Text text="{mManutenzione>DurataCiclo}"/>
+                                <Text text="{mManutenzione>FlagValidita}"/>
+                                <Text text="{mManutenzione>TipoGestione}"/>
+                                <Text text="{mManutenzione>Finalita}"/>
+                                <Text text="{mManutenzione>GruppoControllo}"/>
+                                <Text text="{mManutenzione>Aggreg}"/>
+                                <Text text="{mManutenzione>TestoEs}"/>
+                                <Text text="{mManutenzione>OpenText}"/>
+                                <Text text="{path: 'mManutenzione>EditData',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'dd/MM/yyyy'
+                                            }}"/>
+                                <Text text="{mManutenzione>EditUser}"/>
+                                <Text text="{mManutenzione>EditOra}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+             </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+    <Page
+		id="p1"
+		title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
+      <VBox class="sapUiSmallMargin">
+        <form:Form id="FormToolbar"
+          editable="true"
+          ariaLabelledBy="Title1">
+          <form:toolbar>
+            <Toolbar id="TB1">
+              <Title text="{i18n>editPage2}"/>
+            </Toolbar>
+          </form:toolbar>
+          <form:layout>
+          <form:ResponsiveGridLayout
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="3"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="4"
+            emptySpanL="4"
+            emptySpanM="4"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false" />
+          </form:layout>
+          <form:formContainers>
+            <form:FormContainer ariaLabelledBy="Title2">
+              <form:formElements>
+                <form:FormElement label="{i18n>InizioValidita}">
+                  <form:fields>
+                    <DatePicker id="DateP1" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>InizioValidita}"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>FineValidita}" >
+                  <form:fields>
+                    <DatePicker id="DateP2" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>FineValidita}"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Divisione}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Sistema}">
+                  <form:fields>
+                    <Input value="{mManutenzione>Sistema}" type="Text" maxLength="2"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Classe}">
+                  <Input value="{mManutenzione>Classe}" type="Text" maxLength="2"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Progressivo}">
+                  <Input value="{mManutenzione>Progressivo}" type="Number" maxLength="5"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>TipoComponente}">
+                  <Input value="{mManutenzione>TipoComponente}" type="Text" maxLength="40"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>DescrizioneProgressivo}">
+                  <Input value="{mManutenzione>DescrizioneProgressivo}" type="Text" maxLength="80"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Frequenza}">
+                  <Input value="{mManutenzione>Frequenza}" type="Number" maxLength="3"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>DurataCiclo}">
+                  <Input value="{mManutenzione>DurataCiclo}" type="Number" maxLength="4"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>FlagValidita}">
+                  <CheckBox selected="{mManutenzione>FlagValidita}" />
+                </form:FormElement>
+                <form:FormElement label="{i18n>TipoGestione}">
+                  <Input value="{mManutenzione>TipoGestione}" type="Text" maxLength="3"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Finalita}">
+                  <Input value="{mManutenzione>Finalita}" type="Text" maxLength="3"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>GruppoControllo}">
+                  <Input value="{mManutenzione>GruppoControllo}" type="Text" maxLength="3"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Aggreg}">
+                  <Input value="{mManutenzione>Aggreg}" type="Number" maxLength="5"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>TestoEs}">
+                  <Input value="{mManutenzione>TestoEs}" type="Text" maxLength="1"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>OpenText}">
+                  <Input value="{mManutenzione>OpenText}" type="Text" maxLength="40"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>EditData}">
+                  <DatePicker id="DateP3" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>EditData}"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>EditUser}">
+                  <Input value="{mManutenzione>EditUser}" type="Text" maxLength="12"/>
+                </form:FormElement>
+                <form:FormElement label="{i18n>EditOra}">
+                  <Input value="{mManutenzione>EditOra}" type="Number" maxLength="3"/>
+                </form:FormElement>
+              </form:formElements>
+            </form:FormContainer>
+          </form:formContainers>
+        </form:Form>
+            <Toolbar>
+              	<ToolbarSpacer/>
+                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
+				        <ToolbarSpacer/> 
+            </Toolbar>
+        </VBox>
+		</Page>
+  </NavContainer>
+</mvc:View>
