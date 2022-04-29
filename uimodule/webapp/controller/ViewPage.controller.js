@@ -16,6 +16,16 @@ sap.ui.define([
       // leggere i modelli che ci servono
       var tabs = [
         {
+          Nome: "Materiali",
+          Descrizione: "Tabella Materiali",
+          Tipo: "PMO",
+        },
+        {
+          Nome: "Servizi",
+          Descrizione: "Tabella Servizi",
+          Tipo: "PMO",
+        },
+        {
           Nome: "Strategia",
           Descrizione: "Tabella Strategia",
           Tipo: "PMO",
@@ -162,6 +172,12 @@ sap.ui.define([
           break;
         case "ZPM4R_CAR_PMO_S":
           this.navTo("CaricaTabellaS");
+          break;
+        case "Materiali":
+          this.navTo("Materiali");
+          break;
+        case "Servizi":
+          this.navTo("Servizi");
           break;
         case "Strategia":
           this.navTo("Strategia");

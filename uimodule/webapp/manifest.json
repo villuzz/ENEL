@@ -218,7 +218,23 @@
           "target": [
             "Strategia"
           ]
+        },
+        {
+          "name": "Materiali",
+          "pattern": "Materiali",
+          "target": [
+            "Materiali"
+          ]
+        },
+        {
+          "name": "Servizi",
+          "pattern": "Servizi",
+          "target": [
+            "Servizi"
+          ]
         }
+
+        
       ],
       "targets": {
         "TargetMainView": {
@@ -234,6 +250,20 @@
           "clearControlAggregation": false,
           "viewId": "ViewPage",
           "viewName": "ViewPage"
+        },
+        "Servizi": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "Servizi",
+          "viewName": "Servizi"
+        },
+        "Materiali": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "Materiali",
+          "viewName": "Materiali"
         },
         "Strategia": {
           "viewType": "XML",

@@ -1,0 +1,150 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" controllerName="PM030.APP1.controller.Servizi">
+<NavContainer
+			id="navCon"
+			class="navContainerControl sapUiSmallMarginBottom">
+    <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"></Button>
+                        <Title text="{i18n>TitoloServizi}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                    <fb:FilterBar useToolbar="true" search="onSearchResult" showRestoreButton="true" showClearButton="true">
+                        <fb:filterGroupItems>
+              <fb:FilterGroupItem id="FIServizi" visible="true" groupName="__$INTERNAL$" name="Servizi" label="{i18n>ASNUM}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                <fb:control>
+                  <MultiComboBox id="cbServizi" items="{ path: '/Servizi'}" showSecondaryValues="true">
+                    <core:ListItem key="{ASNUM}" text="{ASNUM}" additionalText="{ASKTX}"/>
+                  </MultiComboBox>
+                </fb:control>
+              </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                     <OverflowToolbar style="Clear">
+                      <ToolbarSpacer/>
+                      <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    </OverflowToolbar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
+                <Table id="tbServizi" growing="true"
+    growingThreshold="100" growingScrollToLoad="false" items="{ path: '/Servizi'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" >
+                  <columns>
+                        <Column id="Servizi1" width="7em"><Text text="{i18n>ASNUM}"/></Column>
+                        <Column id="Servizi2" width="25em"><Text text="{i18n>ASKTX}"/></Column>
+                        <Column id="Servizi3" width="7em"><Text text="{i18n>MENGE}"/></Column>
+                        <Column id="Servizi4" width="7em"><Text text="{i18n>MEINS}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
+                            <cells>
+                                <Text text="{ASNUM}"/>
+                                <Text text="{ASKTX}"/>
+                                <Text text="{MENGE}"/> 
+                                <Text text="{MEINS}"/>                          
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+             </ScrollContainer>
+        </f:content>
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </f:footer>
+        <f:dependents>
+      <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
+    </f:dependents>
+    </f:DynamicPage>
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd"></Button>
+                        <Title id="TitleDetail"  class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                 
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+        <form:Form editable="true">
+                               <form:layout>
+				<form:ResponsiveGridLayout
+					labelSpanXL="3"
+					labelSpanL="3"
+					labelSpanM="3"
+					labelSpanS="12"
+					adjustLabelSpan="false"
+					emptySpanXL="4"
+					emptySpanL="4"
+					emptySpanM="4"
+					emptySpanS="0"
+					columnsXL="1"
+					columnsL="1"
+					columnsM="1"
+					singleContainerFullSize="false" />
+			</form:layout>
+      <form:formContainers>
+            <form:FormContainer ariaLabelledBy="Title2">
+              <form:formElements>
+                <form:FormElement label="{i18n>ASNUM}">
+                  <form:fields>
+                    <Input value="{sDetail>/ASNUM}" type="Text" maxLength="18"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>ASKTX}" >
+                  <form:fields>
+                    <Input value="{sDetail>/ASKTX}" type="Text" maxLength="40"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>MENGE}" >
+                  <form:fields>
+                    <Input value="{sDetail>/MENGE}" type="Number" maxLength="16"/>
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>MEINS}" >
+                  <form:fields>
+                    <Input value="{sDetail>/MEINS}" type="Text" maxLength="3"/>
+                  </form:fields>
+                </form:FormElement>
+              </form:formElements>
+            </form:FormContainer>
+          </form:formContainers>
+        </form:Form>
+        </f:content>
+    </f:DynamicPage>
+   
+  </NavContainer>
+</mvc:View>
