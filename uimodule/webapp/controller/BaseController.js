@@ -8,18 +8,19 @@ sap.ui.define([
     "PM030/APP1/util/xlsx",
     'sap/ui/model/Filter',
     'sap/ui/model/FilterOperator',
+    "PM030/APP1/util/underscore-min",
 ],
 /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      * @param {typeof sap.ui.core.routing.History} History
      * @param {typeof sap.ui.core.UIComponent} UIComponent
      */
-    function (Controller, History, UIComponent, formatter, MessageBox, Sorter, xlsx, Filter, FilterOperator) {
+    function (Controller, History, UIComponent, formatter, MessageBox, Sorter, xlsx, Filter, FilterOperator, underscore) {
     "use strict";
 
     return Controller.extend("PM030.APP1.controller.BaseController", {
         formatter: formatter,
-
+        underscore: underscore,
         /**
              * Convenience method for getting the view model by name in every controller of the application.
              * @public
@@ -355,6 +356,51 @@ sap.ui.define([
                 });
             });
         },
+        _getLine: function (Entity, Filters) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve, reject) {
+              xsoDataModelReport.read(Entity, {
+                  filters: Filters,
+                  urlParameters: {
+                      "$top": 1
+                  },
+                  success: function (oDataIn) {
+                      if (oDataIn.results[0] !== undefined) {
+                          resolve(oDataIn.results[0]);
+                      } else {
+                          resolve(oDataIn);
+                      }
+                  },
+                  error: function (err) {
+                      var responseObject = JSON.parse(err.responseText);
+                      reject(MessageBox.error(responseObject.error.message.value))
+                  }
+              });
+          });
+      },
+      _getLinenoError: function (Entity, Filters) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve) {
+              xsoDataModelReport.read(Entity, {
+                  filters: Filters,
+                  urlParameters: {
+                      "$top": 1
+                  },
+                  success: function (oDataIn) {
+                      if (oDataIn.results[0] !== undefined) {
+                          resolve(oDataIn.results[0]);
+                      } else if (oDataIn.results !== undefined) {
+                          resolve(oDataIn.results);
+                      } else {
+                          resolve(oDataIn);
+                      }
+                  },
+                  error: function () {
+                      resolve(undefined);
+                  }
+              });
+          });
+      },
         _getLastItemData: function (Entity, Filters, SortBy) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {
@@ -383,6 +429,25 @@ sap.ui.define([
                 });
             });
         },
+        _getTable: function (Entity, Filters) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve, reject) {
+              xsoDataModelReport.read(Entity, {
+                  filters: Filters,
+                  success: function (oDataIn) {
+                      if (oDataIn.results !== undefined) {
+                          resolve(oDataIn.results);
+                      } else {
+                          resolve(oDataIn);
+                      }
+                  },
+                  error: function (err) {
+                      var responseObject = JSON.parse(err.responseText);
+                      reject(MessageBox.error(responseObject.error.message.value))
+                  }
+              });
+          });
+      },
         _getTableDistinct: function (Entity, Filters, Columns) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve) {
