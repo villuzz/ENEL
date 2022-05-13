@@ -48,8 +48,8 @@
                 <Table id="tbServizi" growing="true"
     growingThreshold="100" growingScrollToLoad="false" items="{ path: '/Servizi'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" >
                   <columns>
-                        <Column id="Servizi1" width="7em"><Text text="{i18n>ASNUM}"/></Column>
-                        <Column id="Servizi2" width="25em"><Text text="{i18n>ASKTX}"/></Column>
+                        <Column id="Servizi1" width="40%"><Text text="{i18n>ASNUM}"/></Column>
+                        <Column id="Servizi2" width="60%"><Text text="{i18n>ASKTX}"/></Column>
                        <!-- <Column id="Servizi3" width="7em"><Text text="{i18n>MENGE}"/></Column>
                         <Column id="Servizi4" width="7em"><Text text="{i18n>MEINS}"/></Column>-->
                     </columns>

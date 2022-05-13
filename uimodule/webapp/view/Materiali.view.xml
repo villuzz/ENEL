@@ -48,8 +48,8 @@
                 <Table id="tbMateriali" growing="true"
     growingThreshold="100" growingScrollToLoad="false" items="{ path: '/Materiali'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" >
                   <columns>
-                        <Column id="Materiali1" width="7em"><Text text="{i18n>MATNR}"/></Column>
-                        <Column id="Materiali2" width="25em"><Text text="{i18n>MAKTX}"/></Column>
+                        <Column id="Materiali1" width="40%"><Text text="{i18n>MATNR}"/></Column>
+                        <Column id="Materiali2" width="60%"><Text text="{i18n>MAKTX}"/></Column>
                       <!--    <Column id="Materiali3" width="7em"><Text text="{i18n>MENGE}"/></Column>
                         <Column id="Materiali4" width="7em"><Text text="{i18n>MEINS}"/></Column>  -->  
                     </columns>
@@ -121,7 +121,7 @@
               <form:formElements>
                 <form:FormElement label="{i18n>MATNR}">
                   <form:fields>
-                    <Input value="{sDetail>/MATNR}" type="Text" maxLength="18"/>
+                    <Input value="{sDetail>/MATNR}" type="Number" maxLength="18"/>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>MAKTX}" >

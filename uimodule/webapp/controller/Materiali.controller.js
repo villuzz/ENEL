@@ -149,18 +149,10 @@ sap.ui.define([
             delete line.createdBy;
             delete line.createdAt;
 
+            line.MATNR = line.MATNR.padStart(18, '0');
             var sURL = "/Materiali/" + line.MATNR;
             await this._updateHana(sURL, line);
             this.byId("navCon").back();
-        },
-        onCancel: async function () {
-            var sel = this.getView().byId("tbMateriali").getSelectedItems();
-            for (var i =( sel.length - 1); i >= 0; i--) {
-                var line = sel[i].getBindingContext().getObject();
-                await this._removeHana("/Materiali/" + line.MATNR);
-            }
-            this.getView().getModel().refresh();
-            this.getView().byId("tbMateriali").removeSelections();
         },
         onCancel: async function () {
 
@@ -222,7 +214,7 @@ sap.ui.define([
         MaterialiModel: function (sValue) {
             var oResource = this.getResourceBundle();
             var rValue = {
-                MATNR: (sValue[oResource.getText("MATNR")] === undefined) ? undefined : sValue[oResource.getText("MATNR")].toString(),
+                MATNR: (sValue[oResource.getText("MATNR")] === undefined) ? undefined : sValue[oResource.getText("MATNR")].toString().padStart(18, "0"),
                 MAKTX: (sValue[oResource.getText("MAKTX")] === undefined) ? undefined : sValue[oResource.getText("MAKTX")].toString(),
                 MENGE: (sValue[oResource.getText("MENGE")] === undefined) ? undefined : sValue[oResource.getText("MENGE")].toString(),
                 MEINS: (sValue[oResource.getText("MEINS")] === undefined) ? undefined : sValue[oResource.getText("MEINS")].toString()
