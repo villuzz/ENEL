@@ -28,6 +28,7 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
+   
     onSearchFilters: function () {
       var aFilters = [];
 

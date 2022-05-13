@@ -270,6 +270,7 @@ sap.ui.define([
           return sURL;
         },
         handleUploadPress: async function () {
+          debugger
             var oResource = this.getResourceBundle();
 
             if (this.getView().byId("fileUploader").getValue() === "") {

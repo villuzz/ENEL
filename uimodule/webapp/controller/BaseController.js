@@ -66,6 +66,25 @@ sap.ui.define([
             return UIComponent.getRouterFor(this);
         },
 
+        _getTable: function (Entity, Filters) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve, reject) {
+              xsoDataModelReport.read(Entity, {
+                  filters: Filters,
+                  success: function (oDataIn) {
+                      if (oDataIn.results !== undefined) {
+                          resolve(oDataIn.results);
+                      } else {
+                          resolve(oDataIn);
+                      }
+                  },
+                  error: function (err) {
+                      var responseObject = JSON.parse(err.responseText);
+                      reject(MessageBox.error(responseObject.error.message.value))
+                  }
+              });
+          });
+      },
         onNavBack: function () {
             var sPreviousHash = History.getInstance().getPreviousHash();
 
@@ -446,7 +465,5 @@ sap.ui.define([
                 });
             });
         }
-
-
     });
 });
