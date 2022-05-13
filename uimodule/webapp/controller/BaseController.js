@@ -336,6 +336,51 @@ sap.ui.define([
                 });
             });
         },
+        _getLine: function (Entity, Filters) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve, reject) {
+              xsoDataModelReport.read(Entity, {
+                  filters: Filters,
+                  urlParameters: {
+                      "$top": 1
+                  },
+                  success: function (oDataIn) {
+                      if (oDataIn.results[0] !== undefined) {
+                          resolve(oDataIn.results[0]);
+                      } else {
+                          resolve(oDataIn);
+                      }
+                  },
+                  error: function (err) {
+                      var responseObject = JSON.parse(err.responseText);
+                      reject(MessageBox.error(responseObject.error.message.value))
+                  }
+              });
+          });
+      },
+      _getLinenoError: function (Entity, Filters) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve) {
+              xsoDataModelReport.read(Entity, {
+                  filters: Filters,
+                  urlParameters: {
+                      "$top": 1
+                  },
+                  success: function (oDataIn) {
+                      if (oDataIn.results[0] !== undefined) {
+                          resolve(oDataIn.results[0]);
+                      } else if (oDataIn.results !== undefined) {
+                          resolve(oDataIn.results);
+                      } else {
+                          resolve(oDataIn);
+                      }
+                  },
+                  error: function () {
+                      resolve(undefined);
+                  }
+              });
+          });
+      },
         _getLastItemData: function (Entity, Filters, SortBy) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {

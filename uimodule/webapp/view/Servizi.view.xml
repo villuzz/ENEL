@@ -50,16 +50,16 @@
                   <columns>
                         <Column id="Servizi1" width="7em"><Text text="{i18n>ASNUM}"/></Column>
                         <Column id="Servizi2" width="25em"><Text text="{i18n>ASKTX}"/></Column>
-                        <Column id="Servizi3" width="7em"><Text text="{i18n>MENGE}"/></Column>
-                        <Column id="Servizi4" width="7em"><Text text="{i18n>MEINS}"/></Column>
+                       <!-- <Column id="Servizi3" width="7em"><Text text="{i18n>MENGE}"/></Column>
+                        <Column id="Servizi4" width="7em"><Text text="{i18n>MEINS}"/></Column>-->
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
                                 <Text text="{ASNUM}"/>
                                 <Text text="{ASKTX}"/>
-                                <Text text="{MENGE}"/> 
-                                <Text text="{MEINS}"/>                          
+                              <!--    <Text text="{MENGE}"/> 
+                                <Text text="{MEINS}"/>   -->                       
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -129,7 +129,7 @@
                     <Input value="{sDetail>/ASKTX}" type="Text" maxLength="40"/>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>MENGE}" >
+           <!--       <form:FormElement label="{i18n>MENGE}" >
                   <form:fields>
                     <Input value="{sDetail>/MENGE}" type="Number" maxLength="16"/>
                   </form:fields>
@@ -138,7 +138,7 @@
                   <form:fields>
                     <Input value="{sDetail>/MEINS}" type="Text" maxLength="3"/>
                   </form:fields>
-                </form:FormElement>
+                </form:FormElement>-->
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>
