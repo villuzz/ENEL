@@ -7,25 +7,16 @@
             <f:DynamicPageTitle>
                 <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                         <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"/>
                         <Title text="{i18n>TitoloTPAT}" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
                 <f:navigationActions>
-                    <Button press="handleNav" class="sapUiTinyMarginBegin" text="{i18n>Modifica}" enabled="{tabCheckModel>/editEnabled}">
-                      <layoutData>
-                        <FlexItemData growFactor="1" />
-                      </layoutData>
-                      <customData>
-                        <core:CustomData
-                          key="target"
-                          value="p1" />
-                      </customData>
-			              </Button>
-                    <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://home" press="onBack" class="sapUiTinyMarginBegin" tooltip="{i18n>TitoloGTA}"/>
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>   
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -37,57 +28,78 @@
 
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/>
+                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
+                                <MultiComboBox id="cbDivisione" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>value}" text="{sHelp>value}"/>
+                                </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="sis" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/Sistema}" maxLength="2"/>
+                                 <MultiComboBox id="cbSistema" items="{ path: 'sHelp>/T_ACT_PROG', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
+                                </MultiComboBox>
+                                    <!-- <Input type="Text" value="{FilterModel>/Sistema}" maxLength="2"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="progressivo" visible="true" groupName="__$INTERNAL$" name="pr" label="{i18n>Progressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Number" value="{FilterModel>/Progressivo}" maxLength="5"/>
+                                 <MultiComboBox id="cbProgressivo" items="{ path: 'sHelp>/T_ACT_PROG', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Progres}" text="{sHelp>Progres}"/>
+                                </MultiComboBox>
+                                    <!-- <Input type="Number" value="{FilterModel>/Progressivo}" maxLength="5"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="descrizioneProgressivo" visible="true" groupName="__$INTERNAL$" name="dp" label="{i18n>DescrizioneProgressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/DescrizioneProgressivo}" maxLength="80"/>
+                                 <MultiComboBox id="cbDescrizioneProgressivo" items="{ path: 'sHelp>/T_ACT_PROG', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
+                                </MultiComboBox>
+                                    <!-- <Input type="Text" value="{FilterModel>/DescrizioneProgressivo}" maxLength="80"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="componenteTipo" visible="true" groupName="__$INTERNAL$" name="ct" label="{i18n>ComponenteTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/ComponenteTipo}" maxLength="40"/>
+                                 <MultiComboBox id="cbComponentTipo" items="{ path: 'sHelp>/T_ACT_PROG', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>ComponentTipo}" text="{sHelp>ComponentTipo}"/>
+                                </MultiComboBox>
+                                    <!-- <Input type="Text" value="{FilterModel>/ComponenteTipo}" maxLength="40"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
+                    <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                      <ToolbarSpacer/>
+                      <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    </OverflowToolbar>
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbManutenzione" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbProgressivoAzioni"  growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col1" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
-                        <Column width="15em" id="col2" app:property="Sistema"><Text text="{i18n>Sistema}"/></Column>
-                        <Column width="15em" id="col3" app:property="Progressivo"><Text text="{i18n>Progressivo}"/></Column>                        
-                        <Column width="15em" id="col4" app:property="DescrizioneProgressivo"><Text text="{i18n>DescrizioneProgressivo}"/></Column>
-                        <Column width="15em" id="col5" app:property="ComponenteTipo"><Text text="{i18n>ComponenteTipo}"/></Column>
+                        <Column width="15em" id="col1"><Text text="{i18n>Divisione}"/></Column>
+                        <Column width="15em" id="col2"><Text text="{i18n>Sistema}"/></Column>
+                        <Column width="15em" id="col3"><Text text="{i18n>Progressivo}"/></Column>                        
+                        <Column width="15em" id="col4"><Text text="{i18n>DescrizioneProgressivo}"/></Column>
+                        <Column width="15em" id="col5"><Text text="{i18n>ComponenteTipo}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{mManutenzione>Divisione}"/>
-                                <Text text="{mManutenzione>Sistema}"/>
-                                <Text text="{mManutenzione>Progressivo}"/>
-                                <Text text="{mManutenzione>DescrizioneProgressivo}"/>
-                                <Text text="{mManutenzione>ComponenteTipo}"/>
+                                <Text text="{T_ACT_PROG>Werks}"/>
+                                <Text text="{T_ACT_PROG>Sistema}"/>
+                                <Text text="{T_ACT_PROG>Progres}"/>
+                                <Text text="{T_ACT_PROG>Txt}"/>
+                                <Text text="{T_ACT_PROG>ComponentTipo}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -100,71 +112,87 @@
                 <ToolbarSpacer/>
             </OverflowToolbar>
         </f:footer>
-    </f:DynamicPage>
-    <Page
-			id="p1"
-			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
-      <VBox class="sapUiSmallMargin">
-        <form:Form id="FormToolbar"
-          editable="true"
-          ariaLabelledBy="Title1">
-          <form:toolbar>
-            <Toolbar id="TB1">
-              <Title text="{i18n>editPage2}"/>
-            </Toolbar>
-          </form:toolbar>
-          <form:layout>
-          <form:ResponsiveGridLayout
-            labelSpanXL="3"
-            labelSpanL="3"
-            labelSpanM="3"
-            labelSpanS="12"
-            adjustLabelSpan="false"
-            emptySpanXL="4"
-            emptySpanL="4"
-            emptySpanM="4"
-            emptySpanS="0"
-            columnsXL="1"
-            columnsL="1"
-            columnsM="1"
-            singleContainerFullSize="false" />
-          </form:layout>
-          <form:formContainers>
+     <f:dependents>
+      <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
+    </f:dependents>
+   </f:DynamicPage>
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd"></Button>
+                        <Title title="{i18n>editPage}"  id="TitleDetail"  class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                 
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+        <form:Form editable="true">
+                               <form:layout>
+				<form:ResponsiveGridLayout
+					labelSpanXL="3"
+					labelSpanL="3"
+					labelSpanM="3"
+					labelSpanS="12"
+					adjustLabelSpan="false"
+					emptySpanXL="4"
+					emptySpanL="4"
+					emptySpanM="4"
+					emptySpanS="0"
+					columnsXL="1"
+					columnsL="1"
+					columnsM="1"
+					singleContainerFullSize="false" />
+			</form:layout>
+      <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
-                <form:FormElement label="{i18n>Divisione}">
+              <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                    <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/>
+                    <!-- <Input value="{sDetail>/Werks}" type="Text" id="IDDivisione" maxLength="4" /> -->
+                   <ComboBox id="cbDivisioneNew" items="{ path: 'sHelp>/DIVISIONENew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" > 
+                         <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Sistema}" >
+                <form:FormElement label="{i18n>Sistema}">
                   <form:fields>
-                    <Input value="{mManutenzione>Sistema}" type="Text" maxLength="2"/>
+                    <Input value="{sDetail>/Sistema}" type="Text" maxLength="2"/>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Progressivo}">
+                <form:FormElement label="{i18n>Progressivo}" >
                   <form:fields>
-                    <Input value="{mManutenzione>Progressivo}" type="Number" maxLength="5"/>
+                    <Input value="{sDetail>/Progres}"  type="Number" maxLength="5"/>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>DescrizioneProgressivo}">
+                <form:FormElement label="{i18n>DescrizioneProgressivo}" >
                   <form:fields>
-                    <Input value="{mManutenzione>DescrizioneProgressivo}" type="Text" maxLength="80"/>
+                    <Input value="{sDetail>/Txt}"  type="Text" maxLength="80"/>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>ComponenteTipo}">
-                  <Input value="{mManutenzione>ComponenteTipo}" type="Text" maxLength="40"/>
+                <form:FormElement label="{i18n>ComponenteTipo}" >
+                  <form:fields>
+                    <Input value="{sDetail>/ComponentTipo}"  type="Text" maxLength="40"/>
+                  </form:fields>
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>
         </form:Form>
-            <Toolbar>
-              	<ToolbarSpacer/>
-                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
-				        <ToolbarSpacer/> 
-            </Toolbar>
-        </VBox>
-		</Page>
+        </f:content>
+    </f:DynamicPage>
+   
   </NavContainer>
 </mvc:View>

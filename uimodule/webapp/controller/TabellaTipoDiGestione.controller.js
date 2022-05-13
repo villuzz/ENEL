@@ -6,8 +6,11 @@ sap.ui.define([
   "sap/ui/export/Spreadsheet",
   "sap/ui/export/library",
   'sap/ui/core/routing/History',
+  'sap/ui/model/Filter',
+  'sap/ui/model/FilterOperator',
+  'sap/m/MessageToast',
   "PM030/APP1/util/manutenzioneTable",
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, ) {
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, ) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
@@ -15,78 +18,75 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaTipoDiGestione", {
     onInit: function () {
-      this.getView().setModel(
-        new JSONModel({
-          editEnabled: false,
-        }),
-        "tabCheckModel"
-      );
-      // leggere i modelli che ci servono
-      var sPiani = [
-        {
-          Divisione: "123",
-        }, {
-          Divisione: "23",
-        },
-      ];
-      var oManutenzione = new sap.ui.model.json.JSONModel();
-      oManutenzione.setData(sPiani);
-      this.getView().setModel(oManutenzione, "mManutenzione");
-
+  
       this.getOwnerComponent().getRouter().getRoute("TabellaTipoDiGestione").attachPatternMatched(this._onObjectMatched, this);
 
     },
-    _onObjectMatched: function () {
+    
+    _onObjectMatched: async function () {
+      var aT_TP_MAN = await this._getTable("/T_TP_MAN", []);
       var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData({
-        DataEsecuzione: new Date()
-      });
-      this.getView().setModel(oModel, "FilterModel");
-
+      oModel.setData(aT_TP_MAN);
+      this.getView().setModel(oModel, "T_TP_MAN");
       this._mViewSettingsDialogs = {};
       this._oTPC = new TablePersoController({ table: this.byId("tbTabellaTipoDiGestione"), componentName: "Piani", persoService: manutenzioneTable }).activate();
+      this.getValueHelp();
     },
-    onSearchResult: function (oEvent) {
-      debugger;
-      var oModel = this.getView().getModel("FilterModel");
-      var divisione = oModel.getData().Divisione;
-      if (!divisione) {
-        MessageBox.error(oResource.getText("MessageDivisioneObbligatoria"))
-      } else {
-        this.onSearchFilters();
-      }
+    getValueHelp: async function(){
+      debugger
+      var sData = {};
+        var oModelHelp = new sap.ui.model.json.JSONModel();
+        sData.T_TP_MAN = await this._getTableDistinct("/T_TP_MAN", []);
+        sData.DIVISIONE = new Set(sData.T_TP_MAN.map(item => item.Divisione));
+
+        oModelHelp.setData(sData);
+        this.getView().setModel(oModelHelp, "sHelp");
+    },
+    Shpl: async function (ShplName, ShplType) {
+        var aFilter = [];
+        aFilter.push(new Filter("ShplName", FilterOperator.EQ, ShplName));
+        aFilter.push(new Filter("ShplType", FilterOperator.EQ, ShplType));
+
+        var result = await this._getTable("/dySearch", aFilter);
+        if (result[0].ReturnFieldValueSet) {
+          result = result[0].ReturnFieldValueSet.results;
+          result.splice(0,1);
+        } else {
+          result = [];
+        }
+        return result;
+    },
+    onSearchResult: function () {
+      this.onSearchFilters();
     },
     onSearchFilters: function () {
-      var model = this.getModel("FilterModel");
-      var oData = model.getData();
-
-      var oBinding = this.byId("tbTabellaTipoDiGestione").getBinding("items");
-      if (oBinding.isSuspended()) {
-        oBinding.resume();
+      debugger
+      var aFilters = [];
+      if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
+        aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Divisione"));
       }
+      if (this.getView().byId("cbTipoGestione").getSelectedKeys().length !== 0) {
+        aFilters.push(this.multiFilterNumber(this.getView().byId("cbTipoGestione").getSelectedKeys(), "TipoGestione"));
+      }
+      if (this.getView().byId("cbRaggruppamento").getSelectedKeys().length !== 0) {
+        aFilters.push(this.multiFilterNumber(this.getView().byId("cbRaggruppamento").getSelectedKeys(), "Raggruppamento"));
+      }
+     
+      this.byId("tbTabellaDestinatariCdl").getBinding("items").filter(aFilters);
+    },
 
-      var filterArray = [];
-      oData.Divisione.map((d) => {
-        filterArray.push(new sap.ui.model.Filter("Divisione", sap.ui.model.FilterOperator.EQ, d));
-      });
-      oData.TipoGestione.map((tg) => {
-        filterArray.push(new sap.ui.model.Filter("TipoGestione", sap.ui.model.FilterOperator.EQ, tg));
-      });
-      oData.Raggruppamento.map((ragg) => {
-        filterArray.push(new sap.ui.model.Filter("Raggruppamento", sap.ui.model.FilterOperator.EQ, ragg));
-      });
-
-      var self = this;
-      var oDataModel = self.getModel();
-
-      oDataModel.read("", {
-        filters: filterArray,
-        success: function (response) { // debugger;
-
-        },
-        error: function () { // debugger;
+    multiFilterNumber: function (aArray, vName) {
+      var aFilter = [];
+      if (aArray.length === 0) {
+        return new Filter(vName, FilterOperator.EQ, "");
+      } else if (aArray.length === 1) {
+        return new Filter(vName, FilterOperator.EQ, aArray[0]);
+      } else {
+        for (var i = 0; i < aArray.length; i++) {
+          aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-      });
+        return aFilter;
+      }
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbTabellaTipoDiGestione");
@@ -174,10 +174,61 @@ sap.ui.define([
 
     onSave: function () {
       this.byId("navCon").back();
-    }
-    // onBack: function () {
-    // sap.ui.core.UIComponent.getRouterFor(this).navTo("TilePage");
-    // }
+    },
+    onCancel: async function () {
+      debugger
+      var sel = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
+      for (var i = (sel.length - 1); i >= 0; i--) {
+        var line = JSON.stringify(sel[i].getBindingContext("T_TP_MAN").getObject());
+        line = JSON.parse(line);
+        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+        await this._removeHana(sURL);
+      }
+      this.getView().byId("tbTabellaTipoDiGestione").removeSelections();
+      var aT_TP_MAN = await this._getTable("/T_TP_MAN", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_TP_MAN);
+      this.getView().setModel(oModel, "T_TP_MAN");
+    },
+    onSave: async function () {
+      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+      line = JSON.parse(line);
 
+      if (line.ID === "New") {
+        delete line.ID;
+        // get Last Index
+        await this._saveHana("/T_TP_MAN", line);
+        var aT_TP_MAN = await this._getTable("/T_TP_MAN", []);
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(aT_TP_MAN);
+        this.getView().setModel(oModel, "T_TP_MAN");
+      } else {
+        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+        await this._updateHana(sURL, line);
+        aT_TP_MAN = await this._getTable("/T_TP_MAN", []);
+        oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(aT_TP_MAN);
+        this.getView().setModel(oModel, "T_TP_MAN");
+      }
+      this.byId("navCon").back();
+    },
+    onModify: function () {
+      debugger
+      sap.ui.core.BusyIndicator.show();
+      var items = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
+      if (items.length === 1) {
+        this.byId("Detail").bindElement({ path: items[0].getBindingContext("T_TP_MAN").getPath() });
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(items[0].getBindingContext("T_TP_MAN").getObject());
+        this.getView().setModel(oModel, "sDetail");
+        this.byId("navCon").to(this.byId("Detail"));
+      } else {
+        MessageToast.show("Seleziona una riga");
+      }
+      sap.ui.core.BusyIndicator.hide();
+    },
+    onBackDetail: function () {
+      this.byId("navCon").back();
+    },
   });
 });
