@@ -7,25 +7,16 @@
             <f:DynamicPageTitle>
                 <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                         <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"/>
                         <Title text="{i18n>TitoloGDC}" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
-                <f:navigationActions>
-                    <Button press="handleNav" class="sapUiTinyMarginBegin" text="{i18n>Modifica}" enabled="{tabCheckModel>/editEnabled}">
-                      <layoutData>
-                        <FlexItemData growFactor="1" />
-                      </layoutData>
-                      <customData>
-                        <core:CustomData
-                          key="target"
-                          value="p1" />
-                      </customData>
-			              </Button>
-                    <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://home" press="onBack" class="sapUiTinyMarginBegin" tooltip="{i18n>TitoloGTA}"/>
+             <f:navigationActions>
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>   
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -34,46 +25,61 @@
                 <f:content>
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
-
-                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                              <fb:control>
-                                <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/>
-                              </fb:control>
-                            </fb:FilterGroupItem>
-
-                            <fb:FilterGroupItem id="gruppoControlli" visible="true" groupName="__$INTERNAL$" name="gc" label="{i18n>GruppoControlli}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:FilterGroupItem id="gruppoControlli" visible="true" groupName="__$INTERNAL$" name="gc" label="{i18n>GruppoControlli}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/GruppoControlli}" maxLength="3"/>
+                                    <!-- <Input type="Text" value="{FilterModel>/GruppoControlli}" maxLength="3"/> -->
+                                    <MultiComboBox id="cbGruppoControlli"  items="{ path: 'sHelp>/T_TP_MAN2/TipoGestione2', sorter: [{ path: 'T_TP_MAN2', descending: false, group:false }] }" > 
+                                    <core:Item key="{sHelp>TipoGestione2}" text="{sHelp>TipoGestione2}"/>
+                                </MultiComboBox> 
                                 </fb:control>
                             </fb:FilterGroupItem>
 
+                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
+                                <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_TP_MAN2/Divisione', sorter: [{ path: 'T_TP_MAN2', descending: false, group:false }] }" > 
+                                    <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}"/>
+                                </MultiComboBox> 
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                           
                             <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="ragg" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/Raggruppamento}" maxLength="10"/>
+                                    <!-- <Input type="Text" value="{FilterModel>/Raggruppamento}" maxLength="10"/> -->
+                                    <MultiComboBox id="cbRaggruppamento"  items="{ path: 'sHelp>/T_TP_MAN2/Raggruppamento', sorter: [{ path: 'T_TP_MAN2', descending: false, group:false }] }" > 
+                                    <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
+                                </MultiComboBox> 
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
+                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                      <ToolbarSpacer/>
+                      <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    </OverflowToolbar>
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbTabellaGruppoDiControllo" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbTabellaGruppoDiControllo" items="{path: 'T_TP_MAN2>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col65" app:property="GruppoControlli"><Text text="{i18n>GruppoControlli}"/></Column>
+                        <Column width="15em" id="col65" app:property="TipoGestione2"><Text text="{i18n>GruppoControlli}"/></Column>
                         <Column width="15em" id="col66" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
-                        <Column width="15em" id="col67" app:property="DescrizioneGruppoControlli"><Text text="{i18n>DescrizioneGruppoControlli}"/></Column>
+                        <Column width="15em" id="col67" app:property="DesTipoGest2"><Text text="{i18n>DescrizioneGruppoControlli}"/></Column>
                         <Column width="15em" id="col68" app:property="Raggruppamento"><Text text="{i18n>Raggruppamento}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{mManutenzione>GruppoControlli}"/>
-                                <Text text="{mManutenzione>Divisione}"/>
-                                <Text text="{mManutenzione>DescrizioneGruppoControlli}"/>
-                                <Text text="{mManutenzione>Raggruppamento}"/>
+                                <Text text="{T_TP_MAN2>TipoGestione2}"/>
+                                <Text text="{T_TP_MAN2>Divisione}"/>
+                                <Text text="{T_TP_MAN2>DesTipoGest2}"/>
+                                <Text text="{T_TP_MAN2>Raggruppamento}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -86,12 +92,35 @@
                 <ToolbarSpacer/>
             </OverflowToolbar>
         </f:footer>
+           <f:dependents>
+      <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
+    </f:dependents>
     </f:DynamicPage>
-    <Page
-			id="p1"
-			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
-      <VBox class="sapUiSmallMargin">
-        <form:Form id="FormToolbar"
+    
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd"></Button>
+                        <Title title="{i18n>editPage}"  id="TitleDetail"  class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                 
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <form:Form id="FormToolbar"
           editable="true"
           ariaLabelledBy="Title1">
           <form:toolbar>
@@ -120,34 +149,41 @@
               <form:formElements>
                 <form:FormElement label="{i18n>GruppoControlli}">
                   <form:fields>
-                    <Input value="{mManutenzione>GruppoControlli}" type="Text" maxLength="3"/>
+                    <!-- <Input value="{mManutenzione>GruppoControlli}" type="Text" maxLength="3"/> -->
+                     <ComboBox  value="{sDetail>/TipoGestione2}" items="{ path: 'sHelp>/T_TP_MAN2/TipoGestione2', sorter: [{ path: 'T_TP_MAN2', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>TipoGestione2}" text="{sHelp>TipoGestione2}"/>
+                  </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Divisione}" >
                   <form:fields>
-                    <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/>
+                    <!-- <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/> -->
+                     <ComboBox  value="{sDetail>/Divisione}"  items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                  </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneGruppoControlli}">
                   <form:fields>
-                    <Input value="{mManutenzione>DescrizioneGruppoControlli}" type="Text" maxLength="40"/>
+                    <!-- <Input value="{mManutenzione>DescrizioneGruppoControlli}" type="Text" maxLength="40"/> -->
+                     <ComboBox  value="{sDetail>/DesTipoGest2}"  items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
+                   <core:Item key="{}" text="{}"/>
+                  </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}">
                   <form:fields>
-                    <Input value="{mManutenzione>Raggruppamento}" type="Text" maxLength="10"/>
+                    <!-- <Input value="{mManutenzione>Raggruppamento}" type="Text" maxLength="10"/> -->
+                  <ComboBox  value="{sDetail>/Raggruppamento}"  items="{ path: 'sHelp>/T_RAGGR/Raggruppamento', sorter: [{ path: 'aRAGGRUPPAMENTO', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
+                  </ComboBox>
                   </form:fields>
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>
         </form:Form>
-            <Toolbar>
-              	<ToolbarSpacer/>
-                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
-				        <ToolbarSpacer/> 
-            </Toolbar>
-        </VBox>
-		</Page>
+        </f:content>
+    </f:DynamicPage>
   </NavContainer>
 </mvc:View>

@@ -18,7 +18,7 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaClasseAzioneTipo", {
     onInit: function () {
-
+      sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("TabellaClasseAzioneTipo").attachPatternMatched(this._onObjectMatched, this);
 
     },
@@ -33,11 +33,71 @@ sap.ui.define([
     getValueHelp: async function () {
       debugger
       var sData = {};
-      var oModelHelp = new sap.ui.model.json.JSONModel();
-      sData.T_ACT_CL = await this._getTableDistinct("/T_ACT_CL", [], "Divisione");
+      var oModelHelp = new sap.ui.model.json.JSONModel({
+        T_ACT_CL: {},
+        H_T001W: {},
+        ZPM4R_T_ACT_SYST: {},
+        ZPM4R_T_ACT_CLAS: {}
+      });
+      oModelHelp.setSizeLimit(2000);
+      sData.T_ACT_CL = await this._getTableDistinct("/T_ACT_CL", []);
+      var aArray = [];
+      sData.T_ACT_CL.forEach(el => {
+        if (!aArray.find(item => item.Werks === el.Werks)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_ACT_CL/Divisione", aArray.filter(a => a.Werks));
 
-      oModelHelp.setData(sData);
+      aArray = [];
+      sData.T_ACT_CL.forEach(el => {
+        if (!aArray.find(item => item.Sistema === el.Sistema)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_ACT_CL/Sistema", aArray.filter(a => a.Sistema));
+     
+      aArray = [];
+      sData.T_ACT_CL.forEach(el => {
+        if (!aArray.find(item => item.Classe === el.Classe)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_ACT_CL/Classe", aArray.filter(a => a.Classe));
+
+      aArray = [];
+      sData.T_ACT_CL.forEach(el => {
+        if (!aArray.find(item => item.Txt === el.Txt)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_ACT_CL/Txt", aArray.filter(a => a.Txt));
+      sData.DIVISIONENew = await this.Shpl("H_T001W", "SH");
+      oModelHelp.setProperty("/H_T001W/DivisioneNew", sData.DIVISIONENew);
+            
+      sData.aSISTEMA = await this.Shpl("ZPM4R_T_ACT_SYST", "CH");
+      aArray = [];
+      sData.aSISTEMA.forEach(el => {
+        if (!aArray.find(item => item.Fieldname2 === el.Fieldname2)) {
+          aArray.push(el)
+        }
+      });
+      oModelHelp.setProperty("/ZPM4R_T_ACT_SYST/aSISTEMA", aArray.filter(a => a.Fieldname2))
+      
+      sData.aCLASSE = await this.Shpl("ZPM4R_T_ACT_CLAS", "CH");
+      aArray = [];
+      sData.aCLASSE.forEach(el => {
+        if (!aArray.find(item => item.Fieldname2 === el.Fieldname2)) {
+          aArray.push(el)
+        }
+      });
+      oModelHelp.setProperty("/ZPM4R_T_ACT_CLAS/aCLASSE", aArray.filter(a => a.Fieldname2))
+      
+      //sData.aTXT = await this.Shpl("ZPM4R_T_ACT_CLAS", "CH");
+      
+      // oModelHelp.setData(sData);
       this.getView().setModel(oModelHelp, "sHelp");
+      sap.ui.core.BusyIndicator.hide();
     },
 
     Shpl: async function (ShplName, ShplType) {
@@ -215,33 +275,32 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onSave: async function () {
+      
       debugger
       var line = JSON.stringify(this.getView().getModel("sDetail").getData());
       line = JSON.parse(line);
 
       if (line.ID === "New") {
         delete line.ID;
+        delete line.__metadata
         // get Last Index
-        // var sURLCrea = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        var sURLCrea = this.componiURL(line);
-        await this._saveHana(sURLCrea, line);
-        var aT_ACT_CL = await this._getTable("/T_ACT_CL", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_ACT_CL);
-        this.getView().setModel(oModel, "T_ACT_CL");
+        await this._saveHana("/T_ACT_CL", line);
       } else {
         var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
         await this._updateHana(sURL, line);
-        aT_ACT_CL = await this._getTable("/T_ACT_CL", []);
-        oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_ACT_CL);
-        this.getView().setModel(oModel, "T_ACT_CL");
       }
+      sap.ui.core.BusyIndicator.show();
+      var aT_ACT_CL = await this._getTable("/T_ACT_CL", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_ACT_CL);
+      this.getView().setModel(oModel, "T_ACT_CL");
+      this.getValueHelp();
+      sap.ui.core.BusyIndicator.hide();
       this.byId("navCon").back();
     },
 
     componiURL: function (line) {
-      var sURL = `/T_ACT_CL(Werks='${line.Werks}',Sistema='${line.Sistema}',Classe='${line.Classe}')`;
+      var sURL = `/T_ACT_CL(Werks='${line.Divisione}',Sistema='${line.Sistema}',Classe='${line.Classe}')`;
       return sURL;
     },
     onCancel: async function () {
@@ -260,6 +319,58 @@ sap.ui.define([
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_ACT_CL);
       this.getView().setModel(oModel, "T_ACT_CL");
+    },
+    handleUploadPress: async function () {
+      debugger
+      var oResource = this.getResourceBundle();
+
+      if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
+        MessageBox.warning("Inserire un File da caricare");
+      } else {
+        sap.ui.core.BusyIndicator.show();
+        var i = 0,
+          sURL,
+          msg = "";
+        var rows = this.getView().getModel("uploadModel").getData();
+
+        if (msg !== "") {
+          sap.ui.core.BusyIndicator.hide(0);
+          MessageBox.error(msg);
+        } else {
+          for (i = 0; i < rows.length; i++) {
+            var sAzione = this.AzioneModel(rows[i]);
+            if (sAzione.Werks.startsWith("C-")) { //Creazione                  
+              await this._saveHana("/T_ACT_CL", sAzione);
+            } else { // Modifica
+              // sAzioni.CONTATORE = await this._getLastItemData("/Azioni", "", "CONTATORE");
+              // sURL = "/Azioni/" + sAzioni.CONTATORE;
+
+              sURL = this.componiURLExcel(sAzione);
+              // sAzioni.DIVISIONE = Number(sAzioni.DIVISIONE);
+              await this._updateHana(sURL, sAzione);
+            }
+          }
+          MessageBox.success("Excel Caricato con successo");
+          sap.ui.core.BusyIndicator.hide(0);
+          this.getView().getModel().refresh();
+          this.byId("UploadTable").close();
+        }
+      }
+    },
+    AzioneModel: function (sValue) {
+      debugger
+      var oResources = this.getResourceBundle();
+      var rValue = {
+        Classe: (sValue[oResources.getText("Classe")] === undefined) ? undefined : sValue[oResources.getText("Classe")].toString(),
+        Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
+        Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
+        Txt: (sValue[oResources.getText("Testo")] === undefined) ? undefined : sValue[oResources.getText("Testo")].toString(),
+         };
+      return rValue;
+    },
+    componiURLExcel: function (line) {
+      var sURL = `/T_ACT_CL(Werks='${line.Werks}',Sistema='${line.Sistema}',Classe='${line.Classe}')`;
+      return sURL;
     },
   });
 });

@@ -231,6 +231,7 @@ sap.ui.define([
         onSave: async function () {
             var line = JSON.stringify(this.getView().getModel("sDetail").getData());
             line = JSON.parse(line);
+            delete line["__metadata"]
             if (line.ID === "New") {
                 // get Last Index
                 // line.ID = await this._getLastItemData("/Sede", "", "ID");

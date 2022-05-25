@@ -18,11 +18,11 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaRaggruppamento", {
     onInit: function () {
+      sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("TabellaRaggruppamento").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbRaggruppamento"), componentName: "Piani", persoService: manutenzioneTable }).activate();
     },
     _onObjectMatched: async function () {
-      debugger
       var aT_RAGRR = await this._getTable("/T_RAGGR", []);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_RAGRR);
@@ -35,23 +35,62 @@ sap.ui.define([
 
       this.getValueHelp();
       this.onSearchResult();
-      // this.onFilterAddItems();
     },
     getValueHelp: async function () {
       var sData = {};
-      var oModelHelp = new sap.ui.model.json.JSONModel();
+      var oModelHelp = new sap.ui.model.json.JSONModel({
+        T_RAGGR: {},
+        T001W: {},
+        ZPM4R_H_RAG: {}
+      });
+      oModelHelp.setSizeLimit(2000);
+      sData.T_RAGGR = await this._getTableDistinct("/T_RAGGR", []);
+      var aArray = [];
+      sData.T_RAGGR.forEach(el => {
+        if (!aArray.find(item => item.Divisione === el.Divisione)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_RAGGR/Divisione", aArray.filter(a => a.Divisione));
 
-      // sData.DIVISIONE = await this.Shpl("ZPM4R_H_WERKS", "SH");
-      sData.DIVISIONE = await this._getTableDistinct("/T_RAGGR", [], "Divisione");
+      aArray = [];
+      sData.T_RAGGR.forEach(el => {
+        if (!aArray.find(item => item.Raggruppamento === el.Raggruppamento)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_RAGGR/Raggruppamento", aArray);
+
+      aArray = [];
+      sData.T_RAGGR.forEach(el => {
+        if (!aArray.find(item => item.DescRaggr === el.DescRaggr)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_RAGGR/DescRaggr", aArray);
       sData.DIVISIONENew = await this.Shpl("T001W", "CH");
-      sData.RAGGRUPPAMENTO = await this.Shpl("ZPM4R_H_RAG", "SH");
-      sData.DESC_RAGGR = await this._getTableDistinct("/T_RAGGR", [], "DescRaggr");
-      sData.DESC_RAGGR_NEW = await this.Shpl("ZPM4R_T_RAGGR", "CH");
+      oModelHelp.setProperty("/T001W/DivisioneNew", sData.DIVISIONENew);
 
-      // var aT_RAGRR = await this.Shpl("T001W", "CH");
-      // sData.DESC_RAGGR = await this.Shpl("ZPM4R_T_RAGGR", "CH");
-      oModelHelp.setData(sData);
+      sData.RAGGRUPPAMENTO = await this.Shpl("ZPM4R_H_RAG", "SH");
+      aArray = [];
+      sData.RAGGRUPPAMENTO.forEach(el => {
+        if (!aArray.find(item => item.Fieldname1 === el.Fieldname1)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/ZPM4R_H_RAG/RAGGRUPPAMENTO", aArray.filter(a => a.Fieldname1));
+
+      sData.DESC_RAGGR = await this._getTable("/T_RAGGR", []);
+      aArray = [];
+      sData.DESC_RAGGR.forEach(el => {
+        if (!aArray.find(item => item.DescRaggr === el.DescRaggr)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/ZPM4R_H_RAG/DescRaggrNew", aArray);
+
       this.getView().setModel(oModelHelp, "sHelp");
+      sap.ui.core.BusyIndicator.hide();
     },
     Shpl: async function (ShplName, ShplType) {
       var aFilter = [];
@@ -70,15 +109,6 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
-    // onFilterAddItems: async function() {
-    //   debugger
-    //   var sFilter = {};
-    //   var oModelHelp = new sap.ui.model.json.JSONModel();
-
-    //   sFilter.DIVISIONE = await this.Shpl("T001W", "CH");
-    //   oModelHelp.setData(sFilter);
-    //   this.getView().setModel(oModelHelp, "sHelpField");
-    // },
 
     onSearchFilters: function () {
       var aFilters = [];
@@ -269,6 +299,7 @@ sap.ui.define([
     },
 
     handleUploadPiani: function () {
+      this.getView().byId("fileUploader").setValue("");
       this.byId("UploadTable").open();
     },
     onCloseFileUpload: function () {

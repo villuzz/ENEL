@@ -40,7 +40,7 @@
 
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                              <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_DEST_USR', sorter: [{ path: 'T_DEST_USR', descending: false, group:false }] }" > 
+                              <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_ACT_TYPE', sorter: [{ path: 'T_ACT_TYPE', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
                                 </MultiComboBox> 
                                 <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
@@ -147,7 +147,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbGestioneAzioneTipo" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbGestioneAzioneTipo" items="{path: 'T_ACT_TYPE>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col31" app:property="InizioValidita"><Text text="{i18n>InizioValidita}"/></Column>
                         <Column width="15em" id="col32" app:property="FineValidita"><Text text="{i18n>FineValidita}"/></Column>

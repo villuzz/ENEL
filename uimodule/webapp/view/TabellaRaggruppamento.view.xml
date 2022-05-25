@@ -29,7 +29,7 @@
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
                                 <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
-                                <MultiComboBox id="cbDivisione"  value="{sRaggruppamento>/DIVISIONE}" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                <MultiComboBox id="cbDivisione"  value="{sRaggruppamento>/DIVISIONE}" items="{ path: 'sHelp>/T_RAGGR/Divisione', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -38,8 +38,8 @@
                             <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="rag" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <!-- <Input type="Text" value="{FilterModel>/Raggruppamento}" maxLength="10"/> -->
-                                  <MultiComboBox id="cbRaggruppamento" selectionChange="onFilterHelp" selectedKeys="{sFilter>/RAGGRUPPAMENTO}" value="{sRaggruppamento>/RAGGRUPPAMENTO}" items="{ path: 'sHelp>/RAGGRUPPAMENTO', sorter: [{ path: 'RAGGRUPPAMENTO', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                                  <MultiComboBox id="cbRaggruppamento" value="{sRaggruppamento>/RAGGRUPPAMENTO}" items="{ path: 'sHelp>/T_RAGGR/Raggruppamento', sorter: [{ path: 'RAGGRUPPAMENTO', descending: false, group:false }] }" > 
+                                    <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
                                 </MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
@@ -47,7 +47,7 @@
                             <fb:FilterGroupItem id="descrizioneRaggruppamento" visible="true" groupName="__$INTERNAL$" name="dr" label="{i18n>DescrizioneRaggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <!-- <Input type="Text" value="{FilterModel>/DescrizioneRaggruppamento}" maxLength="10"/> -->
-                                    <MultiComboBox id="cbDescRaggr" selectionChange="onFilterHelp" selectedKeys="{sFilter>/DESC_RAGGR}" value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/DESC_RAGGR', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
+                                    <MultiComboBox id="cbDescRaggr" selectionChange="onFilterHelp" selectedKeys="{sFilter>/DESC_RAGGR}" value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_RAGGR/DescRaggr', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>DescRaggr}" text="{sHelp>DescRaggr}"/>
                                 </MultiComboBox>
                                 </fb:control>
@@ -147,15 +147,15 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Divisione}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/DIVISIONENew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>DIVISIONENew}" text="{sHelp>Fieldname1}"/>
+                  <ComboBox  value="{sDetail>/Divisione}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                    </ComboBox>
                     <!-- <Input value="{sDetail>/Divisione}" enabled="{oDataModel>/Enabled}" type="Text" maxLength="4"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}" >
                   <form:fields>
-                  <ComboBox value="{sDetail>/Raggruppamento}" enabled="{/Enabled}"  items="{ path: 'sHelp>/RAGGRUPPAMENTO', sorter: [{ path: 'RAGGRUPPAMENTO', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/Raggruppamento}" enabled="{/Enabled}"  items="{ path: 'sHelp>/ZPM4R_H_RAG/RAGGRUPPAMENTO', sorter: [{ path: 'RAGGRUPPAMENTO', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                    </ComboBox>
                     <!-- <Input value="{sDetail>/Raggruppamento}" enabled="{/Enabled}" type="Text" maxLength="10"/> -->
@@ -163,8 +163,8 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneRaggruppamento}">
                   <form:fields>
-                  <ComboBox value="{sDetail>/DescRaggr}"  items="{ path: 'sHelp>/DESC_RAGGR_NEW', sorter: [{ path: 'DESC_RAGGR_NEW', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                  <ComboBox value="{sDetail>/DescRaggr}"  items="{ path: 'sHelp>/ZPM4R_H_RAG/DescRaggrNew', sorter: [{ path: '', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>DescRaggr}" text="{sHelp>DescRaggr}"/>
                    </ComboBox>
                     <!-- <Input value="{sDetail>/DescRaggr}" type="Text" maxLength="40"/> -->
                   </form:fields>

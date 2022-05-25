@@ -15,31 +15,32 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.GestioneAzioneTipo", {
     onInit: function () {
-      this.getView().setModel(
-        new JSONModel({
-          editEnabled: false,
-        }),
-        "tabCheckModel"
-      );
+    
 
       this.getOwnerComponent().getRouter().getRoute("GestioneAzioneTipo").attachPatternMatched(this._onObjectMatched, this);
 
     },
+    onBeforeRendering: async function() {
 
+    },
     _onObjectMatched: async function () {
-      var aT_DEST_USR = await this._getTable("/T_DEST_USR", []);
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData(aT_DEST_USR);
-      this.getView().setModel(oModel, "T_DEST_USR");
+      debugger
+    var T_ACT_TYPE = await this._getTable("/T_ACT_TYPE", []);
+    var oModel = new sap.ui.model.json.JSONModel();
+    oModel.setData(T_ACT_TYPE);
+    this.getView().setModel(oModel, "T_ACT_TYPE");
+    
+    // var oData = {
+    //   "Enabled": true
+    // };
+    // var oModelEnabled = new JSONModel(oData);
+    // this.getView().setModel(oModelEnabled, "oDataModel");
 
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData({
-        DataEsecuzione: new Date()
-      });
-      this.getView().setModel(oModel, "FilterModel");
-
-      this._mViewSettingsDialogs = {};
-      this._oTPC = new TablePersoController({ table: this.byId("tbGestioneAzioneTipo"), componentName: "Piani", persoService: manutenzioneTable }).activate();
+    // this.getView().getModel().read('/T_ACT_TYPE', {
+    //   success:function(oData, res){debugger},error:function(err){debugger}
+    // });
+    
+    this.getValueHelp();
     },
     onSearchResult: function (oEvent) {
       debugger;

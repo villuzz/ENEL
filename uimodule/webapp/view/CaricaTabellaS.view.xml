@@ -60,7 +60,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbCaricaTabellaS" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbCaricaTabellaS" items="{path: 'T_PMO_S>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col105" app:property="Azione"><Text text="{i18n>Azione}"/></Column>
                         <Column width="15em" id="col106" app:property="NAttivita"><Text text="{i18n>NAttivita}"/></Column>

@@ -7,6 +7,7 @@
             <f:DynamicPageTitle>
                 <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                         <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"/>
                         <Title text="{i18n>TitoloCTZTPM}" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
@@ -60,7 +61,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbCaricaTabellaM" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbCaricaTabellaM" items="{path: 'T_PMO_M>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col91" app:property="IndexAzioni"><Text text="{i18n>Azione}"/></Column>
                         <Column width="15em" id="col92" app:property="Materiale"><Text text="{i18n>Materiale}"/></Column>
@@ -80,20 +81,20 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{mManutenzione>Azione}"/>
-                                <Text text="{mManutenzione>Materiale}"/>
-                                <Text text="{mManutenzione>TestoBreveMat}"/>
-                                <Text text="{mManutenzione>QuantFabbisogno}"/>
-                                <Text text="{mManutenzione>Unita}"/>
-                                <Text text="{mManutenzione>Magazzino}"/>
-                                <Text text="{mManutenzione>Divisione}"/>
-                                <Text text="{mManutenzione>Partita}"/>
-                                <Text text="{mManutenzione>PrezzoLordo}"/>
-                                <Text text="{mManutenzione>Divisa}"/>
-                                <Text text="{mManutenzione>GrupAcq}"/>
-                                <Text text="{mManutenzione>OrgAcq}"/>
-                                <Text text="{mManutenzione>Richiedente}"/>
-                                <Text text="{mManutenzione>GrupMerci}"/>                                  
+                                <Text text="{T_PMO_M>IndexPmo}"/>
+                                <Text text="{T_PMO_M>Matnr}"/>
+                                <Text text="{T_PMO_M>Maktx}"/>
+                                <Text text="{T_PMO_M>Menge}"/>
+                                <Text text="{T_PMO_M>Meins}"/>
+                                <Text text="{T_PMO_M>Lgort}"/>
+                                <Text text="{T_PMO_M>Werks}"/>
+                                <Text text="{T_PMO_M>Charg}"/>
+                                <Text text="{T_PMO_M>Tbtwr}"/>
+                                <Text text="{T_PMO_M>Waers}"/>
+                                <Text text="{T_PMO_M>Ekgrp}"/>
+                                <Text text="{T_PMO_M>Ekorg}"/>
+                                <Text text="{T_PMO_M>Afnam}"/>
+                                <Text text="{T_PMO_M>Matkl}"/>                                  
                             </cells>
                         </ColumnListItem>
                     </items>

@@ -28,43 +28,61 @@
 
                             <fb:FilterGroupItem id="index" visible="true" groupName="__$INTERNAL$" name="ind" label="{i18n>Index}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <Input type="Text" value="{FilterModel>/Index}" maxLength="4"/>
+                                <!-- <Input type="Text" value="{FilterModel>/Index}" maxLength="4"/> -->
+                              <MultiComboBox id="cbIndex" items="{ path: 'sHelp>/T_APP_WO/IndexOdm', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>IndexOdm}" text="{sHelp>IndexOdm}" />
+                                </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="cont" visible="true" groupName="__$INTERNAL$" name="cont" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Number" value="{FilterModel>/Cont}" maxLength="4"/>
+                                    <!-- <Input type="Number" value="{FilterModel>/Cont}" maxLength="4"/> -->
+                                <MultiComboBox id="cbCont" items="{ path: 'sHelp>/T_APP_WO/Zcount', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Zcount}" text="{sHelp>Zcount}" />
+                                </MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="appuntamenti" visible="true" groupName="__$INTERNAL$" name="app" label="{i18n>Appuntamenti}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Number" value="{FilterModel>/Appuntamenti}" maxLength="5"/>
+                                <MultiComboBox id="cbAppuntamenti" items="{ path: 'sHelp>/T_APP_WO/Appuntam', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Appuntam}" text="{sHelp>Appuntam}" />
+                                </MultiComboBox>
+                                    <!-- <Input type="Number" value="{FilterModel>/Appuntamenti}" maxLength="5"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="odm" visible="true" groupName="__$INTERNAL$" name="odm" label="{i18n>Odm}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Number" value="{FilterModel>/Odm}" maxLength="12"/>
+                                <MultiComboBox id="cbOdm" items="{ path: 'sHelp>/T_APP_WO/Aufpl', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Aufpl}" text="{sHelp>Aufpl}" />
+                                </MultiComboBox>
+                                    <!-- <Input type="Number" value="{FilterModel>/Odm}" maxLength="12"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="statoODM" visible="true" groupName="__$INTERNAL$" name="sodm" label="{i18n>StatoODM}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/StatoODM}" maxLength="4"/>
+                                <MultiComboBox id="cbStatoODM" items="{ path: 'sHelp>/T_APP_WO/StatoOdm', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>StatoOdm}" text="{sHelp>StatoOdm}" />
+                                </MultiComboBox>
+                                    <!-- <Input type="Text" value="{FilterModel>/StatoODM}" maxLength="4"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="dettaglioConferma" visible="true" groupName="__$INTERNAL$" name="dc" label="{i18n>DettaglioConferma}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/DettaglioConferma}" maxLength="40"/>
+                                <MultiComboBox id="cbDettaglioConferma" items="{ path: 'sHelp>/T_APP_WO/DettConf', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>DettConf}" text="{sHelp>DettConf}" />
+                                </MultiComboBox>
+                                    <!-- <Input type="Text" value="{FilterModel>/DettaglioConferma}" maxLength="40"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
-                     <OverflowToolbar style="Clear">
+                     <OverflowToolbar class="sapUiMediumMarginTop" style="Clear">
                       <ToolbarSpacer/>
                       <Button text="Elimina pianificazione appuntamento" icon="sap-icon://delete" press="onElimina" class="sapUiTinyMarginBegin"/>
                        <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
@@ -76,9 +94,9 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbVisualizzazioneAttribuzioneOdmApp" items="{path: 'mManutenzione>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbVisualizzazioneAttribuzioneOdmApp" items="{path: 'T_APP_WO>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col69" app:property="Cont"><Text text="{i18n>Cont}"/></Column>
+                        <Column width="15em" id="col69" app:property="Zcount"><Text text="{i18n>Cont}"/></Column>
                         <Column width="15em" id="col70" app:property="Index"><Text text="{i18n>Index}"/></Column>
                         <Column width="15em" id="col71" app:property="Appuntamenti"><Text text="{i18n>Appuntamenti}"/></Column>
                         <Column width="15em" id="col72" app:property="Odm"><Text text="{i18n>Odm}"/></Column>
@@ -100,36 +118,36 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{mManutenzione>Cont}"/>
-                                <Text text="{mManutenzione>Index}"/>
-                                <Text text="{mManutenzione>Appuntamenti}"/>
-                                <Text text="{mManutenzione>Odm}"/>
-                                <Text text="{mManutenzione>NOper}"/>
-                                <Text text="{mManutenzione>NOper1}"/>
-                                <Text text="{mManutenzione>NOper2}"/>
-                                <Text text="{mManutenzione>NOper3}"/>
-                                <Text text="{mManutenzione>NOper4}"/>
-                                <Text text="{mManutenzione>NOper5}"/>
-                                <Text text="{mManutenzione>Adm}"/>
-                                <Text text="{mManutenzione>StatoODM}"/>
-                                <Text text="{mManutenzione>DettaglioConferma}"/>
-                                <Text text="{path: 'mManutenzione>DataPianificazione',
+                                <Text text="{T_APP_WO>Zcount}"/>
+                                <Text text="{T_APP_WO>IndexOdm}"/>
+                                <Text text="{T_APP_WO>Appuntam}"/>
+                                <Text text="{T_APP_WO>Aufnr}"/>
+                                <Text text="{T_APP_WO>Aplzl}"/>
+                                <Text text="{T_APP_WO>Aplzl1}"/>
+                                <Text text="{T_APP_WO>Aplzl2}"/>
+                                <Text text="{T_APP_WO>Aplzl3}"/>
+                                <Text text="{T_APP_WO>Aplzl4}"/>
+                                <Text text="{T_APP_WO>Aplzl5}"/>
+                                <Text text="{T_APP_WO>Qmnum}"/>
+                                <Text text="{T_APP_WO>StatoOdm}"/>
+                                <Text text="{T_APP_WO>DettConf}"/>
+                                <Text text="{path: 'T_APP_WO>DataPian',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
                                             pattern: 'dd/MM/yyyy'
                                             }}"/>
-                                <Text text="{path: 'mManutenzione>FineCardine',
+                                <Text text="{path: 'T_APP_WO>DataFineCard',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
                                             pattern: 'dd/MM/yyyy'
                                             }}"/>
-                                <Text text="{path: 'mManutenzione>ScadNaturale',
+                                <Text text="{path: 'T_APP_WO>DataPianNatur',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
                                             pattern: 'dd/MM/yyyy'
                                             }}"/>
-                                <Text text="{mManutenzione>Aggregatore}"/>
-                                <Text text="{mManutenzione>DescrizioneAggregatore}"/>                                  
+                                <Text text="{T_APP_WO>Aggregatore}"/>
+                                <Text text="{T_APP_WO>DescAggregatore}"/>                                  
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -137,17 +155,42 @@
              </ScrollContainer>
         </f:content>
         <f:footer>
+        
             <OverflowToolbar>
                 <ToolbarSpacer/>
                 <ToolbarSpacer/>
             </OverflowToolbar>
         </f:footer>
+         <f:dependents>
+      <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
+    </f:dependents>
     </f:DynamicPage>
-    <Page
-			id="p1"
-			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
-      <VBox class="sapUiSmallMargin">
-        <form:Form id="FormToolbar"
+   
+
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd"></Button>
+                        <Title title="{i18n>editPage}"  id="TitleDetail"  class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                 
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+     <form:Form id="FormToolbar"
           editable="true"
           ariaLabelledBy="Title1">
           <form:toolbar>
@@ -176,50 +219,89 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Cont}">
                   <form:fields>
-                    <Input value="{mManutenzione>Cont}" type="Number" maxLength="4"/>
+                  <ComboBox  value="{sDetail>/Cont}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Zcount', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Zcount}" text="{sHelp>Zcount}"/>
+                   </ComboBox>
+                    <!-- <Input value="{mManutenzione>Cont}" type="Number" maxLength="4"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Index}" >
                   <form:fields>
-                    <Input value="{mManutenzione>Index}" type="Number" maxLength="12"/>
+                  <ComboBox  value="{sDetail>/Index}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/IndexOdm', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>IndexOdm}" text="{sHelp>IndexOdm}"/>
+                   </ComboBox>
+                    <!-- <Input value="{mManutenzione>Index}" type="Number" maxLength="12"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Appuntamenti}">
                   <form:fields>
-                    <Input value="{mManutenzione>Appuntamenti}" type="Number" maxLength="5"/>
+                  <ComboBox  value="{sDetail>/Appuntamenti}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Appuntam', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Appuntam}" text="{sHelp>Appuntam}"/>
+                   </ComboBox>
+                    <!-- <Input value="{mManutenzione>Appuntamenti}" type="Number" maxLength="5"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Odm}">
                   <form:fields>
-                    <Input value="{mManutenzione>Odm}" type="Number" maxLength="12"/>
+                  <ComboBox  value="{sDetail>/Odm}" enabled="{/Enabled}" items="{ path: '', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{}" text="{}"/>
+                   </ComboBox>
+                    <!-- <Input value="{mManutenzione>Odm}" type="Number" maxLength="12"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper}">
-                  <Input value="{mManutenzione>NOper}" type="Number" maxLength="8"/>
+                <ComboBox  value="{sDetail>/NOper}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Aplzl}" text="{sHelp>Aplzl}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>NOper}" type="Number" maxLength="8"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper1}">
-                  <Input value="{mManutenzione>NOper1}" type="Number" maxLength="8"/>
+                <ComboBox  value="{sDetail>/NOper1}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl1', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Aplzl1}" text="{sHelp>Aplzl1}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>NOper1}" type="Number" maxLength="8"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper2}">
-                  <Input value="{mManutenzione>NOper2}" type="Number" maxLength="8"/>
+                <ComboBox  value="{sDetail>/NOper2}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl2', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Aplzl2}" text="{sHelp>Aplzl2}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>NOper2}" type="Number" maxLength="8"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper3}">
-                  <Input value="{mManutenzione>NOper3}" type="Number" maxLength="8"/>
+                <ComboBox  value="{sDetail>/NOper3}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl3', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Aplzl3}" text="{sHelp>Aplzl3}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>NOper3}" type="Number" maxLength="8"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper4}">
-                  <Input value="{mManutenzione>NOper4}" type="Number" maxLength="8"/>
+                <ComboBox  value="{sDetail>/NOper4}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl4', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Aplzl4}" text="{sHelp>Aplzl4}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>NOper4}" type="Number" maxLength="8"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper5}">
-                  <Input value="{mManutenzione>NOper5}" type="Number" maxLength="8"/>
+                <ComboBox  value="{sDetail>/NOper5}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl5', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Aplzl5}" text="{sHelp>Aplzl5}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>NOper5}" type="Number" maxLength="8"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>Adm}">
-                  <Input value="{mManutenzione>Adm}" type="Number" maxLength="12"/>
+                <ComboBox  value="{sDetail>/Werks}" enabled="{/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>Adm}" type="Number" maxLength="12"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>StatoODM}">
-                  <Input value="{mManutenzione>StatoODM}" type="Text" maxLength="4"/>
+                <ComboBox  value="{sDetail>/StatoODM}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/StatoOdm', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>StatoOdm}" text="{sHelp>StatoOdm}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>StatoODM}" type="Text" maxLength="4"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>DettaglioConferma}">
-                  <Input value="{mManutenzione>DettaglioConferma}" type="Text" maxLength="40"/>
+<ComboBox  value="{sDetail>/DettaglioConferma}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/DettConf', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>DettConf}" text="{sHelp>DettConf}"/>
+                   </ComboBox>                
+                  <!-- <Input value="{mManutenzione>DettaglioConferma}" type="Text" maxLength="40"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>DataPianificazione}">
                   <DatePicker placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>DataPianificazione}"/>
@@ -231,21 +313,23 @@
                   <DatePicker placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{mManutenzione>ScadNaturale}"/>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Aggregatore}">
-                  <Input value="{mManutenzione>Aggregatore}" type="Number" maxLength="12"/>
+                <ComboBox  value="{sDetail>/Werks}" enabled="{/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>Aggregatore}" type="Number" maxLength="12"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneAggregatore}">
-                  <Input value="{mManutenzione>DescrizioneAggregatore}" type="Text" maxLength="40"/>
+                <ComboBox  value="{sDetail>/Werks}" enabled="{/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                   </ComboBox>
+                  <!-- <Input value="{mManutenzione>DescrizioneAggregatore}" type="Text" maxLength="40"/> -->
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>
         </form:Form>
-            <Toolbar>
-              	<ToolbarSpacer/>
-                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
-				        <ToolbarSpacer/> 
-            </Toolbar>
-        </VBox>
-		</Page>
+        
+        </f:content>
+    </f:DynamicPage>
   </NavContainer>
 </mvc:View>

@@ -29,7 +29,7 @@
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
                                 <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
-                                <MultiComboBox id="cbDivisione" required="true"  items="{ path: 'sHelp>/T_ACT_CL', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
+                                <MultiComboBox id="cbDivisione" required="true"  items="{ path: 'sHelp>/T_ACT_CL/Divisione', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -38,7 +38,7 @@
                             <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="sis" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <!-- <Input type="Text" value="{FilterModel>/Sistema}" maxLength="2"/> -->
-                                    <MultiComboBox id="cbSistema"  items="{ path: 'sHelp>/T_ACT_CL', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
+                                    <MultiComboBox id="cbSistema"  items="{ path: 'sHelp>/T_ACT_CL/Sistema', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}" />
                                 </MultiComboBox>
                                 </fb:control>
@@ -47,7 +47,7 @@
                             <fb:FilterGroupItem id="Classe" visible="true" groupName="__$INTERNAL$" name="cl" label="{i18n>Classe}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <!-- <Input type="Text" value="{FilterModel>/Classe}" maxLength="2"/> -->
-                                    <MultiComboBox id="cbClasse"  items="{ path: 'sHelp>/T_ACT_CL', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
+                                    <MultiComboBox id="cbClasse"  items="{ path: 'sHelp>/T_ACT_CL/Classe', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Classe}" text="{sHelp>Classe}" />
                                 </MultiComboBox>
                                 </fb:control>
@@ -56,7 +56,7 @@
                             <fb:FilterGroupItem id="Testo" visible="true" groupName="__$INTERNAL$" name="testo" label="{i18n>Testo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <!-- <Input type="Text" value="{FilterModel>/Testo}" maxLength="80"/> -->
-                                    <MultiComboBox id="cbTesto"   items="{ path: 'sHelp>/T_ACT_CL', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
+                                    <MultiComboBox id="cbTesto"   items="{ path: 'sHelp>/T_ACT_CL/Txt', sorter: [{ path: 'T_ACT_CL', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}" />
                                 </MultiComboBox>
                                 </fb:control>
@@ -157,22 +157,34 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                    <Input value="{sDetail>/Werks}" type="Text" maxLength="4"/>
+                   <ComboBox  value="{sDetail>/Werks}" items="{ path: 'sHelp>/H_T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                   </ComboBox>
+                    <!-- <Input value="{sDetail>/Werks}" type="Text" maxLength="4"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Sistema}" >
                   <form:fields>
-                    <Input value="{sDetail>/Sistema}" type="Text" maxLength="2"/>
+                   <ComboBox  value="{sDetail>/Sistema}" items="{ path: 'sHelp>/ZPM4R_T_ACT_SYST/aSISTEMA', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname2}" text="{sHelp>Fieldname2}"/>
+                   </ComboBox>
+                    <!-- <Input value="{sDetail>/Sistema}" type="Text" maxLength="2"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Classe}">
                   <form:fields>
-                    <Input value="{sDetail>/Classe}" type="Text" maxLength="2"/>
+                   <ComboBox  value="{sDetail>/Classe}"  items="{ path: 'sHelp>/ZPM4R_T_ACT_CLAS/aCLASSE', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname2}" text="{sHelp>Fieldname2}"/>
+                   </ComboBox>
+                    <!-- <Input value="{sDetail>/Classe}" type="Text" maxLength="2"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Testo}">
                   <form:fields>
-                    <Input value="{sDetail>/Txt}" type="Text" maxLength="60"/>
+                   <ComboBox  value="{sDetail>/Txt}" items="{ path: 'sHelp>/DIVISIONENew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                   </ComboBox>
+                    <!-- <Input value="{sDetail>/Txt}" type="Text" maxLength="60"/> -->
                   </form:fields>
                 </form:FormElement>
               </form:formElements>

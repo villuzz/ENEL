@@ -6,8 +6,11 @@ sap.ui.define([
   "sap/ui/export/Spreadsheet",
   "sap/ui/export/library",
   'sap/ui/core/routing/History',
+  'sap/ui/model/Filter',
+  'sap/ui/model/FilterOperator',
+  'sap/m/MessageToast',
   "PM030/APP1/util/manutenzioneTable",
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, ) {
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, ) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
@@ -15,78 +18,117 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaGruppoDiControllo", {
     onInit: function () {
-      this.getView().setModel(
-        new JSONModel({
-          editEnabled: false,
-        }),
-        "tabCheckModel"
-      );
-      // leggere i modelli che ci servono
-      var sPiani = [
-        {
-          Divisione: "123",
-        }, {
-          Divisione: "23",
-        },
-      ];
-      var oManutenzione = new sap.ui.model.json.JSONModel();
-      oManutenzione.setData(sPiani);
-      this.getView().setModel(oManutenzione, "mManutenzione");
+
 
       this.getOwnerComponent().getRouter().getRoute("TabellaGruppoDiControllo").attachPatternMatched(this._onObjectMatched, this);
 
     },
-    _onObjectMatched: function () {
+    _onObjectMatched: async function () {
+      debugger
+      var aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
       var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData({
-        DataEsecuzione: new Date()
-      });
-      this.getView().setModel(oModel, "FilterModel");
-
+      oModel.setData(aT_TP_MAN2);
+      this.getView().setModel(oModel, "T_TP_MAN2");
       this._mViewSettingsDialogs = {};
       this._oTPC = new TablePersoController({ table: this.byId("tbTabellaGruppoDiControllo"), componentName: "Piani", persoService: manutenzioneTable }).activate();
+      this.getValueHelp();
     },
-    onSearchResult: function (oEvent) {
-      debugger;
-      var oModel = this.getView().getModel("FilterModel");
-      var divisione = oModel.getData().Divisione;
-      if (!divisione) {
-        MessageBox.error(oResource.getText("MessageDivisioneObbligatoria"))
-      } else {
-        this.onSearchFilters();
-      }
-    },
-    onSearchFilters: function () {
-      var model = this.getModel("FilterModel");
-      var oData = model.getData();
-
-      var oBinding = this.byId("tbTabellaGruppoDiControllo").getBinding("items");
-      if (oBinding.isSuspended()) {
-        oBinding.resume();
-      }
-
-      var filterArray = [];
-      oData.Divisione.map((d) => {
-        filterArray.push(new sap.ui.model.Filter("Divisione", sap.ui.model.FilterOperator.EQ, d));
+    getValueHelp: async function () {
+      debugger
+      var sData = {};
+      var oModelHelp = new sap.ui.model.json.JSONModel({
+        T_TP_MAN2: {},
+        T001W: {},
+        T_RAGGR: {}
       });
-      oData.GruppoControlli.map((gc) => {
-        filterArray.push(new sap.ui.model.Filter("GruppoControlli", sap.ui.model.FilterOperator.EQ, gc));
-      });
-      oData.Raggruppamento.map((ragg) => {
-        filterArray.push(new sap.ui.model.Filter("Raggruppamento", sap.ui.model.FilterOperator.EQ, ragg));
-      });
-
-      var self = this;
-      var oDataModel = self.getModel();
-
-      oDataModel.read("", {
-        filters: filterArray,
-        success: function (response) { // debugger;
-
-        },
-        error: function () { // debugger;
+      oModelHelp.setSizeLimit(2000);
+      sData.T_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
+      var aArray = []
+      sData.T_TP_MAN2.forEach(el => {
+        if (!aArray.find(item => item.TipoGestione2 === el.TipoGestione2)) {
+          aArray.push(el);
         }
       });
+      oModelHelp.setProperty("/T_TP_MAN2/TipoGestione2", aArray.filter(a => a.TipoGestione2));
+
+      aArray = [];
+      sData.T_TP_MAN2.forEach(el => {
+        if (!aArray.find(item => item.Divisione === el.Divisione)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_TP_MAN2/Divisione", aArray.filter(a => a.Divisione));
+
+      aArray = [];
+      sData.T_TP_MAN2.forEach(el => {
+        if (!aArray.find(item => item.Raggruppamento === el.Raggruppamento)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_TP_MAN2/Raggruppamento", aArray.filter(a => a.Raggruppamento));
+
+      sData.DIVISIONENew = await this.Shpl("T001W", "CH");
+      oModelHelp.setProperty("/T001W/DivisioneNew", sData.DIVISIONENew);
+
+
+      sData.aRAGGRUPPAMENTO = await this._getTable("/T_RAGGR", [])
+      aArray = [];
+      sData.aRAGGRUPPAMENTO.forEach(el => {
+        if (!aArray.find(item => item.Raggruppamento === el.Raggruppamento)) {
+          aArray.push(el);
+        }
+      });
+      oModelHelp.setProperty("/T_RAGGR/Raggruppamento", aArray.filter(a => a.Raggruppamento));
+
+      // oModelHelp.setData(sData);
+      this.getView().setModel(oModelHelp, "sHelp");
+    },
+    Shpl: async function (ShplName, ShplType) {
+      var aFilter = [];
+      aFilter.push(new Filter("ShplName", FilterOperator.EQ, ShplName));
+      aFilter.push(new Filter("ShplType", FilterOperator.EQ, ShplType));
+
+      var result = await this._getTable("/dySearch", aFilter);
+      if (result[0].ReturnFieldValueSet) {
+        result = result[0].ReturnFieldValueSet.results;
+        result.splice(0, 1);
+      } else {
+        result = [];
+      }
+      return result;
+    },
+    onSearchResult: function () {
+      this.onSearchFilters();
+    },
+    onSearchFilters: function () {
+      debugger
+      var aFilters = [];
+      if (this.getView().byId("cbGruppoControlli").getSelectedKeys().length !== 0) {
+        aFilters.push(this.multiFilterNumber(this.getView().byId("cbGruppoControlli").getSelectedKeys(), "TipoGestione2"));
+      }
+      if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
+        aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Divisione"));
+      }
+
+      if (this.getView().byId("cbRaggruppamento").getSelectedKeys().length !== 0) {
+        aFilters.push(this.multiFilterNumber(this.getView().byId("cbRaggruppamento").getSelectedKeys(), "Raggruppamento"));
+      }
+
+      this.byId("tbTabellaGruppoDiControllo").getBinding("items").filter(aFilters);
+    },
+
+    multiFilterNumber: function (aArray, vName) {
+      var aFilter = [];
+      if (aArray.length === 0) {
+        return new Filter(vName, FilterOperator.EQ, "");
+      } else if (aArray.length === 1) {
+        return new Filter(vName, FilterOperator.EQ, aArray[0]);
+      } else {
+        for (var i = 0; i < aArray.length; i++) {
+          aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
+        }
+        return aFilter;
+      }
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbTabellaGruppoDiControllo");
@@ -172,12 +214,154 @@ sap.ui.define([
 
     },
 
-    onSave: function () {
+    onNuovo: function () {
+      debugger
+      this.getView().getModel().setProperty("/Enabled", true);
+      sap.ui.core.BusyIndicator.show();
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData({ ID: "New" });
+      this.getView().setModel(oModel, "sDetail");
+      this.byId("navCon").to(this.byId("Detail"));
+      sap.ui.core.BusyIndicator.hide();
+    },
+    onSave: async function () {
+      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+      line = JSON.parse(line);
+
+      if (line.ID === "New") {
+        delete line.ID;
+        // get Last Index
+        // var sDestUsr = this.DESTUSERModel(line);
+        delete line["__metadata"];
+        var sControllo = this.ControlloModel(line);
+        await this._saveHana("/T_TP_MAN2", sControllo);
+        var aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(aT_TP_MAN2);
+        this.getView().setModel(oModel, "T_TP_MAN2");
+      } else {
+        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+        await this._updateHana(sURL, line);
+        aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
+        oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(aT_TP_MAN2);
+        this.getView().setModel(oModel, "T_TP_MAN2");
+      }
       this.byId("navCon").back();
-    }
-    // onBack: function () {
-    // sap.ui.core.UIComponent.getRouterFor(this).navTo("TilePage");
-    // }
+
+    },
+    ControlloModel: function (sValue) {
+      debugger
+      var oResources = this.getResourceBundle();
+      var rValue = {
+        TipoGestione2: (sValue[oResources.getText("TipoGest2")] === undefined) ? undefined : sValue[oResources.getText("TipoGest2")].toString(),
+        Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
+        DesTipoGest2: (sValue[oResources.getText("DescrGruppoControlli")] === undefined) ? undefined : sValue[oResources.getText("DescrGruppoControlli")].toString(),
+        Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+      };
+      return rValue;
+    },
+
+    onModify: function () {
+      debugger
+      this.getView().getModel().setProperty("/Enabled", false);
+      sap.ui.core.BusyIndicator.show();
+      var items = this.getView().byId("tbTabellaGruppoDiControllo").getSelectedItems();
+      if (items.length === 1) {
+        this.byId("Detail").bindElement({ path: items[0].getBindingContext("T_TP_MAN2").getPath() });
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(items[0].getBindingContext("T_TP_MAN2").getObject());
+        this.getView().setModel(oModel, "sDetail");
+        this.byId("navCon").to(this.byId("Detail"));
+      } else {
+        MessageToast.show("Seleziona una riga");
+      }
+      sap.ui.core.BusyIndicator.hide();
+    },
+    onBackDetail: function () {
+      this.byId("navCon").back();
+    },
+    onCancel: async function () {
+      var sel = this.getView().byId("tbTabellaGruppoDiControllo").getSelectedItems();
+      for (var i = (sel.length - 1); i >= 0; i--) {
+        var line = JSON.stringify(sel[i].getBindingContext("T_TP_MAN2").getObject());
+        line = JSON.parse(line);
+        // line = this.RaggruppamentoCancelModel(line);
+        var sURL = this.componiCancelURL(line);
+        await this._removeHana(sURL);
+      }
+      this.getView().byId("tbTabellaGruppoDiControllo").removeSelections();
+      var aT_RAGRR = await this._getTable("/T_TP_MAN2", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_RAGRR);
+      this.getView().setModel(oModel, "T_TP_MAN2");
+    },
+    componiCancelURL: function (line) {
+      var sURL = "/T_TP_MAN2(" + "TipoGestione2=" + "'" + line.TipoGestione2 + "'," +
+        "Divisione=" + "'" + line.Divisione + "'" + ")";
+      return sURL;
+    },
+    onCopy: function () {
+      sap.ui.core.BusyIndicator.show();
+      var items = this.getView().byId("tbTabellaGruppoDiControllo").getSelectedItems();
+      if (items.length === 1) {
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(items[0].getBindingContext("T_TP_MAN2").getObject());
+        oModel.getData().ID = "New";
+        this.getView().setModel(oModel, "sDetail");
+        this.byId("navCon").to(this.byId("Detail"));
+      } else {
+        MessageToast.show("Seleziona una riga");
+      }
+      sap.ui.core.BusyIndicator.hide();
+    },
+    handleUploadPress: async function () {
+      debugger
+      var oResource = this.getResourceBundle();
+      if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
+        MessageBox.warning("Inserire un File da caricare");
+      } else {
+        sap.ui.core.BusyIndicator.show();
+        var i = 0,
+          sURL,
+          msg = "";
+        var rows = this.getView().getModel("uploadModel").getData();
+        if (msg !== "") {
+          sap.ui.core.BusyIndicator.hide(0);
+          MessageBox.error(msg);
+        } else {
+          for (i = 0; i < rows.length; i++) {
+            var sControlloEx = this.ControlloExcelModel(rows[i]);
+            if (sControlloEx.TipoGestione2.startsWith("C-")) { //Creazione                  
+              // sDestUsr.Werks = await this._getLastItemData("/T_DEST_USR", "", "Divisione");
+
+              await this._saveHana("/T_TP_MAN2", sControlloEx);
+            } else { // Modifica
+              sURL = this.componiCancelURL(sControlloEx)
+              await this._updateHana(sURL, sControlloEx);
+            }
+          }
+          MessageBox.success("Excel Caricato con successo");
+          sap.ui.core.BusyIndicator.hide(0);
+          var aT_TP_MAN1 = await this._getTable("/T_TP_MAN2", []);
+          var oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(aT_TP_MAN1);
+          this.getView().setModel(oModel, "T_TP_MAN2");
+          sap.ui.getCore().byId("UploadTable").close();
+        }
+      }
+    },
+    ControlloExcelModel: function (sValue) {
+      debugger
+      var oResources = this.getResourceBundle();
+      var rValue = {
+        TipoGestione2: (sValue[oResources.getText("GruppoControlli")] === undefined) ? undefined : sValue[oResources.getText("GruppoControlli")].toString(),
+        Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
+        DesTipoGest2: (sValue[oResources.getText("DescrizioneGruppoControlli")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneGruppoControlli")].toString(),
+        Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+      };
+      return rValue;
+    },
 
   });
 });

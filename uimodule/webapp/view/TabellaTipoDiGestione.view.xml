@@ -7,11 +7,12 @@
             <f:DynamicPageTitle>
                 <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                         <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"/>
                         <Title text="{i18n>TitoloTDG}" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
-                <f:navigationActions>
+                 <f:navigationActions>
                     <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
                     <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
                     <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
@@ -25,27 +26,29 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                              <fb:control>
-                                <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_TP_MAN', sorter: [{ path: 'T_TP_MAN', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}"/>
-                                </MultiComboBox>                               
-                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
-                              </fb:control>
-                            </fb:FilterGroupItem>
-
-                            <fb:FilterGroupItem id="tipoGestione" visible="true" groupName="__$INTERNAL$" name="tg" label="{i18n>TipoGestione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                        <fb:FilterGroupItem id="tipoGestione" visible="true" groupName="__$INTERNAL$" name="tg" label="{i18n>TipoGestione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                <MultiComboBox id="cbTipoGestione"  items="{ path: 'sHelp>/T_TP_MAN', sorter: [{ path: 'T_TP_MAN', descending: false, group:false }] }" > 
+                                <MultiComboBox id="cbTipoGestione"  items="{ path: 'sHelp>/T_TP_MAN/TipoGestione', sorter: [{ path: 'T_TP_MAN', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>TipoGestione}" text="{sHelp>TipoGestione}"/>
                                 </MultiComboBox>    
                                     <!-- <Input type="Text" value="{FilterModel>/TipoGestione}" maxLength="3"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
+                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_TP_MAN/Divisione', sorter: [{ path: 'T_TP_MAN', descending: false, group:false }] }" > 
+                                    <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}"/>
+                                </MultiComboBox>                               
+                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                            
+
                             <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="ragg" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                <MultiComboBox id="cbRaggruppamento"  items="{ path: 'sHelp>/T_TP_MAN', sorter: [{ path: 'T_TP_MAN', descending: false, group:false }] }" > 
+                                <MultiComboBox id="cbRaggruppamento"  items="{ path: 'sHelp>/T_TP_MAN/Raggruppamento', sorter: [{ path: 'T_TP_MAN', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
                                 </MultiComboBox>    
                                     <!-- <Input type="Text" value="{FilterModel>/Raggruppamento}" maxLength="80"/> -->
@@ -65,7 +68,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbTabellaTipoDiGestione" items="{path: 'T_TP_MAN>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbTabellaTipoDiGestione" growing="true" growingThreshold="100" items="{path: 'T_TP_MAN>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col57" app:property="TipoGestione"><Text text="{i18n>TipoGestione}"/></Column>
                         <Column width="15em" id="col58" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
@@ -145,22 +148,34 @@
               <form:formElements>
                 <form:FormElement label="{i18n>TipoGestione}">
                   <form:fields>
-                    <Input value="{sDetail>/TipoGestione}" type="Text" maxLength="3"/>
+                    <!-- <Input value="{sDetail>/TipoGestione}" type="Text" maxLength="3"/> -->
+                    <ComboBox  value="{sDetail>/TipoGestione}" items="{ path: 'sHelp>/T_TP_MAN/TipoGestione', sorter: [{ path: 'T_TP_MAN', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>TipoGestione}" text="{sHelp>TipoGestione}"/>
+                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Divisione}" >
                   <form:fields>
-                    <Input value="{sDetail>/Divisione}" type="Text" maxLength="4"/>
+                    <!-- <Input value="{sDetail>/Divisione}" type="Text" maxLength="4"/> -->
+                    <ComboBox  value="{sDetail>/Divisione}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneTipoGestione}">
                   <form:fields>
-                    <Input value="{sDetail>/DesTipoGest}" type="Text" maxLength="40"/>
+                    <!-- <Input value="{sDetail>/DesTipoGest}" type="Text" maxLength="40"/> -->
+                    <ComboBox  value="{sDetail>/DesTipoGest}" items="{ path: 'sHelp>/aDESTINATARIO', sorter: [{ path: 'aDESTINATARIO', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Fieldname2}" text="{sHelp>Fieldname2}"/>
+                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}">
                   <form:fields>
-                    <Input value="{sDetail>/Raggruppamento}" type="Text" maxLength="10"/>
+                    <!-- <Input value="{sDetail>/Raggruppamento}" type="Text" maxLength="10"/> -->
+                    <ComboBox  value="{sDetail>/Raggruppamento}" items="{ path: 'sHelp>/T_RAGGR/RAGGRUPPAMENTO', sorter: [{ path: 'aRAGGRUPPAMENTO', descending: false, group:false }] }" >
+                   <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
+                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
               </form:formElements>

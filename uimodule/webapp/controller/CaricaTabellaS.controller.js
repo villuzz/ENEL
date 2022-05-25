@@ -15,36 +15,17 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.CaricaTabellaS", {
       onInit: function () {
-          this.getView().setModel(
-            new JSONModel({
-              editEnabled: false,
-            }),
-            "tabCheckModel"
-          );
-          // leggere i modelli che ci servono
-          var sPiani = [
-              {
-                  Divisione: "123",
-              }, {
-                  Divisione: "23",
-              },
-          ];
-          var oManutenzione = new sap.ui.model.json.JSONModel();
-          oManutenzione.setData(sPiani);
-          this.getView().setModel(oManutenzione, "mManutenzione");
+      
 
           this.getOwnerComponent().getRouter().getRoute("CaricaTabellaS").attachPatternMatched(this._onObjectMatched, this);
-
-      },
-      _onObjectMatched: function () {
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData({
-              DataEsecuzione: new Date()
-          });
-          this.getView().setModel(oModel, "FilterModel");
-
-          this._mViewSettingsDialogs = {};
           this._oTPC = new TablePersoController({table: this.byId("tbCaricaTabellaS"), componentName: "Piani", persoService: manutenzioneTable}).activate();
+      },
+      _onObjectMatched: async function () {
+        var aT_PMO_S = await this._getTable("/T_PMO_S", []);
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(aT_PMO_S);
+        this.getView().setModel(oModel, "T_PMO_S");
+         
       },
       onSearchResult: function (oEvent) {
           debugger;
