@@ -19,6 +19,11 @@ sap.ui.define([
   return Controller.extend("PM030.APP1.controller.TabellaFinalita", {
     onInit: function () {
       sap.ui.core.BusyIndicator.show();
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       this.getOwnerComponent().getRouter().getRoute("TabellaFinalita").attachPatternMatched(this._onObjectMatched, this);
 
     },
@@ -37,7 +42,8 @@ sap.ui.define([
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_TP_MAN1: {},
-        T001W: {}
+        T001W: {},
+        T_RAGGR: {}
       });
       oModelHelp.setSizeLimit(2000);
       sData.T_TP_MAN1 = await this._getTable("/T_TP_MAN1", []);
@@ -56,6 +62,7 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/T_TP_MAN1/TipoGestione1", aArray.filter(a => a.TipoGestione1));
+
       aArray = [];
       sData.T_TP_MAN1.forEach(el => {
         if (!aArray.find(item => item.Raggruppamento === el.Raggruppamento)) {
@@ -74,7 +81,7 @@ sap.ui.define([
           aArray.push(el);
         }
       });
-      oModelHelp.setProperty("/T_TP_MAN1/Raggruppamento", aArray.filter(a => a.Raggruppamento));
+      oModelHelp.setProperty("/T_RAGGR/Raggruppamento", aArray.filter(a => a.Raggruppamento));
 
       // oModelHelp.setData(sData);
       this.getView().setModel(oModelHelp, "sHelp");
@@ -193,6 +200,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled" , true);
       var items = this.getView().byId("tbTabellaFinalita").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

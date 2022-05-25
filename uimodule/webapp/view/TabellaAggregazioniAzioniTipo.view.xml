@@ -37,7 +37,6 @@
 
                             <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="sis" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Sistema}" maxLength="2"/> -->
                                  <MultiComboBox id="cbSistema" value="{sRaggruppamento>/RAGGRUPPAMENTO}" items="{ path: 'sHelp>/T_AGGREG/Sistema', sorter: [{ path: 'RAGGRUPPAMENTO', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                                 </MultiComboBox>
@@ -46,7 +45,6 @@
 
                             <fb:FilterGroupItem id="classe" visible="true" groupName="__$INTERNAL$" name="clas" label="{i18n>Classe}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Classe}" maxLength="2"/> -->
                                 <MultiComboBox id="cbClasse"  value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_AGGREG/Classe', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Classe}" text="{sHelp>Classe}"/>
                                 </MultiComboBox>
@@ -55,8 +53,7 @@
 
                             <fb:FilterGroupItem id="nProAggr" visible="true" groupName="__$INTERNAL$" name="npa" label="{i18n>NProAggr}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Number" value="{FilterModel>/NProAggr}" maxLength="5"/> -->
-                                <MultiComboBox id="cbDescNProAggr"  value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
+                                <MultiComboBox  id="cbDescNProAggr"  value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}"/>
                                 </MultiComboBox>
                                 </fb:control>
@@ -64,7 +61,6 @@
 
                             <fb:FilterGroupItem id="titoloAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="taa" label="{i18n>TitoloAzioneAggregativo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/TitoloAzioneAggregativo}" maxLength="40"/> -->
                                 <MultiComboBox id="cbTitoloAzioneAggregativo"  value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_AGGREG/AggrActTitle', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>AggrActTitle}" text="{sHelp>AggrActTitle}"/>
                                 </MultiComboBox>
@@ -73,7 +69,6 @@
 
                             <fb:FilterGroupItem id="componenteAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="caa" label="{i18n>ComponenteAzioneAggregativo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/ComponenteAzioneAggregativo}" maxLength="60"/> -->
                                <MultiComboBox id="cbComponenteAzioneAggregativo" value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_AGGREG/AggrActComponent', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>AggrActComponent}" text="{sHelp>AggrActComponent}"/>
                                 </MultiComboBox>
@@ -178,47 +173,41 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox value="{sDetail>/Werks}"  items="{ path: 'sHelp>/H_T001W_C/DIVISIONENew', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/Werks}" enabled="{oDataModel>/Enabled}"  items="{ path: 'sHelp>/H_T001W_C/DIVISIONENew', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                    </ComboBox>
-                    <!-- <Input value="{mManutenzione>Divisione}" type="Text" maxLength="4"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Sistema}" >
                   <form:fields>
-                  <ComboBox value="{sDetail>/Sistema}"  items="{ path: 'sHelp>/T_ACT_SYST/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/Sistema}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                    </ComboBox>
-                    <!-- <Input value="{mManutenzione>Sistema}" type="Text" maxLength="2"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Classe}">
                   <form:fields>
-                  <ComboBox value="{sDetail>/Classe}"  items="{ path: 'sHelp>/T_ACT_CLAS/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/Classe}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_CLAS/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Classe}" text="{sHelp>Classe}"/>
                    </ComboBox>
-                    <!-- <Input value="{mManutenzione>Classe}" type="Text" maxLength="2"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>NProAggr}">
                   <form:fields>
-                  <ComboBox value="{sDetail>/ProgAggr}"  items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/ProgAggr}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}"/>
                    </ComboBox>
-                    <!-- <Input value="{mManutenzione>NProAggr}" type="Number" maxLength="5"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TitoloAzioneAggregativo}">
                 <ComboBox value="{sDetail>/AggrActTitle}"  items="{ path: 'sHelp>/T_AGGREG/AggrActTitle', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>AggrActTitle}" text="{sHelp>AggrActTitle}"/>
                    </ComboBox>
-                  <!-- <Input value="{mManutenzione>TitoloAzioneAggregativo}" type="Text" maxLength="40"/> -->
                 </form:FormElement>
                 <form:FormElement label="{i18n>ComponenteAzioneAggregativo}">
                 <ComboBox value="{sDetail>/AggrActComponent}"  items="{ path: 'sHelp>/T_AGGREG/AggrActComponent', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>AggrActComponent}" text="{sHelp>AggrActComponent}"/>
                    </ComboBox>
-                  <!-- <Input value="{mManutenzione>ComponenteAzioneAggregativo}" type="Text" maxLength="60"/> -->
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>

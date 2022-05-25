@@ -28,7 +28,7 @@ sap.ui.define([
       oModel.setData(aT_RAGRR);
       this.getView().setModel(oModel, "T_RAGGR");
       var oData = {
-        "Enabled": true
+        "Enabled": false
       };
       var oModelEnabled = new JSONModel(oData);
       this.getView().setModel(oModelEnabled, "oDataModel");
@@ -374,6 +374,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbRaggruppamento").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

@@ -28,7 +28,6 @@
 
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
                               <MultiComboBox id="cbDivisione"   items="{ path: 'sHelp>/T_DEST/Divisione', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}" />
                               </MultiComboBox>
@@ -37,7 +36,6 @@
 
                             <fb:FilterGroupItem id="centroDiLavoro" visible="true" groupName="__$INTERNAL$" name="cdl" label="{i18n>CentroDiLavoro}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/CentroDiLavoro}" maxLength="8"/> -->
                                    <MultiComboBox id="cbCentroDiLavoro"    items="{ path: 'sHelp>/T_DEST/Arbpl', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Arbpl}" text="{sHelp>Arbpl}" />
                                 </MultiComboBox>
@@ -46,7 +44,6 @@
 
                             <fb:FilterGroupItem id="destinatario" visible="true" groupName="__$INTERNAL$" name="dest" label="{i18n>Destinatario}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Destinatario}" maxLength="12"/> -->
                                  <MultiComboBox id="cbDestinatario"   items="{ path: 'sHelp>/T_DEST/Destinatario', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Destinatario}" text="{sHelp>Destinatario}" />
                                 </MultiComboBox>
@@ -55,7 +52,6 @@
 
                             <fb:FilterGroupItem id="descrizioneDestinatario" visible="true" groupName="__$INTERNAL$" name="dd" label="{i18n>DescrizioneDestinatario}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/DescrizioneDestinatario}" maxLength="60"/> -->
                                  <MultiComboBox id="cbDescrizioneDestinatario"  items="{ path: 'sHelp>/T_DEST/Txt', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}" />
                                 </MultiComboBox>

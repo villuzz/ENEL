@@ -27,7 +27,11 @@ sap.ui.define([
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_AGGREG);
       this.getView().setModel(oModel, "T_AGGREG");
-
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       this.getValueHelp();
     },
     getValueHelp: async function () {
@@ -238,9 +242,7 @@ sap.ui.define([
 
     },
     onCloseFileUpload: function () {
-      // this.onSearch();
-      this._oValueHelpDialog.destroy();
-
+      this.byId("UploadTable").close();
     },
 
     onNuovo: function () {
@@ -347,6 +349,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true)
       var items = this.getView().byId("tbTabellaAggregazioniAzioniTipo").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
@@ -364,53 +367,53 @@ sap.ui.define([
       var oResource = this.getResourceBundle();
 
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-          MessageBox.warning("Inserire un File da caricare");
+        MessageBox.warning("Inserire un File da caricare");
       } else {
-          sap.ui.core.BusyIndicator.show();
-          var i = 0,
-              sURL,
-              msg = "";
-          var rows = this.getView().getModel("uploadModel").getData();
+        sap.ui.core.BusyIndicator.show();
+        var i = 0,
+          sURL,
+          msg = "";
+        var rows = this.getView().getModel("uploadModel").getData();
 
 
 
-          if (msg !== "") {
-              sap.ui.core.BusyIndicator.hide(0);
-              MessageBox.error(msg);
-          } else {
-              for (i = 0; i < rows.length; i++) {
-                  var sAggregazioni = this.AggregExcelModel(rows[i]);
-                  if (sAggregazioni.Werks.startsWith("C-")) { //Creazione 
-                      await this._saveHana("/T_AGGREG", sAggregazioni);
-                  } else { // Modifica
+        if (msg !== "") {
+          sap.ui.core.BusyIndicator.hide(0);
+          MessageBox.error(msg);
+        } else {
+          for (i = 0; i < rows.length; i++) {
+            var sAggregazioni = this.AggregExcelModel(rows[i]);
+            if (sAggregazioni.Werks.startsWith("C-")) { //Creazione 
+              await this._saveHana("/T_AGGREG", sAggregazioni);
+            } else { // Modifica
 
-                      sURL = this.componiURL(sAggregazioni)
-                      await this._updateHana(sURL, sAggregazioni);
-                  }
-              }
-              MessageBox.success("Excel Caricato con successo");
-              sap.ui.core.BusyIndicator.hide(0);
-              var aT_AGGREG = await this._getTable("/T_AGGREG", []);
-              var oModel = new sap.ui.model.json.JSONModel();
-              oModel.setData(aT_AGGREG);
-              this.getView().setModel(oModel, "T_AGGREG");
-              this.getValueHelp();
-              sap.ui.getCore().byId("UploadTable").byId("UploadTable").close();
+              sURL = this.componiURL(sAggregazioni)
+              await this._updateHana(sURL, sAggregazioni);
+            }
           }
+          MessageBox.success("Excel Caricato con successo");
+          sap.ui.core.BusyIndicator.hide(0);
+          var aT_AGGREG = await this._getTable("/T_AGGREG", []);
+          var oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(aT_AGGREG);
+          this.getView().setModel(oModel, "T_AGGREG");
+          this.getValueHelp();
+          sap.ui.getCore().byId("UploadTable").byId("UploadTable").close();
+        }
       }
-  },
-  AggregExcelModel: function (sValue) {
-    debugger
-    var oResources = this.getResourceBundle();
-    var rValue = {
-      Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-      Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
-      Classe: (sValue[oResources.getText("Classe")] === undefined) ? undefined : sValue[oResources.getText("Classe")].toString(),
-      ProgAggr: (sValue[oResources.getText("NProAggr")] === undefined) ? undefined : sValue[oResources.getText("NProAggr")].toString(),
-      AggrActTitle: (sValue[oResources.getText("TitoloAzioneAggregativo")] === undefined) ? undefined : sValue[oResources.getText("TitoloAzioneAggregativo")].toString(),
-      AggrActComponent: (sValue[oResources.getText("ComponenteAzioneAggregativo")] === undefined) ? undefined : sValue[oResources.getText("ComponenteAzioneAggregativo")].toString(),
-    };
-    return rValue;
-  },
+    },
+    AggregExcelModel: function (sValue) {
+      debugger
+      var oResources = this.getResourceBundle();
+      var rValue = {
+        Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
+        Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
+        Classe: (sValue[oResources.getText("Classe")] === undefined) ? undefined : sValue[oResources.getText("Classe")].toString(),
+        ProgAggr: (sValue[oResources.getText("NProAggr")] === undefined) ? undefined : sValue[oResources.getText("NProAggr")].toString(),
+        AggrActTitle: (sValue[oResources.getText("TitoloAzioneAggregativo")] === undefined) ? undefined : sValue[oResources.getText("TitoloAzioneAggregativo")].toString(),
+        AggrActComponent: (sValue[oResources.getText("ComponenteAzioneAggregativo")] === undefined) ? undefined : sValue[oResources.getText("ComponenteAzioneAggregativo")].toString(),
+      };
+      return rValue;
+    },
   });
 });

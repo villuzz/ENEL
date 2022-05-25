@@ -28,7 +28,6 @@
 
                             <fb:FilterGroupItem id="lingua" visible="true" groupName="__$INTERNAL$" name="lin" label="{i18n>Lingua}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Lingua}" maxLength="2"/> -->
                                     <MultiComboBox  id="cbLingua" items="{ path: 'sHelp>/T_ATTPM/Lingua', sorter: [{ path: 'Lingua', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Spras}" text="{sHelp>Spras}"/>
                                 </MultiComboBox>
@@ -37,7 +36,6 @@
 
                             <fb:FilterGroupItem id="tPAttivitaPM" visible="true" groupName="__$INTERNAL$" name="tap" label="{i18n>TPAttivitaPM}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/TPAttivitaPM}" maxLength="3"/> -->
                                     <MultiComboBox id="cbTPAttivitaPM"  items="{ path: 'sHelp>/T_ATTPM/TPAttivita', sorter: [{ path: 'TPAttivita', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Ilart}" text="{sHelp>Ilart}"/>
                                 </MultiComboBox>
@@ -46,7 +44,6 @@
 
                             <fb:FilterGroupItem id="descrizioneTPAttivitaPM" visible="true" groupName="__$INTERNAL$" name="dtpp" label="{i18n>DescrizioneTPAttivitaPM}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/DescrizioneTPAttivitaPM}" maxLength="30"/> -->
                                     <MultiComboBox id="cbDescrizioneTPAttivitaPM"  items="{ path: 'sHelp>/T_ATTPM/DescrizioneTPAttivita', sorter: [{ path: 'DescrizioneTPAttivita', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Ilatx}" text="{sHelp>Ilatx}"/>
                                 </MultiComboBox>
@@ -148,23 +145,20 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Lingua}">
                   <form:fields>
-                    <!-- <Input value="{mManutenzione>Lingua}" type="Text" maxLength="2"/> -->
-                    <ComboBox  value="{sDetail>/Spras}"  items="{ path: 'sHelp>/H_T002/Lingua', sorter: [{ path: 'SPRAS', descending: false, group:false }] }" >
+                    <ComboBox  value="{sDetail>/Spras}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/H_T002/Lingua', sorter: [{ path: 'SPRAS', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TPAttivitaPM}" >
                   <form:fields>
-                    <!-- <Input value="{mManutenzione>TPAttivitaPM}" type="Text" maxLength="3"/> -->
-                    <ComboBox  value="{sDetail>/Ilart}"  items="{ path: 'sHelp>/H_T350I/TPAttivita', sorter: [{ path: 'ILART', descending: false, group:false }] }" >
+                    <ComboBox  value="{sDetail>/Ilart}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/H_T350I/TPAttivita', sorter: [{ path: 'ILART', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneTPAttivitaPM}">
                   <form:fields>
-                    <!-- <Input value="{mManutenzione>DescrizioneTPAttivitaPM}" type="Text" maxLength="30"/> -->
                     <ComboBox  value="{sDetail>/Ilatx}"  items="{ path: 'sHelp>/aRAGGRUPPAMENTO', sorter: [{ path: 'aRAGGRUPPAMENTO', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
                   </ComboBox>

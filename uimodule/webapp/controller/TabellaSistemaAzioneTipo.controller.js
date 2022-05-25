@@ -18,6 +18,11 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaSistemaAzioneTipo", {
     onInit: function () {
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("TabellaSistemaAzioneTipo").attachPatternMatched(this._onObjectMatched, this);
 
@@ -228,6 +233,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true)
       var items = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

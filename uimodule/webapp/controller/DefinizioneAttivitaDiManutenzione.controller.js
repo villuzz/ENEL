@@ -19,7 +19,11 @@ sap.ui.define([
   return Controller.extend("PM030.APP1.controller.DefinizioneAttivitaDiManutenzione", {
     onInit: function () {
       this.getOwnerComponent().getRouter().getRoute("DefinizioneAttivitaDiManutenzione").attachPatternMatched(this._onObjectMatched, this);
-
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
     },
     _onObjectMatched: async function () {
       var aT_ATTPM = await this._getTable("/T_ATTPM", []);
@@ -256,6 +260,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled" , true);
       var items = this.getView().byId("tbDefinizioneAttivitaDiManutenzione").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

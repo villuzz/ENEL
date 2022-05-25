@@ -31,7 +31,7 @@ sap.ui.define([
       oModel.setData(aT_DEST_USR);
       this.getView().setModel(oModel, "T_DEST_USR");
       var oData = {
-        "Enabled": true
+        "Enabled": false
       };
       var oModelEnabled = new JSONModel(oData);
       this.getView().setModel(oModelEnabled, "oDataModel");
@@ -334,6 +334,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled" , true);
       var items = this.getView().byId("tbTabellaDestinatariUtenti").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

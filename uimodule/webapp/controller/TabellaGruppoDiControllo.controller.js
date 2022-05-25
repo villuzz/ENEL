@@ -18,7 +18,11 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaGruppoDiControllo", {
     onInit: function () {
-
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
 
       this.getOwnerComponent().getRouter().getRoute("TabellaGruppoDiControllo").attachPatternMatched(this._onObjectMatched, this);
 
@@ -231,7 +235,6 @@ sap.ui.define([
       if (line.ID === "New") {
         delete line.ID;
         // get Last Index
-        // var sDestUsr = this.DESTUSERModel(line);
         delete line["__metadata"];
         var sControllo = this.ControlloModel(line);
         await this._saveHana("/T_TP_MAN2", sControllo);
@@ -286,7 +289,6 @@ sap.ui.define([
       for (var i = (sel.length - 1); i >= 0; i--) {
         var line = JSON.stringify(sel[i].getBindingContext("T_TP_MAN2").getObject());
         line = JSON.parse(line);
-        // line = this.RaggruppamentoCancelModel(line);
         var sURL = this.componiCancelURL(line);
         await this._removeHana(sURL);
       }
@@ -303,6 +305,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled" , true);
       var items = this.getView().byId("tbTabellaGruppoDiControllo").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
@@ -333,8 +336,6 @@ sap.ui.define([
           for (i = 0; i < rows.length; i++) {
             var sControlloEx = this.ControlloExcelModel(rows[i]);
             if (sControlloEx.TipoGestione2.startsWith("C-")) { //Creazione                  
-              // sDestUsr.Werks = await this._getLastItemData("/T_DEST_USR", "", "Divisione");
-
               await this._saveHana("/T_TP_MAN2", sControlloEx);
             } else { // Modifica
               sURL = this.componiCancelURL(sControlloEx)

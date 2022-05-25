@@ -49,7 +49,6 @@
                                  <MultiComboBox id="cbProgressivo" items="{ path: 'sHelp>/T_ACT_PROG/Progres', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Progres}" text="{sHelp>Progres}"/>
                                 </MultiComboBox>
-                                    <!-- <Input type="Number" value="{FilterModel>/Progressivo}" maxLength="5"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
@@ -58,7 +57,6 @@
                                  <MultiComboBox id="cbDescrizioneProgressivo" items="{ path: 'sHelp>/T_ACT_PROG/Txt', sorter: [{ path: 'T_ACT_PROG', length:1000, descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                                 </MultiComboBox>
-                                    <!-- <Input type="Text" value="{FilterModel>/DescrizioneProgressivo}" maxLength="80"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
@@ -67,7 +65,6 @@
                                  <MultiComboBox id="cbComponentTipo" items="{ path: 'sHelp>/T_ACT_PROG/ComponentTipo', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>ComponentTipo}" text="{sHelp>ComponentTipo}"/>
                                 </MultiComboBox>
-                                    <!-- <Input type="Text" value="{FilterModel>/ComponenteTipo}" maxLength="40"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 

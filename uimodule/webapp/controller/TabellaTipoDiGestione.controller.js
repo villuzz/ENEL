@@ -19,7 +19,11 @@ sap.ui.define([
   return Controller.extend("PM030.APP1.controller.TabellaTipoDiGestione", {
     onInit: function () {
       sap.ui.core.BusyIndicator.show();
-
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       this.getOwnerComponent().getRouter().getRoute("TabellaTipoDiGestione").attachPatternMatched(this._onObjectMatched, this);
 
     },
@@ -210,9 +214,7 @@ sap.ui.define([
 
     },
     onCloseFileUpload: function () {
-      // this.onSearch();
-      this._oValueHelpDialog.destroy();
-
+      this.byId("UploadTable").close();
     },
     onCancel: async function () {
       debugger
@@ -273,6 +275,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true)
       var items = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
@@ -345,11 +348,12 @@ sap.ui.define([
       debugger
       var oResources = this.getResourceBundle();
       var rValue = {
-          TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione")].toString(),
-          Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-          DesTipoGest: (sValue[oResources.getText("DescrizioneTipoGestione")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneTipoGestione")].toString(),
-          Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()      };
+        TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione")].toString(),
+        Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
+        DesTipoGest: (sValue[oResources.getText("DescrizioneTipoGestione")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneTipoGestione")].toString(),
+        Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+      };
       return rValue
-  },
+    },
   });
 });

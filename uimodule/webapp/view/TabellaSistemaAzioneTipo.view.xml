@@ -31,7 +31,6 @@
                               <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_ACT_SYST/Divisione', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
                                 </MultiComboBox> 
-                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -40,7 +39,6 @@
                                 <MultiComboBox id="cbClasse"  items="{ path: 'sHelp>/T_ACT_SYST/Sistema', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                                 </MultiComboBox> 
-                                    <!-- <Input type="Text" value="{FilterModel>/Classe}" maxLength="2"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
@@ -49,7 +47,6 @@
                                 <MultiComboBox id="cbTesto"  items="{ path: 'sHelp>/T_ACT_SYST/Txt', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                                 </MultiComboBox> 
-                                    <!-- <Input type="Number" value="{FilterModel>/Testo}" maxLength="60"/> -->
                                 </fb:control>
                             </fb:FilterGroupItem>
 
@@ -66,7 +63,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbTabellaSistemaAzioneTipo" items="{path: 'T_ACT_SYST>/'}" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbTabellaSistemaAzioneTipo" growing="true" growingThreshold="100" items="{path: 'T_ACT_SYST>/'}" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col27" app:property="Werks"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col28" app:property="Sistema"><Text text="{i18n>Sistema}"/></Column>
@@ -147,19 +144,16 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-
-                  <!-- <Input value="{sDetail>/Werks}" type="Text" maxLength="4"/> -->
-                  <ComboBox  value="{sDetail>/Werks}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                  <ComboBox  value="{sDetail>/Werks}"  enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
                     <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Classe}" >
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Sistema}" items="{ path: 'sHelp>/T_ACT_SYST/SistemaNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
+                  <ComboBox  value="{sDetail>/Sistema}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SistemaNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                    </ComboBox>
-                    <!-- <Input value="{sDetail>/Sistema}" type="Text" maxLength="2"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Testo}">
@@ -167,7 +161,6 @@
                   <ComboBox  value="{sDetail>/Txt}" items="{ path: 'sHelp>/T_ACT_SYST/TxtNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                    </ComboBox>
-                    <!-- <Input value="{sDetail>/Txt}" type="Text" maxLength="60"/> -->
                   </form:fields>
                 </form:FormElement>
               </form:formElements>
