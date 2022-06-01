@@ -165,11 +165,12 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
+      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
       oSettings = {
         workbook: {
           columns: aCols
         },
-        dataSource: oRowBinding,
+        dataSource: aFilters,
         fileName: "TabellaDestinatariCdl.xlsx",
         worker: false
       };

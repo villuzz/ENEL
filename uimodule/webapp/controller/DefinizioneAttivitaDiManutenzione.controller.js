@@ -18,6 +18,7 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.DefinizioneAttivitaDiManutenzione", {
     onInit: function () {
+      sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("DefinizioneAttivitaDiManutenzione").attachPatternMatched(this._onObjectMatched, this);
       var oData = {
         "Enabled": true
@@ -63,6 +64,7 @@ sap.ui.define([
       oModelHelp.setProperty("/H_T350I/TPAttivita", aArray);
       // oModelHelp.setData(sData);
       this.getView().setModel(oModelHelp, "sHelp");
+      sap.ui.core.BusyIndicator.hide();
     },
 
     Shpl: async function (ShplName, ShplType) {
@@ -120,11 +122,12 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
+      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
       oSettings = {
         workbook: {
           columns: aCols
         },
-        dataSource: oRowBinding,
+        dataSource: aFilters,
         fileName: "DefinizioneAttivitaDiManutenzione.xlsx",
         worker: false
       };

@@ -151,7 +151,6 @@ sap.ui.define([
       if (line.ID === "New") {
         delete line.ID;
         // get Last Index
-        // var sDestUsr = this.DESTUSERModel(line);
         var sFinalita = this.FinalitaModel(line);
         await this._saveHana("/T_TP_MAN1", sFinalita);
         var aT_RAGRR = await this._getTable("/T_TP_MAN1", []);
@@ -241,11 +240,12 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
+      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
       oSettings = {
         workbook: {
           columns: aCols
         },
-        dataSource: oRowBinding,
+        dataSource: aFilters,
         fileName: "TabellaFinalita.xlsx",
         worker: false
       };
