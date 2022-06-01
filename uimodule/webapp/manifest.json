@@ -65,7 +65,7 @@
         "preload": false,
         "settings": {
           "useBatch": false,
-          "defaultUpdateMethod": "Put"
+          "defaultUpdateMethod": "PUT"
         }
       }
     },

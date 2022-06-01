@@ -241,12 +241,10 @@ sap.ui.define([
       this._oValueHelpDialog.open();
 
     },
-    onCloseFileUpload: function () {
-      this.byId("UploadTable").close();
-    },
+    
 
     onNuovo: function () {
-      this.getView().getModel().setProperty("/Enabled", true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
@@ -257,7 +255,7 @@ sap.ui.define([
 
     onModify: function () {
       debugger
-      this.getView().getModel().setProperty("/Enabled", false);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaAggregazioniAzioniTipo").getSelectedItems();
       if (items.length === 1) {
@@ -349,7 +347,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
-      this.getView().getModel("oDataModel").setProperty("/Enabled", true)
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbTabellaAggregazioniAzioniTipo").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
@@ -410,10 +408,14 @@ sap.ui.define([
         Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
         Classe: (sValue[oResources.getText("Classe")] === undefined) ? undefined : sValue[oResources.getText("Classe")].toString(),
         ProgAggr: (sValue[oResources.getText("NProAggr")] === undefined) ? undefined : sValue[oResources.getText("NProAggr")].toString(),
-        AggrActTitle: (sValue[oResources.getText("TitoloAzioneAggregativo")] === undefined) ? undefined : sValue[oResources.getText("TitoloAzioneAggregativo")].toString(),
-        AggrActComponent: (sValue[oResources.getText("ComponenteAzioneAggregativo")] === undefined) ? undefined : sValue[oResources.getText("ComponenteAzioneAggregativo")].toString(),
+        AggrActTitle: (sValue[oResources.getText("TitoloAzioneAggregativo1")] === undefined) ? undefined : sValue[oResources.getText("TitoloAzioneAggregativo1")].toString(),
+        AggrActComponent: (sValue[oResources.getText("ComponenteAzioneAggregativo1")] === undefined) ? undefined : sValue[oResources.getText("ComponenteAzioneAggregativo1")].toString(),
       };
       return rValue;
+    },
+    onCloseFileUpload: function () {
+      // this.onSearch();
+      this._oValueHelpDialog.destroy();
     },
   });
 });

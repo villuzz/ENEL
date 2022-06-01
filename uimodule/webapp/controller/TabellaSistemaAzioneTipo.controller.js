@@ -207,7 +207,7 @@ sap.ui.define([
     },
 
     onNuovo: function () {
-      this.getView().getModel().setProperty("/Enabled", true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
@@ -217,7 +217,7 @@ sap.ui.define([
     },
     onModify: function () {
       debugger
-      // this.getView().getModel().setProperty("/Enabled", false);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
       if (items.length === 1) {
@@ -233,7 +233,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
-      this.getView().getModel("oDataModel").setProperty("/Enabled", true)
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
@@ -330,14 +330,14 @@ sap.ui.define([
     onCloseFileUpload: function () {
       // this.onSearch();
       this._oValueHelpDialog.destroy();
-  },
+    },
     componiURLExcel: function (line) {
       debugger
       var sURL = `/T_ACT_SYST(Werks='${line.Werks}',Sistema='${line.Sistema}')`;
 
       // return encodeURIComponent(sURL);
       return sURL;
-  },
+    },
     SistemaModel: function (sValue) {
       var oResources = this.getResourceBundle();
       var rValue = {

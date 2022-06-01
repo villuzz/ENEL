@@ -52,7 +52,6 @@
 
                             <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="ragg" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Raggruppamento}" maxLength="10"/> -->
                                       <MultiComboBox id="cbRaggruppamento" items="{ path: 'sHelp>/T_DEST_USR/Raggruppamento', sorter: [{ path: 'T_DEST_USR', descending: false, group:false }] }" > 
                                       <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
                                     </MultiComboBox>
@@ -61,7 +60,6 @@
 
                             <fb:FilterGroupItem id="utente" visible="true" groupName="__$INTERNAL$" name="ut" label="{i18n>Utente}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Utente}" maxLength="12"/> -->
                                    <MultiComboBox id="cbUtente" items="{ path: 'sHelp>/T_DEST_USR/Uname', sorter: [{ path: 'T_DEST_USR', descending: false, group:false }] }" > 
                                       <core:Item key="{sHelp>Uname}" text="{sHelp>Uname}"/>
                                     </MultiComboBox>
@@ -181,7 +179,7 @@
                 <form:FormElement label="{i18n>CentroDiLavoro}" >
                   <form:fields>
                     <ComboBox  value="{sDetail>/Arbpl}" enabled="{oDataModel>/Enabled}" items="{ path: '', sorter: [{ path: 'aDESTINATARIO', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname2}" text="{sHelp>Fieldname2}"/>
+                   <core:Item key="{}" text="{sHelp>}"/>
                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
@@ -200,18 +198,18 @@
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>AOP}">
-                  <ComboBox  value="{sDetail>/Object}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/', sorter: [{ path: '', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>DIVISIONENew}" text="{sHelp>Fieldname1}"/>
+                  <ComboBox  value="{sDetail>/Object}" enabled="{oDataModel>/Enabled}" items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
+                   <core:Item key="{}" text="{}"/>
                    </ComboBox>
                 </form:FormElement>
                  <form:FormElement label="{i18n>AF}">
-                  <ComboBox  value="{sDetail>/Id}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/', sorter: [{ path: '', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>DIVISIONENew}" text="{sHelp>Fieldname1}"/>
+                  <ComboBox  value="{sDetail>/Id}" enabled="{oDataModel>/Enabled}" items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
+                   <core:Item key="{}" text="{}"/>
                    </ComboBox>
                 </form:FormElement>
                  <form:FormElement label="{i18n>ZAP}">
-                  <ComboBox  value="{sDetail>/Auto}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/', sorter: [{ path: '', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>DIVISIONENew}" text="{sHelp>Fieldname1}"/>
+                  <ComboBox  value="{sDetail>/Auto}" enabled="{oDataModel>/Enabled}" items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
+                   <core:Item key="{}" text="{}"/>
                    </ComboBox>
                 </form:FormElement>
                  <form:FormElement label="{i18n>Raggruppamento}">

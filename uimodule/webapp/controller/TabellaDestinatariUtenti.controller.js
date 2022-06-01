@@ -18,7 +18,12 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaDestinatariUtenti", {
     onInit: function () {
-      sap.ui.core.BusyIndicator.show();
+
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       this.getOwnerComponent().getRouter().getRoute("TabellaDestinatariUtenti").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbTabellaDestinatariUtenti"), componentName: "Piani", persoService: manutenzioneTable }).activate();
 
@@ -26,15 +31,12 @@ sap.ui.define([
     },
     _onObjectMatched: async function () {
       debugger
+      sap.ui.core.BusyIndicator.show();
       var aT_DEST_USR = await this._getTable("/T_DEST_USR", []);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_DEST_USR);
       this.getView().setModel(oModel, "T_DEST_USR");
-      var oData = {
-        "Enabled": false
-      };
-      var oModelEnabled = new JSONModel(oData);
-      this.getView().setModel(oModelEnabled, "oDataModel");
+
       this.getValueHelp();
     },
     getValueHelp: async function () {
@@ -63,7 +65,7 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/T_DEST_USR/Arbpl", aArray.filter(a => a.Arbpl));
-      
+
       aArray = [];
       sData.T_DEST_USR.forEach(el => {
         if (!aArray.find(item => item.Destinatario === el.Destinatario)) {
@@ -71,7 +73,7 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/T_DEST_USR/Destinatario", aArray.filter(a => a.Destinatario));
-      
+
       aArray = [];
       sData.T_DEST_USR.forEach(el => {
         if (!aArray.find(item => item.Raggruppamento === el.Raggruppamento)) {
@@ -80,7 +82,7 @@ sap.ui.define([
       });
       oModelHelp.setProperty("/T_DEST_USR/Raggruppamento", aArray.filter(a => a.Raggruppamento));
 
-       aArray = [];
+      aArray = [];
       sData.T_DEST_USR.forEach(el => {
         if (!aArray.find(item => item.Uname === el.Uname)) {
           aArray.push(el);
@@ -95,7 +97,7 @@ sap.ui.define([
         if (!aArray.find(item => item.Fieldname3 === el.Fieldname3)) {
           aArray.push(el);
         }
-      });      
+      });
       oModelHelp.setProperty("/ZPM4R_H_DEST_URS/aDESTINATARIO", aArray.filter(a => a.Fieldname3));
       aArray = [];
       sData.aRAGGRUPPAMENTO = await this.Shpl("ZPM4R_H_RAG", "SH");
@@ -321,7 +323,7 @@ sap.ui.define([
     },
     onNuovo: function () {
       debugger
-      this.getView().getModel().setProperty("/Enabled", true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
@@ -334,7 +336,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
-      this.getView().getModel("oDataModel").setProperty("/Enabled" , true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbTabellaDestinatariUtenti").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
@@ -349,7 +351,7 @@ sap.ui.define([
     },
     onModify: function () {
       debugger
-      this.getView().getModel().setProperty("/Enabled", false);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaDestinatariUtenti").getSelectedItems();
       if (items.length === 1) {

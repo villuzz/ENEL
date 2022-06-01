@@ -18,6 +18,11 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaClasseAzioneTipo", {
     onInit: function () {
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("TabellaClasseAzioneTipo").attachPatternMatched(this._onObjectMatched, this);
 
@@ -36,8 +41,8 @@ sap.ui.define([
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_ACT_CL: {},
         H_T001W: {},
-        ZPM4R_T_ACT_SYST: {},
-        ZPM4R_T_ACT_CLAS: {}
+        T_ACT_SYST: {},
+        T_ACT_CLAS: {}
       });
       oModelHelp.setSizeLimit(2000);
       sData.T_ACT_CL = await this._getTableDistinct("/T_ACT_CL", []);
@@ -64,7 +69,7 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/T_ACT_CL/Classe", aArray.filter(a => a.Classe));
-
+      
       aArray = [];
       sData.T_ACT_CL.forEach(el => {
         if (!aArray.find(item => item.Txt === el.Txt)) {
@@ -74,28 +79,19 @@ sap.ui.define([
       oModelHelp.setProperty("/T_ACT_CL/Txt", aArray.filter(a => a.Txt));
       sData.DIVISIONENew = await this.Shpl("H_T001W", "SH");
       oModelHelp.setProperty("/H_T001W/DivisioneNew", sData.DIVISIONENew);
+
+  
             
-      sData.aSISTEMA = await this.Shpl("ZPM4R_T_ACT_SYST", "CH");
+      sData.T_ACT_CL = await this._getTable("/T_ACT_SYST", []);
       aArray = [];
-      sData.aSISTEMA.forEach(el => {
-        if (!aArray.find(item => item.Fieldname2 === el.Fieldname2)) {
+      sData.T_ACT_CL.forEach(el => {
+        if (!aArray.find(item => item.Sistema === el.Sistema)) {
           aArray.push(el)
         }
       });
-      oModelHelp.setProperty("/ZPM4R_T_ACT_SYST/aSISTEMA", aArray.filter(a => a.Fieldname2))
-      
-      sData.aCLASSE = await this.Shpl("ZPM4R_T_ACT_CLAS", "CH");
-      aArray = [];
-      sData.aCLASSE.forEach(el => {
-        if (!aArray.find(item => item.Fieldname2 === el.Fieldname2)) {
-          aArray.push(el)
-        }
-      });
-      oModelHelp.setProperty("/ZPM4R_T_ACT_CLAS/aCLASSE", aArray.filter(a => a.Fieldname2))
-      
-      //sData.aTXT = await this.Shpl("ZPM4R_T_ACT_CLAS", "CH");
-      
-      // oModelHelp.setData(sData);
+      oModelHelp.setProperty("/T_ACT_SYST/Sistema", aArray.filter(a => a.Sistema))
+
+
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
@@ -235,7 +231,7 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onNuovo: function () {
-      // this.getView().getModel().setProperty("/Enabled", true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
@@ -245,7 +241,7 @@ sap.ui.define([
     },
     onModify: function () {
       debugger
-      // this.getView().getModel().setProperty("/Enabled", false);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       debugger
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaClasseAzioneTipo").getSelectedItems();
@@ -262,6 +258,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbTabellaClasseAzioneTipo").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

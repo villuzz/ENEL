@@ -59,7 +59,7 @@
                                 </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="titoloAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="taa" label="{i18n>TitoloAzioneAggregativo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="titoloAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="taa" label="{i18n>TitoloAzioneAggregativo1}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                 <MultiComboBox id="cbTitoloAzioneAggregativo"  value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_AGGREG/AggrActTitle', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>AggrActTitle}" text="{sHelp>AggrActTitle}"/>
@@ -67,7 +67,7 @@
                                 </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="componenteAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="caa" label="{i18n>ComponenteAzioneAggregativo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="componenteAzioneAggregativo" visible="true" groupName="__$INTERNAL$" name="caa" label="{i18n>ComponenteAzioneAggregativo1}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                <MultiComboBox id="cbComponenteAzioneAggregativo" value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/T_AGGREG/AggrActComponent', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>AggrActComponent}" text="{sHelp>AggrActComponent}"/>
@@ -94,8 +94,8 @@
                         <Column width="15em" id="col52" app:property="Sistema"><Text text="{i18n>Sistema}"/></Column>
                         <Column width="15em" id="col53" app:property="Classe"><Text text="{i18n>Classe}"/></Column>
                         <Column width="15em" id="col54" app:property="ProgAggr"><Text text="{i18n>NProAggr}"/></Column>
-                        <Column width="15em" id="col55" app:property="AggrActTitle"><Text text="{i18n>TitoloAzioneAggregativo}"/></Column>
-                        <Column width="15em" id="col56" app:property="AggrActComponent"><Text text="{i18n>ComponenteAzioneAggregativo}"/></Column>
+                        <Column width="15em" id="col55" app:property="AggrActTitle"><Text text="{i18n>TitoloAzioneAggregativo1}"/></Column>
+                        <Column width="15em" id="col56" app:property="AggrActComponent"><Text text="{i18n>ComponenteAzioneAggregativo1}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
@@ -199,12 +199,12 @@
                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>TitoloAzioneAggregativo}">
+                <form:FormElement label="{i18n>TitoloAzioneAggregativo1}">
                 <ComboBox value="{sDetail>/AggrActTitle}"  items="{ path: 'sHelp>/T_AGGREG/AggrActTitle', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>AggrActTitle}" text="{sHelp>AggrActTitle}"/>
                    </ComboBox>
                 </form:FormElement>
-                <form:FormElement label="{i18n>ComponenteAzioneAggregativo}">
+                <form:FormElement label="{i18n>ComponenteAzioneAggregativo1}">
                 <ComboBox value="{sDetail>/AggrActComponent}"  items="{ path: 'sHelp>/T_AGGREG/AggrActComponent', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>AggrActComponent}" text="{sHelp>AggrActComponent}"/>
                    </ComboBox>

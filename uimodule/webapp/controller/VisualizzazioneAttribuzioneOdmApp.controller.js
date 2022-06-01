@@ -18,6 +18,11 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.VisualizzazioneAttribuzioneOdmApp", {
     onInit: function () {
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("VisualizzazioneAttribuzioneOdmApp").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbVisualizzazioneAttribuzioneOdmApp"), componentName: "Piani", persoService: manutenzioneTable }).activate();
@@ -317,9 +322,10 @@ sap.ui.define([
     },
     onSave: async function () {
       debugger
-      // sap.ui.core.BusyIndicator.show();
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
+      // // sap.ui.core.BusyIndicator.show();
+      // var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+      // line = JSON.parse(line);
+      var line = Object.assign({}, this.getView().getModel("sDetail").getData());
       line = this.VisualizzazioneModel(line);
       // var metadata = line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length -1];
       if (line.ID === "New") {
@@ -328,7 +334,7 @@ sap.ui.define([
         await this._saveHana("/T_APP_WO", line);
       } else {
         // line = this.DestinatariModelSave(line);
-        delete line.__metadata
+        // delete line.__metadata
         var sURL = this.componiURL(line);
         // var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
 
@@ -341,31 +347,76 @@ sap.ui.define([
       this.getValueHelp();
       this.byId("navCon").back();
     },
+    // VisualizzazioneModel: function (sValue) {
+    //   debugger
+    //   var oResources = this.getResourceBundle();
+    //   var rValue = {
+    //     Zcount: (sValue[oResources.getText("Contatore1")] === undefined) ? undefined : sValue[oResources.getText("Contatore1")].toString(),
+    //     IndexOdm: (sValue[oResources.getText("Index")] === undefined) ? undefined : sValue[oResources.getText("Index")].toString(),
+    //     Appuntam: (sValue[oResources.getText("Appuntamenti")] === undefined) ? undefined : sValue[oResources.getText("Appuntamenti")].toString(),
+    //     Aufnr: (sValue[oResources.getText("Odm")] === undefined) ? undefined : sValue[oResources.getText("Odm")].toString(),
+    //     NOper: (sValue[oResources.getText("NoOper")] === undefined) ? undefined : sValue[oResources.getText("NoOper")].toString(),
+    //     NOper1: (sValue[oResources.getText("NoOper1")] === undefined) ? undefined : sValue[oResources.getText("NoOper1")].toString(),
+    //     NOper2: (sValue[oResources.getText("NoOper2")] === undefined) ? undefined : sValue[oResources.getText("NoOper2")].toString(),
+    //     NOper3: (sValue[oResources.getText("NoOper3")] === undefined) ? undefined : sValue[oResources.getText("NoOper3")].toString(),
+    //     NOper4: (sValue[oResources.getText("NoOper4")] === undefined) ? undefined : sValue[oResources.getText("NoOper4")].toString(),
+    //     NOper5: (sValue[oResources.getText("NoOper5")] === undefined) ? undefined : sValue[oResources.getText("NoOper5")].toString(),
+    //     Qmnum: (sValue[oResources.getText("Werks")] === undefined) ? undefined : sValue[oResources.getText("Werks")].toString()
+    //   };
+    //   return rValue
+    // },
     VisualizzazioneModel: function (sValue) {
       debugger
       var oResources = this.getResourceBundle();
+      // var a = "2022-01-01T23:01:00.UTC";
+      // var a = new Date().toISOString();
+      var a = "2016-12-01T23:00:00+00:00";
       var rValue = {
-        Zcount: (sValue[oResources.getText("Contatore1")] === undefined) ? undefined : sValue[oResources.getText("Contatore1")].toString(),
-        IndexOdm: (sValue[oResources.getText("Index")] === undefined) ? undefined : sValue[oResources.getText("Index")].toString(),
-        Appuntam: (sValue[oResources.getText("Appuntamenti")] === undefined) ? undefined : sValue[oResources.getText("Appuntamenti")].toString(),
-        Aufnr: (sValue[oResources.getText("Odm")] === undefined) ? undefined : sValue[oResources.getText("Odm")].toString(),
-        NOper: (sValue[oResources.getText("NoOper")] === undefined) ? undefined : sValue[oResources.getText("NoOper")].toString(),
-        NOper1: (sValue[oResources.getText("NoOper1")] === undefined) ? undefined : sValue[oResources.getText("NoOper1")].toString(),
-        NOper2: (sValue[oResources.getText("NoOper2")] === undefined) ? undefined : sValue[oResources.getText("NoOper2")].toString(),
-        NOper3: (sValue[oResources.getText("NoOper3")] === undefined) ? undefined : sValue[oResources.getText("NoOper3")].toString(),
-        NOper4: (sValue[oResources.getText("NoOper4")] === undefined) ? undefined : sValue[oResources.getText("NoOper4")].toString(),
-        NOper5: (sValue[oResources.getText("NoOper5")] === undefined) ? undefined : sValue[oResources.getText("NoOper5")].toString(),
-        Qmnum: (sValue[oResources.getText("Werks")] === undefined) ? undefined : sValue[oResources.getText("Werks")].toString()
+        Zcount: (sValue[oResources.getText("Zcount")] === undefined) ? undefined : sValue[oResources.getText("Zcount")].toString(),
+        IndexOdm: (sValue[oResources.getText("IndexOdm")] === undefined) ? undefined : sValue[oResources.getText("IndexOdm")].toString(),
+        Appuntam: (sValue[oResources.getText("Appuntam")] === undefined) ? undefined : sValue[oResources.getText("Appuntam")].toString(),
+        Aufnr: (sValue[oResources.getText("Aufnr")] === undefined) ? undefined : sValue[oResources.getText("Aufnr")].toString(),
+        Aufpl: (sValue[oResources.getText("Aufpl")] === undefined) ? undefined : sValue[oResources.getText("Aufpl")].toString(),
+        Aplzl: (sValue[oResources.getText("Aplzl")] === undefined) ? undefined : sValue[oResources.getText("Aplzl")].toString(),
+        Aplzl1: (sValue[oResources.getText("Aplzl1")] === undefined) ? undefined : sValue[oResources.getText("Aplzl1")].toString(),
+        Aplzl2: (sValue[oResources.getText("Aplzl2")] === undefined) ? undefined : sValue[oResources.getText("Aplzl2")].toString(),
+        Aplzl3: (sValue[oResources.getText("Aplzl3")] === undefined) ? undefined : sValue[oResources.getText("Aplzl3")].toString(),
+        Aplzl4: (sValue[oResources.getText("Aplzl4")] === undefined) ? undefined : sValue[oResources.getText("Aplzl4")].toString(),
+        Aplzl5: (sValue[oResources.getText("Aplzl5")] === undefined) ? undefined : sValue[oResources.getText("Aplzl5")].toString(),
+        Qmnum: (sValue[oResources.getText("Qmnum")] === undefined) ? undefined : sValue[oResources.getText("Qmnum")].toString(),
+        NumIntervento: (sValue[oResources.getText("NumIntervento")] === undefined) ? undefined : sValue[oResources.getText("NumIntervento")].toString(),
+        StatoOdm: (sValue[oResources.getText("StatoOdm")] === undefined) ? undefined : sValue[oResources.getText("StatoOdm")].toString(),
+        DettConf: (sValue[oResources.getText("DettConf")] === undefined) ? undefined : sValue[oResources.getText("DettConf")].toString(),
+        DataPian: (sValue[oResources.getText("DataPian")] === undefined) ? undefined : a,
+        DataFineCard: (sValue[oResources.getText("DataFineCard")] === undefined) ? undefined : a,
+        DataPianNatur: (sValue[oResources.getText("DataPianNatur")] === undefined) ? undefined : a,
+        Aggregatore: (sValue[oResources.getText("Aggregatore")] === undefined) ? undefined : sValue[oResources.getText("Aggregatore")].toString(),
+        DescAggregatore: (sValue[oResources.getText("DescAggregatore")] === undefined) ? undefined : sValue[oResources.getText("DescAggregatore")].toString(),
       };
       return rValue
     },
     componiURL: function (line) {
-      debugger
-      var sURL = `/T_APP_WO(Zcount='${line.Zcount}',IndexOdm='${line.IndexOdm}',Appuntam='${line.Appuntam}',Aufnr='${line.Aufnr}',Aufpl='${line.Aufpl}',Aplzl='${line.NOper}',Aplzl1='${line.NOper1}',Aplzl2='${line.NOper2}',Aplzl3='${line.NOper3}',Aplzl4='${line.NOper4}',Aplzl5='${line.NOper5}',Qmnum='${line.Qmnum}')`;
+      var sURL = `/T_APP_WO(Zcount='${line.Zcount}',IndexOdm='${line.IndexOdm}',Appuntam=${line.Appuntam},Aufnr='${line.Aufnr}',Aufpl='${line.Aufpl}',Aplzl='${line.Aplzl}',Aplzl1='${line.Aplzl1}',Aplzl2='${line.Aplzl2}',Aplzl3='${line.Aplzl3}',Aplzl4='${line.Aplzl4}',Aplzl5='${line.Aplzl5}',Qmnum='${line.Qmnum}')`;
       return sURL;
     },
     onBackDetail: function () {
       this.byId("navCon").back();
+    },
+    onModify: function () {
+      debugger
+      this.getView().getModel().setProperty("/Enabled", false);
+      sap.ui.core.BusyIndicator.show();
+      var items = this.getView().byId("tbVisualizzazioneAttribuzioneOdmApp").getSelectedItems();
+      if (items.length === 1) {
+        this.byId("Detail").bindElement({ path: items[0].getBindingContext("T_APP_WO").getPath() });
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(items[0].getBindingContext("T_APP_WO").getObject());
+        this.getView().setModel(oModel, "sDetail");
+        this.byId("navCon").to(this.byId("Detail"));
+      } else {
+        MessageToast.show("Seleziona una riga");
+      }
+      sap.ui.core.BusyIndicator.hide();
     },
   });
 });

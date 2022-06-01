@@ -82,8 +82,6 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/T_RAGGR/Raggruppamento", aArray.filter(a => a.Raggruppamento));
-
-      // oModelHelp.setData(sData);
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
@@ -135,7 +133,7 @@ sap.ui.define([
     },
     onNuovo: function () {
       debugger
-      this.getView().getModel().setProperty("/Enabled", true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
@@ -184,7 +182,7 @@ sap.ui.define([
     },
     onModify: function () {
       debugger
-      this.getView().getModel().setProperty("/Enabled", false);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaFinalita").getSelectedItems();
       if (items.length === 1) {
@@ -200,7 +198,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
-      this.getView().getModel("oDataModel").setProperty("/Enabled" , true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbTabellaFinalita").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

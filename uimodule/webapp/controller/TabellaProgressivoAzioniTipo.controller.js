@@ -18,6 +18,11 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.TabellaProgressivoAzioniTipo", {
     onInit: function () {
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       this.getOwnerComponent().getRouter().getRoute("TabellaProgressivoAzioniTipo").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbProgressivoAzioni"), componentName: "Piani", persoService: manutenzioneTable }).activate();
       var oModel = new sap.ui.model.json.JSONModel();
@@ -231,6 +236,7 @@ sap.ui.define([
     },
     onNuovo: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
       this.getView().setModel(oModel, "sDetail");
@@ -243,6 +249,7 @@ sap.ui.define([
     onModify: function () {
       debugger
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       var items = this.getView().byId("tbProgressivoAzioni").getSelectedItems();
       if (items.length === 1) {
         this.byId("Detail").bindElement({ path: items[0].getBindingContext("T_ACT_PROG").getPath() });
@@ -257,6 +264,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbProgressivoAzioni").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();

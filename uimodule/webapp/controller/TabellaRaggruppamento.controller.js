@@ -19,6 +19,11 @@ sap.ui.define([
   return Controller.extend("PM030.APP1.controller.TabellaRaggruppamento", {
     onInit: function () {
       sap.ui.core.BusyIndicator.show();
+      var oData = {
+        "Enabled": false
+      };
+      var oModelEnabled = new JSONModel(oData);
+      this.getView().setModel(oModelEnabled, "oDataModel");
       this.getOwnerComponent().getRouter().getRoute("TabellaRaggruppamento").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbRaggruppamento"), componentName: "Piani", persoService: manutenzioneTable }).activate();
     },
@@ -27,12 +32,6 @@ sap.ui.define([
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_RAGRR);
       this.getView().setModel(oModel, "T_RAGGR");
-      var oData = {
-        "Enabled": false
-      };
-      var oModelEnabled = new JSONModel(oData);
-      this.getView().setModel(oModelEnabled, "oDataModel");
-
       this.getValueHelp();
       this.onSearchResult();
     },
@@ -308,7 +307,7 @@ sap.ui.define([
 
 
     onNuovo: function () {
-      this.getView().getModel().setProperty("/Enabled", true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
@@ -358,7 +357,7 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onModify: function () {
-      this.getView().getModel().setProperty("/Enabled", false);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbRaggruppamento").getSelectedItems();
       if (items.length === 1) {

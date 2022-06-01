@@ -166,30 +166,26 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Werks}" enabled="{/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                  <ComboBox  value="{sDetail>/Werks}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                    </ComboBox>
-                    <!-- <Input value="{sDetail>/Werks}" enabled="{/Enabled}" type="Text" maxLength="4"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>CentroDiLavoro}" >
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Arbpl}" enabled="{/Enabled}" items="{ path: 'sHelp>/', sorter: [{ path: '', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>}" text="{sHelp>}"/>
+                  <ComboBox  value="{sDetail>/Arbpl}" enabled="{oDataModel>/Enabled}" items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
+                   <core:Item key="{}" text="{}"/>
                    </ComboBox>
-                    <!-- <Input value="{sDetail>/Arbpl}" enabled="{/Enabled}" type="Text" maxLength="8"/> -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Destinatario}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Destinatario}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_DEST/Destinatario', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
+                  <ComboBox  value="{sDetail>/Destinatario}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_DEST/Destinatario', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Destinatario}" text="{sHelp>Destinatario}"/>
                    </ComboBox>
-                    <!-- <Input value="{sDetail>/Destinatario}" enabled="{/Enabled}" type="Text" maxLength="12"/>  -->
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneDestinatario}">
-                  <!-- <Input value="{sDetail>/Txt}" type="Text" maxLength="60"/> -->
                   <ComboBox  value="{sDetail>/Txt}"  items="{ path: 'sHelp>/T_DEST/Txt', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                    </ComboBox>
@@ -199,11 +195,9 @@
                   <ComboBox  value="{sDetail>/Raggruppamento}"  items="{ path: 'sHelp>/ZPM4R_H_RAG/RAGGRUPPAMENTO', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                    </ComboBox>
-                    <!-- <Input value="{sDetail>/Raggruppamento}" type="Text" maxLength="10"/> -->
                   </form:fields>
                 </form:FormElement>
                  <form:FormElement label="{i18n>Email}">
-                  <!-- <Input value="{sDetail>/Mail}" type="Text" maxLength="241"/> -->
                    <ComboBox  value="{sDetail>/Mail}"  items="{ path: 'sHelp>/T_DEST', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Mail}" text="{sHelp>Mail}"/>
                    </ComboBox>

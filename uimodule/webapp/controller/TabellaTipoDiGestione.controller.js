@@ -261,6 +261,7 @@ sap.ui.define([
     onModify: function () {
       debugger
       sap.ui.core.BusyIndicator.show();
+      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       var items = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
       if (items.length === 1) {
         this.byId("Detail").bindElement({ path: items[0].getBindingContext("T_TP_MAN").getPath() });
@@ -275,7 +276,7 @@ sap.ui.define([
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
-      this.getView().getModel("oDataModel").setProperty("/Enabled", true)
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var items = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
@@ -293,7 +294,7 @@ sap.ui.define([
     },
     onNuovo: function () {
       debugger
-      this.getView().getModel().setProperty("/Enabled", true);
+      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
