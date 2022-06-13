@@ -65,26 +65,44 @@ sap.ui.define([
         getRouter: function () {
             return UIComponent.getRouterFor(this);
         },
+        Shpl: async function (ShplName, ShplType, aFilter) {
 
+            var sFilter = {
+                "ReturnFieldValueSet": [{}]
+            };
+            sFilter.ShplType = ShplType;
+            sFilter.ShplName = ShplName;
+            sFilter.IFilterDataSet = aFilter;
+            // Shlpname Shlpfield Sign Option Low
+
+            var result = await this._saveHana("/dySearch", sFilter);
+            if (result.ReturnFieldValueSet !== undefined) {
+                result = result.ReturnFieldValueSet.results;
+            } else {
+                result = [];
+            }
+
+            return result;
+        },
         _getTable: function (Entity, Filters) {
-          var xsoDataModelReport = this.getView().getModel();
-          return new Promise(function (resolve, reject) {
-              xsoDataModelReport.read(Entity, {
-                  filters: Filters,
-                  success: function (oDataIn) {
-                      if (oDataIn.results !== undefined) {
-                          resolve(oDataIn.results);
-                      } else {
-                          resolve(oDataIn);
-                      }
-                  },
-                  error: function (err) {
-                      var responseObject = JSON.parse(err.responseText);
-                      reject(MessageBox.error(responseObject.error.message.value))
-                  }
-              });
-          });
-      },
+            var xsoDataModelReport = this.getView().getModel();
+            return new Promise(function (resolve, reject) {
+                xsoDataModelReport.read(Entity, {
+                    filters: Filters,
+                    success: function (oDataIn) {
+                        if (oDataIn.results !== undefined) {
+                            resolve(oDataIn.results);
+                        } else {
+                            resolve(oDataIn);
+                        }
+                    },
+                    error: function (err) {
+                        var responseObject = JSON.parse(err.responseText);
+                        reject(MessageBox.error(responseObject.error.message.value))
+                    }
+                });
+            });
+        },
         onNavBack: function () {
             var sPreviousHash = History.getInstance().getPreviousHash();
 
@@ -96,184 +114,184 @@ sap.ui.define([
             }
         },
         onResetSedeTecnica: function () {
-          var oModel = new sap.ui.model.json.JSONModel();
-          var sData = {
-              SEDE_TECNICA: "",
-              LIVELLO1: "",
-              LIVELLO2: "",
-              LIVELLO3: "",
-              LIVELLO4: "",
-              LIVELLO5: "",
-              LIVELLO6: "",
-              NOTE: "",
-              DESC_SEDE: "",
-              LANGUAGE: ""              
-          };
-          oModel.setData(sData);
-          this.getView().setModel(oModel, "sSedeTecnica");
-          this.onFilterSedeTecnica();
-      },
-      filterLivello3: function (LIVELLO3) {
+            var oModel = new sap.ui.model.json.JSONModel();
+            var sData = {
+                SEDE_TECNICA: "",
+                LIVELLO1: "",
+                LIVELLO2: "",
+                LIVELLO3: "",
+                LIVELLO4: "",
+                LIVELLO5: "",
+                LIVELLO6: "",
+                NOTE: "",
+                DESC_SEDE: "",
+                LANGUAGE: ""
+            };
+            oModel.setData(sData);
+            this.getView().setModel(oModel, "sSedeTecnica");
+            this.onFilterSedeTecnica();
+        },
+        filterLivello3: function (LIVELLO3) {
 
-          var value = "";
-          if (LIVELLO3 === null || LIVELLO3 === undefined || LIVELLO3 === "") {
-              return new Filter("LIVELLO3", FilterOperator.EQ, "");
-          } else {
+            var value = "";
+            if (LIVELLO3 === null || LIVELLO3 === undefined || LIVELLO3 === "") {
+                return new Filter("LIVELLO3", FilterOperator.EQ, "");
+            } else {
 
-              var fLIVELLO3 = [];
+                var fLIVELLO3 = [];
 
-              fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, LIVELLO3)); // ++
-              value = LIVELLO3[0] + "x";
-              fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, value));
-              // +x
+                fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, LIVELLO3)); // ++
+                value = LIVELLO3[0] + "x";
+                fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, value));
+                // +x
 
-              // 2 -> numero
-              if (!isNaN(Number(LIVELLO3[1]))) {
-                  value = LIVELLO3[0] + "n";
-                  fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, value)); // +n
-                  fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, "xn")); // xn
-              }
+                // 2 -> numero
+                if (!isNaN(Number(LIVELLO3[1]))) {
+                    value = LIVELLO3[0] + "n";
+                    fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, value)); // +n
+                    fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, "xn")); // xn
+                }
 
-              // 1 -> alfabetico
-              if (isNaN(Number(LIVELLO3[0]))) {
-                  fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, "kx")); // kx
-              }fLIVELLO3 = new sap.ui.model.Filter({filters: fLIVELLO3, and: false});
-              return fLIVELLO3;
-          }
+                // 1 -> alfabetico
+                if (isNaN(Number(LIVELLO3[0]))) {
+                    fLIVELLO3.push(new Filter("LIVELLO3", FilterOperator.EQ, "kx")); // kx
+                }fLIVELLO3 = new sap.ui.model.Filter({filters: fLIVELLO3, and: false});
+                return fLIVELLO3;
+            }
 
-      },
-      filterLivello4: function (LIVELLO4) {
+        },
+        filterLivello4: function (LIVELLO4) {
 
-          var value = "";
-          if (LIVELLO4 === null || LIVELLO4 === undefined || LIVELLO4 === "") {
-              return new Filter("LIVELLO4", FilterOperator.EQ, "");
-          } else {
+            var value = "";
+            if (LIVELLO4 === null || LIVELLO4 === undefined || LIVELLO4 === "") {
+                return new Filter("LIVELLO4", FilterOperator.EQ, "");
+            } else {
 
-              var fLIVELLO4 = [];
+                var fLIVELLO4 = [];
 
-              fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, LIVELLO4)); // ++
-              if (LIVELLO4.length === 3) {
-                  value = LIVELLO4[0] + LIVELLO4[1] + "x";
-                  fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value)); // ++x
-              }
-              // -> numero
-              if (!isNaN(Number(LIVELLO4))) {
-                  fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, "nnn")); // nnn
-                  fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, "nn")); // nn
-              }
+                fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, LIVELLO4)); // ++
+                if (LIVELLO4.length === 3) {
+                    value = LIVELLO4[0] + LIVELLO4[1] + "x";
+                    fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value)); // ++x
+                }
+                // -> numero
+                if (!isNaN(Number(LIVELLO4))) {
+                    fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, "nnn")); // nnn
+                    fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, "nn")); // nn
+                }
 
-              // 1 -> numero
-              if (!isNaN(Number(LIVELLO4[0])) && LIVELLO4.length === 2) {
-                  value = "n" + LIVELLO4[1];
-                  fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value)); // n+
-              }
+                // 1 -> numero
+                if (!isNaN(Number(LIVELLO4[0])) && LIVELLO4.length === 2) {
+                    value = "n" + LIVELLO4[1];
+                    fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value)); // n+
+                }
 
-              // 2 -> numero
-              if (!isNaN(Number(LIVELLO4[1])) && LIVELLO4.length === 2) {
-                  value = LIVELLO4[0] + "n";
-                  fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value)); // +n
-              }
+                // 2 -> numero
+                if (!isNaN(Number(LIVELLO4[1])) && LIVELLO4.length === 2) {
+                    value = LIVELLO4[0] + "n";
+                    fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value)); // +n
+                }
 
-              // 1 -> alfabetico
-              if (isNaN(Number(LIVELLO4[0])) && LIVELLO4.length === 2) {
-                  value = "k" + LIVELLO4[1];
-                  fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value));
-                  // k+
-                  // 1 -> alfabetico 2 -> numero
-                  if (!isNaN(Number(LIVELLO4[1]))) {
-                      fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, "kn")); // kn
-                  }
-              }
+                // 1 -> alfabetico
+                if (isNaN(Number(LIVELLO4[0])) && LIVELLO4.length === 2) {
+                    value = "k" + LIVELLO4[1];
+                    fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, value));
+                    // k+
+                    // 1 -> alfabetico 2 -> numero
+                    if (!isNaN(Number(LIVELLO4[1]))) {
+                        fLIVELLO4.push(new Filter("LIVELLO4", FilterOperator.EQ, "kn")); // kn
+                    }
+                }
 
-              fLIVELLO4 = new sap.ui.model.Filter({filters: fLIVELLO4, and: false});
-              return fLIVELLO4;
-          }
-      },
-      filterLivello5: function (LIVELLO5) {
+                fLIVELLO4 = new sap.ui.model.Filter({filters: fLIVELLO4, and: false});
+                return fLIVELLO4;
+            }
+        },
+        filterLivello5: function (LIVELLO5) {
 
-          var value = "";
-          if (LIVELLO5 === null || LIVELLO5 === undefined || LIVELLO5 === "") {
-              return new Filter("LIVELLO5", FilterOperator.EQ, "");
-          } else {
+            var value = "";
+            if (LIVELLO5 === null || LIVELLO5 === undefined || LIVELLO5 === "") {
+                return new Filter("LIVELLO5", FilterOperator.EQ, "");
+            } else {
 
-              var fLIVELLO5 = [];
+                var fLIVELLO5 = [];
 
-              fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, LIVELLO5)); // +++
-              fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, "xx"));
-              // xx
+                fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, LIVELLO5)); // +++
+                fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, "xx"));
+                // xx
 
-              // if numero
-              if (!isNaN(Number(LIVELLO5))) { //
-                  fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, "nn")); // nn
-              }
+                // if numero
+                if (!isNaN(Number(LIVELLO5))) { //
+                    fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, "nn")); // nn
+                }
 
-              // 2 -> numero
-              if (!isNaN(Number(LIVELLO5[1])) && LIVELLO5.length === 2) {
-                  value = LIVELLO5[0] + "n";
-                  fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, value)); // +n
-              }
+                // 2 -> numero
+                if (!isNaN(Number(LIVELLO5[1])) && LIVELLO5.length === 2) {
+                    value = LIVELLO5[0] + "n";
+                    fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, value)); // +n
+                }
 
 
-              // 2 -> alfabetico
-              if (isNaN(Number(LIVELLO5[1])) && LIVELLO5.length === 2) {
-                  value = LIVELLO5[0] + "k";
-                  fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, value)); // +k
-              }fLIVELLO5 = new sap.ui.model.Filter({filters: fLIVELLO5, and: false});
-              return fLIVELLO5;
-          }
+                // 2 -> alfabetico
+                if (isNaN(Number(LIVELLO5[1])) && LIVELLO5.length === 2) {
+                    value = LIVELLO5[0] + "k";
+                    fLIVELLO5.push(new Filter("LIVELLO5", FilterOperator.EQ, value)); // +k
+                }fLIVELLO5 = new sap.ui.model.Filter({filters: fLIVELLO5, and: false});
+                return fLIVELLO5;
+            }
 
-      },
-      filterLivello6: function (LIVELLO6) {
+        },
+        filterLivello6: function (LIVELLO6) {
 
-          var value = "";
-          if (LIVELLO6 === null || LIVELLO6 === undefined || LIVELLO6 === "") {
-              return new Filter("LIVELLO6", FilterOperator.EQ, "");
-          } else {
+            var value = "";
+            if (LIVELLO6 === null || LIVELLO6 === undefined || LIVELLO6 === "") {
+                return new Filter("LIVELLO6", FilterOperator.EQ, "");
+            } else {
 
-              var fLIVELLO6 = [];
+                var fLIVELLO6 = [];
 
-              fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, LIVELLO6)); // ++
-              value = LIVELLO6[0] + "x";
-              fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, value));
-              // +x
+                fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, LIVELLO6)); // ++
+                value = LIVELLO6[0] + "x";
+                fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, value));
+                // +x
 
-              // -> numero
-              if (!isNaN(Number(LIVELLO6))) {
-                  fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, "nn")); // nn
-              }
+                // -> numero
+                if (!isNaN(Number(LIVELLO6))) {
+                    fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, "nn")); // nn
+                }
 
-              // 2 -> numero
-              if (!isNaN(Number(LIVELLO6[1]))) {
-                  value = LIVELLO6[0] + "n";
-                  fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, value)); // +n
-              }fLIVELLO6 = new sap.ui.model.Filter({filters: fLIVELLO6, and: false});
-              return fLIVELLO6;
+                // 2 -> numero
+                if (!isNaN(Number(LIVELLO6[1]))) {
+                    value = LIVELLO6[0] + "n";
+                    fLIVELLO6.push(new Filter("LIVELLO6", FilterOperator.EQ, value)); // +n
+                }fLIVELLO6 = new sap.ui.model.Filter({filters: fLIVELLO6, and: false});
+                return fLIVELLO6;
 
-          }
-      },
-      checkSede: async function (sel) {
-          // control Sede Tecnica da lvl 3 a lvl 6
-          // n = Numero - k = Alfabetico - x = Alfanumerico
-          var aFilter = [];
-          aFilter.push(new Filter("SEDE_TECNICA", FilterOperator.EQ, sel.SEDE_TECNICA));
-          aFilter.push(new Filter("LIVELLO1", FilterOperator.EQ, sel.LIVELLO1));
-          aFilter.push(new Filter("LIVELLO2", FilterOperator.EQ, sel.LIVELLO2));
+            }
+        },
+        checkSede: async function (sel) {
+            // control Sede Tecnica da lvl 3 a lvl 6
+            // n = Numero - k = Alfabetico - x = Alfanumerico
+            var aFilter = [];
+            aFilter.push(new Filter("SEDE_TECNICA", FilterOperator.EQ, sel.SEDE_TECNICA));
+            aFilter.push(new Filter("LIVELLO1", FilterOperator.EQ, sel.LIVELLO1));
+            aFilter.push(new Filter("LIVELLO2", FilterOperator.EQ, sel.LIVELLO2));
 
-          aFilter.push(this.filterLivello3(sel.LIVELLO3));
-          aFilter.push(this.filterLivello4(sel.LIVELLO4));
-          aFilter.push(this.filterLivello5(sel.LIVELLO5));
-          aFilter.push(this.filterLivello6(sel.LIVELLO6));
+            aFilter.push(this.filterLivello3(sel.LIVELLO3));
+            aFilter.push(this.filterLivello4(sel.LIVELLO4));
+            aFilter.push(this.filterLivello5(sel.LIVELLO5));
+            aFilter.push(this.filterLivello6(sel.LIVELLO6));
 
-          aFilter.push(new Filter("LANGUAGE", FilterOperator.EQ, "IT")); // fisso IT - todo
+            aFilter.push(new Filter("LANGUAGE", FilterOperator.EQ, "IT")); // fisso IT - todo
 
-          var result = await this._getLine("/Sede", aFilter);
-          if (result.SEDE_TECNICA !== undefined) {
-              this.DESC_SEDE = result.DESC_SEDE;
-              return true;
-          } else {
-              return false;
-          }
-      },
+            var result = await this._getLine("/Sede", aFilter);
+            if (result.SEDE_TECNICA !== undefined) {
+                this.DESC_SEDE = result.DESC_SEDE;
+                return true;
+            } else {
+                return false;
+            }
+        },
         onUpload: function (e) {
             this._import(e.getParameter("files") && e.getParameter("files")[0]);
         },
@@ -357,50 +375,50 @@ sap.ui.define([
             });
         },
         _getLine: function (Entity, Filters) {
-          var xsoDataModelReport = this.getView().getModel();
-          return new Promise(function (resolve, reject) {
-              xsoDataModelReport.read(Entity, {
-                  filters: Filters,
-                  urlParameters: {
-                      "$top": 1
-                  },
-                  success: function (oDataIn) {
-                      if (oDataIn.results[0] !== undefined) {
-                          resolve(oDataIn.results[0]);
-                      } else {
-                          resolve(oDataIn);
-                      }
-                  },
-                  error: function (err) {
-                      var responseObject = JSON.parse(err.responseText);
-                      reject(MessageBox.error(responseObject.error.message.value))
-                  }
-              });
-          });
-      },
-      _getLinenoError: function (Entity, Filters) {
-          var xsoDataModelReport = this.getView().getModel();
-          return new Promise(function (resolve) {
-              xsoDataModelReport.read(Entity, {
-                  filters: Filters,
-                  urlParameters: {
-                      "$top": 1
-                  },
-                  success: function (oDataIn) {
-                      if (oDataIn.results[0] !== undefined) {
-                          resolve(oDataIn.results[0]);
-                      } else if (oDataIn.results !== undefined) {
-                          resolve(oDataIn.results);
-                      } else {
-                          resolve(oDataIn);
-                      }
-                  },
-                  error: function () {
-                      resolve(undefined);
-                  }
-              });
-          });
-      },
+            var xsoDataModelReport = this.getView().getModel();
+            return new Promise(function (resolve, reject) {
+                xsoDataModelReport.read(Entity, {
+                    filters: Filters,
+                    urlParameters: {
+                        "$top": 1
+                    },
+                    success: function (oDataIn) {
+                        if (oDataIn.results[0] !== undefined) {
+                            resolve(oDataIn.results[0]);
+                        } else {
+                            resolve(oDataIn);
+                        }
+                    },
+                    error: function (err) {
+                        var responseObject = JSON.parse(err.responseText);
+                        reject(MessageBox.error(responseObject.error.message.value))
+                    }
+                });
+            });
+        },
+        _getLinenoError: function (Entity, Filters) {
+            var xsoDataModelReport = this.getView().getModel();
+            return new Promise(function (resolve) {
+                xsoDataModelReport.read(Entity, {
+                    filters: Filters,
+                    urlParameters: {
+                        "$top": 1
+                    },
+                    success: function (oDataIn) {
+                        if (oDataIn.results[0] !== undefined) {
+                            resolve(oDataIn.results[0]);
+                        } else if (oDataIn.results !== undefined) {
+                            resolve(oDataIn.results);
+                        } else {
+                            resolve(oDataIn);
+                        }
+                    },
+                    error: function () {
+                        resolve(undefined);
+                    }
+                });
+            });
+        },
         _getLastItemData: function (Entity, Filters, SortBy) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {
@@ -430,24 +448,24 @@ sap.ui.define([
             });
         },
         _getTable: function (Entity, Filters) {
-          var xsoDataModelReport = this.getView().getModel();
-          return new Promise(function (resolve, reject) {
-              xsoDataModelReport.read(Entity, {
-                  filters: Filters,
-                  success: function (oDataIn) {
-                      if (oDataIn.results !== undefined) {
-                          resolve(oDataIn.results);
-                      } else {
-                          resolve(oDataIn);
-                      }
-                  },
-                  error: function (err) {
-                      var responseObject = JSON.parse(err.responseText);
-                      reject(MessageBox.error(responseObject.error.message.value))
-                  }
-              });
-          });
-      },
+            var xsoDataModelReport = this.getView().getModel();
+            return new Promise(function (resolve, reject) {
+                xsoDataModelReport.read(Entity, {
+                    filters: Filters,
+                    success: function (oDataIn) {
+                        if (oDataIn.results !== undefined) {
+                            resolve(oDataIn.results);
+                        } else {
+                            resolve(oDataIn);
+                        }
+                    },
+                    error: function (err) {
+                        var responseObject = JSON.parse(err.responseText);
+                        reject(MessageBox.error(responseObject.error.message.value))
+                    }
+                });
+            });
+        },
         _getTableDistinct: function (Entity, Filters, Columns) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve) {
@@ -464,7 +482,7 @@ sap.ui.define([
                     }
                 });
             });
-        },
-        
+        }
+
     });
 });

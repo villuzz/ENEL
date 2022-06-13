@@ -89,20 +89,7 @@ sap.ui.define([
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
-    Shpl: async function (ShplName, ShplType) {
-      var aFilter = [];
-      aFilter.push(new Filter("ShplName", FilterOperator.EQ, ShplName));
-      aFilter.push(new Filter("ShplType", FilterOperator.EQ, ShplType));
-
-      var result = await this._getTable("/dySearch", aFilter);
-      if (result[0].ReturnFieldValueSet) {
-        result = result[0].ReturnFieldValueSet.results;
-        result.splice(0, 1);
-      } else {
-        result = [];
-      }
-      return result;
-    },
+   
     onSearchResult: function () {
       this.onSearchFilters();
     },
