@@ -71,7 +71,6 @@ sap.ui.define([
       sData.DIVISIONENew = await this.Shpl("T001W", "CH");
       oModelHelp.setProperty("/T001W/DivisioneNew", sData.DIVISIONENew);
 
-      // sData.DIVISIONENew = await this.Shpl("T001W", "CH");
       sData.ACT_SYST = await this._getTable("/T_ACT_SYST", []);
       aArray = []
       sData.ACT_SYST.forEach(el => {
@@ -90,7 +89,6 @@ sap.ui.define([
       });
       oModelHelp.setProperty("/T_ACT_SYST/TxtNew", aArray.filter(a => a.Txt));
 
-      // oModelHelp.setData(sData);
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
@@ -139,11 +137,12 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
+      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
       oSettings = {
         workbook: {
           columns: aCols
         },
-        dataSource: oRowBinding,
+        dataSource: aFilters,
         fileName: "TabellaSistemaAzioneTipo.xlsx",
         worker: false
       };

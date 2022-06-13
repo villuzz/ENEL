@@ -129,7 +129,7 @@ sap.ui.define([
       if (this.getView().byId("cbUtente").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbUtente").getSelectedKeys(), "Uname"));
       }
-      this.byId("tbTabellaDestinatariCdl").getBinding("items").filter(aFilters);
+      this.byId("tbTabellaDestinatariUtenti").getBinding("items").filter(aFilters);
     },
 
     multiFilterNumber: function (aArray, vName) {
@@ -155,11 +155,12 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
+      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
       oSettings = {
         workbook: {
           columns: aCols
         },
-        dataSource: oRowBinding,
+        dataSource: aFilters,
         fileName: "TabellaDestinatariUtenti.xlsx",
         worker: false
       };

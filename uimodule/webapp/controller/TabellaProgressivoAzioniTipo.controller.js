@@ -178,6 +178,7 @@ sap.ui.define([
       }
     },
     onDataExport: function () {
+      debugger
       var selectedTab = this.byId("tbProgressivoAzioni");
 
       var aCols,
@@ -187,11 +188,14 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
+      
+      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
+     
       oSettings = {
         workbook: {
           columns: aCols
         },
-        dataSource: oRowBinding,
+        dataSource: aFilters,
         fileName: "TabellaProgressivoAzioniTipo.xlsx",
         worker: false
       };
@@ -202,6 +206,7 @@ sap.ui.define([
     },
 
     _createColumnConfig: function () {
+      debugger
       var oCols = [], sCols = {};
       var oColumns = this.byId("tbProgressivoAzioni").getColumns();
       var oCells = this.getView().byId("tbProgressivoAzioni").getBindingInfo('items').template.getCells();
