@@ -34,9 +34,9 @@
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="classe" visible="true" groupName="__$INTERNAL$" name="clas" label="{i18n>Classe}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="clas" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                <MultiComboBox id="cbClasse"  items="{ path: 'sHelp>/T_ACT_SYST/Sistema', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
+                                <MultiComboBox id="cbSistema"  items="{ path: 'sHelp>/T_ACT_SYST/Sistema', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
                                     <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                                 </MultiComboBox> 
                                 </fb:control>
@@ -149,7 +149,7 @@
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Classe}" >
+                <form:FormElement label="{i18n>Sistema}" >
                   <form:fields>
                   <ComboBox  value="{sDetail>/Sistema}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SistemaNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>

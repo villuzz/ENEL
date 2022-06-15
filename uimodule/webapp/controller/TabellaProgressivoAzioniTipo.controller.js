@@ -139,12 +139,11 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
 
-    
+
     onSearchResult: function () {
       this.onSearchFilters();
     },
     onSearchFilters: function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Werks"));
@@ -177,9 +176,10 @@ sap.ui.define([
         return aFilter;
       }
     },
-    onDataExport: function () {
+    onDataExport: function (oEvent) {
       debugger
       var selectedTab = this.byId("tbProgressivoAzioni");
+      var selIndex = this.getView().byId("tbProgressivoAzioni").getSelectedItems();
 
       var aCols,
         oRowBinding,
@@ -188,17 +188,32 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      
-      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
-     
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: aFilters,
-        fileName: "TabellaProgressivoAzioniTipo.xlsx",
-        worker: false
-      };
+      if (selIndex.length >= 1) {
+        var aArray = [];
+        for (let i = 0; i < selIndex.length; i++) {
+          var oContext = selIndex[i].getBindingContext("T_ACT_PROG").getObject()
+          aArray.push(oContext);
+        }
+
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "TabellaProgressivoAzioniTipo.xlsx",
+          worker: false
+        };
+      } else {
+        var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aFilters,
+          fileName: "TabellaProgressivoAzioniTipo.xlsx",
+          worker: false
+        };
+      }
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();
@@ -206,7 +221,6 @@ sap.ui.define([
     },
 
     _createColumnConfig: function () {
-      debugger
       var oCols = [], sCols = {};
       var oColumns = this.byId("tbProgressivoAzioni").getColumns();
       var oCells = this.getView().byId("tbProgressivoAzioni").getBindingInfo('items').template.getCells();
@@ -239,7 +253,6 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onModify: function () {
-      debugger
       sap.ui.core.BusyIndicator.show();
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       var items = this.getView().byId("tbProgressivoAzioni").getSelectedItems();
@@ -270,7 +283,6 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onCancel: async function () {
-      debugger
       var sel = this.getView().byId("tbProgressivoAzioni").getSelectedItems();
       for (var i = (sel.length - 1); i >= 0; i--) {
         var line = JSON.stringify(sel[i].getBindingContext("T_ACT_PROG").getObject());
@@ -305,19 +317,17 @@ sap.ui.define([
     onPersoButtonPressed: function () {
       this._oTPC.openDialog();
     },
-    onSelectRow: function () {
-      this.getView().getModel("tabCheckModel").setProperty("/editEnabled", true);
+    onSelectRow: function (oEvent) {
+  
     },
 
     handleUploadPiani: function () {
       this.byId("UploadTable").open();
     },
     onCloseFileUpload: function () {
-      // this.onSearch();
       this.byId("UploadTable").close();
     },
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
 
       if (this.getView().byId("fileUploader").getValue() === "") {

@@ -61,7 +61,7 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/T_ACT_CL/Sistema", aArray.filter(a => a.Sistema));
-     
+
       aArray = [];
       sData.T_ACT_CL.forEach(el => {
         if (!aArray.find(item => item.Classe === el.Classe)) {
@@ -69,7 +69,7 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/T_ACT_CL/Classe", aArray.filter(a => a.Classe));
-      
+
       aArray = [];
       sData.T_ACT_CL.forEach(el => {
         if (!aArray.find(item => item.Txt === el.Txt)) {
@@ -80,8 +80,8 @@ sap.ui.define([
       sData.DIVISIONENew = await this.Shpl("H_T001W", "SH");
       oModelHelp.setProperty("/H_T001W/DivisioneNew", sData.DIVISIONENew);
 
-  
-            
+
+
       sData.T_ACT_CL = await this._getTable("/T_ACT_SYST", []);
       aArray = [];
       sData.T_ACT_CL.forEach(el => {
@@ -131,6 +131,7 @@ sap.ui.define([
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbTabellaClasseAzioneTipo");
+      var selIndex = this.getView().byId("tbTabellaClasseAzioneTipo").getSelectedItems();
 
       var aCols,
         oRowBinding,
@@ -139,15 +140,33 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: aFilters,
-        fileName: "TabellaClasseAzioneTipo.xlsx",
-        worker: false
-      };
+      if (selIndex.length >= 1) {
+        var aArray = [];
+        for (let i = 0; i < selIndex.length; i++) {
+          var oContext = selIndex[i].getBindingContext("T_ACT_CL").getObject();
+          aArray.push(oContext);
+        }
+
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "TabellaClasseAzioneTipo.xlsx",
+          worker: false
+        };
+      } else {
+        var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aFilters,
+          fileName: "TabellaClasseAzioneTipo.xlsx",
+          worker: false
+        };
+      }
+
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();
@@ -256,7 +275,7 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onSave: async function () {
-      
+
       debugger
       var line = JSON.stringify(this.getView().getModel("sDetail").getData());
       line = JSON.parse(line);
@@ -346,7 +365,7 @@ sap.ui.define([
         Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
         Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
         Txt: (sValue[oResources.getText("Testo")] === undefined) ? undefined : sValue[oResources.getText("Testo")].toString(),
-         };
+      };
       return rValue;
     },
     componiURLExcel: function (line) {

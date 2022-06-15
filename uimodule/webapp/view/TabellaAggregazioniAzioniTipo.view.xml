@@ -194,9 +194,9 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>NProAggr}">
                   <form:fields>
-                  <ComboBox value="{sDetail>/ProgAggr}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <Input value="{sDetail>/ProgAggr}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}"/>
-                   </ComboBox>
+                   </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TitoloAzioneAggregativo1}">

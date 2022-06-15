@@ -198,9 +198,9 @@
                   </form:fields>
                 </form:FormElement>
                  <form:FormElement label="{i18n>Email}">
-                   <ComboBox  value="{sDetail>/Mail}"  items="{ path: 'sHelp>/T_DEST', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
+                   <Input  value="{sDetail>/Mail}"  items="{ path: 'sHelp>/T_DEST', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Mail}" text="{sHelp>Mail}"/>
-                   </ComboBox>
+                   </Input>
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>

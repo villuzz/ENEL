@@ -166,6 +166,7 @@ sap.ui.define([
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbTabellaAggregazioniAzioniTipo");
+      var selIndex = this.getView().byId("tbTabellaAggregazioniAzioniTipo").getSelectedItems();
 
       var aCols,
         oRowBinding,
@@ -174,7 +175,22 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
+      if (selIndex.length >= 1) {
+        var aArray = [];
+        for (let i = 0; i < selIndex.length; i++) {
+          var oContext = selIndex[i].getBindingContext("T_AGGREG").getObject()
+          aArray.push(oContext);
+        }
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "TabellaAggregazioniAzioniTipo.xlsx",
+          worker: false
+        };
+      } else {
+        var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
       oSettings = {
         workbook: {
           columns: aCols
@@ -183,6 +199,9 @@ sap.ui.define([
         fileName: "TabellaAggregazioniAzioniTipo.xlsx",
         worker: false
       };
+      }
+
+      
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();
@@ -317,6 +336,8 @@ sap.ui.define([
       oModel.setData(aT_AGGREG);
       this.getView().setModel(oModel, "T_AGGREG");
     },
+
+    
     onBackDetail: function () {
       this.byId("navCon").back();
     },

@@ -91,7 +91,7 @@ sap.ui.define([
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
-    
+
     onSearchResult: function () {
       this.onSearchFilters();
     },
@@ -125,6 +125,7 @@ sap.ui.define([
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbRaggruppamento");
+      var selIndex = this.getView().byId("tbRaggruppamento").getSelectedItems();
 
       var aCols,
         oRowBinding,
@@ -133,15 +134,32 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: aFilters,
-        fileName: "TabellaRaggruppamento.xlsx",
-        worker: false
-      };
+      if (selIndex.length >= 1) {
+        var aArray = [];
+        for (let i = 0; i < selIndex.length; i++) {
+          var oContext = selIndex[i].getBindingContext("T_RAGGR").getObject()
+          aArray.push(oContext);
+        }
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "TabellaRaggruppamento.xlsx",
+          worker: false
+        };
+      } else {
+        var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aFilters,
+          fileName: "TabellaRaggruppamento.xlsx",
+          worker: false
+        };          
+      }
+
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();
@@ -172,7 +190,7 @@ sap.ui.define([
           for (i = 0; i < rows.length; i++) {
             var sRaggruppamento = this.RaggruppamentoModel(rows[i]);
             if (sRaggruppamento.Divisione.startsWith("C-")) { //Creazione                  
-              sRaggruppamento.Divisione = await this._getLastItemData("/T_RAGGR", "", "Divisione");
+              // sRaggruppamento.Divisione = await this._getLastItemData("/T_RAGGR", "", "Divisione");
 
               await this._saveHana("/T_RAGGR", sRaggruppamento);
             } else { // Modifica

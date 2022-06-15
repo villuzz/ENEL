@@ -85,6 +85,7 @@ sap.ui.define([
             return result;
         },
         _getTable: function (Entity, Filters) {
+          debugger
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {
                 xsoDataModelReport.read(Entity, {

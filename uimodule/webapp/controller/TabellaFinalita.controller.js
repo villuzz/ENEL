@@ -85,7 +85,7 @@ sap.ui.define([
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
-   
+
     onSearchResult: function () {
       this.onSearchFilters();
     },
@@ -219,6 +219,7 @@ sap.ui.define([
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbTabellaFinalita");
+      var selIndex = this.getView().byId("tbTabellaFinalita").getSelectedItems();
 
       var aCols,
         oRowBinding,
@@ -227,15 +228,32 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: aFilters,
-        fileName: "TabellaFinalita.xlsx",
-        worker: false
-      };
+      if (selIndex.length >= 1) {
+        var aArray = [];
+        for (let i = 0; i < selIndex.length; i++) {
+          var oContext = selIndex[i].getBindingContext("T_TP_MAN1").getObject()
+          aArray.push(oContext);
+        }
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "TabellaFinalita.xlsx",
+          worker: false
+        }
+      } else {
+        var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aFilters,
+          fileName: "TabellaFinalita.xlsx",
+          worker: false
+        };
+      }
+
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();

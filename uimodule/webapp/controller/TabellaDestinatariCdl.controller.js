@@ -91,18 +91,22 @@ sap.ui.define([
       sData.DIVISIONENew = await this.Shpl("T001W", "CH");
       oModelHelp.setProperty("/T001W/DivisioneNew", sData.DIVISIONENew);
 
+      sData.CentroDLNew = await this.Shpl("CRAM", "SH");
+
       sData.RAGGRUPPAMENTO = await this.Shpl("ZPM4R_H_RAG", "SH");
       sData.RAGGRUPPAMENTO.forEach(el => {
         if (!aArray.find(item => item.Fieldname1 === el.Fieldname1)) {
           aArray.push(el);
         }
       });
-      oModelHelp.setProperty("/ZPM4R_H_RAG/RAGGRUPPAMENTO", aArray.filter(a => a.Fieldname1))
+      oModelHelp.setProperty("/ZPM4R_H_RAG/RAGGRUPPAMENTO", aArray.filter(a => a.Fieldname1));
+
+
 
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
-    
+
 
     onSearchResult: function () {
       this.onSearchFilters();
@@ -144,6 +148,7 @@ sap.ui.define([
     onDataExport: function () {
       debugger
       var selectedTab = this.byId("tbTabellaDestinatariCdl");
+      var selIndex = this.getView().byId("tbTabellaDestinatariCdl").getSelectedItems();
 
       var aCols,
         oRowBinding,
@@ -152,15 +157,32 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: aFilters,
-        fileName: "TabellaDestinatariCdl.xlsx",
-        worker: false
-      };
+
+      if (selIndex.length >= 1) {
+        var aArray = [];
+        for (let i = 0; i < selIndex.length; i++) {
+          var oContext = selIndex[i].getBindingContext("T_DEST").getObject()
+          aArray.push(oContext);
+        }
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "TabellaDestinatariCdl.xlsx",
+          worker: false
+        };
+      } else {
+        var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aFilters,
+          fileName: "TabellaDestinatariCdl.xlsx",
+          worker: false
+        };
+      }
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();
