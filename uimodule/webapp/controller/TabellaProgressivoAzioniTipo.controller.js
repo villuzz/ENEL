@@ -318,7 +318,7 @@ sap.ui.define([
       this._oTPC.openDialog();
     },
     onSelectRow: function (oEvent) {
-  
+
     },
 
     handleUploadPiani: function () {
@@ -338,31 +338,35 @@ sap.ui.define([
           sURL,
           msg = "";
         var rows = this.getView().getModel("uploadModel").getData();
+        var table = this.byId("tbProgressivoAzioni").getBinding("items").oList;
 
+        var aArrayNew = rows.filter(function (o1) {
+          return !table.some(function (o2) {
+            return o1.Divisione === o2.Werks && o1.Sistema === o2.Sistema && o1.Progressivo === o2.Progres; // return the ones with equal id
+          });
+        });
+        if (aArrayNew) {
+          for (let i = 0; i < aArrayNew.length; i++) {
+            var sAzioni = this.AzioniModel(rows[i]);
+            await this._saveHana("/T_ACT_PROG", sAzioni);
+
+          }
+        }
+        var intersection = table.filter(item1 => rows.some(item2 => item1.Divisione === item2.Werks && item1.Sistema === item2.Sistema && item1.Progressivo === item2.Progres));
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sAzioni = this.AzioniModel(rows[i]);
-            if (sAzioni.Werks.startsWith("C-")) { //Creazione                  
-              await this._saveHana("/T_ACT_PROG", sAzioni);
-            } else { // Modifica
-              // sAzioni.CONTATORE = await this._getLastItemData("/Azioni", "", "CONTATORE");
-              // sURL = "/Azioni/" + sAzioni.CONTATORE;
+        }
 
-              sURL = this.componiURL(sAzioni);
-              // sAzioni.DIVISIONE = Number(sAzioni.DIVISIONE);
-              await this._updateHana(sURL, sAzioni);
-            }
-          }
-          MessageBox.success("Excel Caricato con successo");
-          sap.ui.core.BusyIndicator.hide(0);
-          this.getView().getModel().refresh();
-          this.byId("UploadTable").close();
+        for (i = 0; i < intersection.length; i++) {
+          sAzioni = this.AzioniModelModifica(intersection[i]);
+          // Modifica
+          sURL = this.componiURL(sAzioni);
+          await this._updateHana(sURL, sAzioni);
         }
       }
     },
+      
     AzioniModel: function (sValue) {
       debugger
       var oResources = this.getResourceBundle();
@@ -372,6 +376,18 @@ sap.ui.define([
         Progres: (sValue[oResources.getText("Progressivo")] === undefined) ? undefined : sValue[oResources.getText("Progressivo")].toString(),
         Txt: (sValue[oResources.getText("DescrizioneProgressivo")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneProgressivo")].toString(),
         ComponentTipo: (sValue[oResources.getText("ComponenteTipo")] === undefined) ? undefined : sValue[oResources.getText("ComponenteTipo")].toString()
+      };
+      return rValue;
+    },
+    AzioniModelModifica: function (sValue) {
+      debugger
+      var oResources = this.getResourceBundle();
+      var rValue = {
+        Werks: (sValue[oResources.getText("Werks")] === undefined) ? undefined : sValue[oResources.getText("Werks")].toString(),
+        Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
+        Progres: (sValue[oResources.getText("Progres")] === undefined) ? undefined : sValue[oResources.getText("Progres")].toString(),
+        Txt: (sValue[oResources.getText("Txt")] === undefined) ? undefined : sValue[oResources.getText("Txt")].toString(),
+        ComponentTipo: (sValue[oResources.getText("ComponentTipo")] === undefined) ? undefined : sValue[oResources.getText("ComponentTipo")].toString()
       };
       return rValue;
     },
