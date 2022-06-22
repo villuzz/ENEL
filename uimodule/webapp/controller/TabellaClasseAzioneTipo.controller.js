@@ -42,7 +42,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_ACT_CL: {},
@@ -124,7 +123,7 @@ sap.ui.define([
         model.setData({});
       }
       model.setData(tableFilters);
-  },
+    },
 
     multiFilterNumber: function (aArray, vName) {
       var aFilter = [];
@@ -136,7 +135,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -271,9 +270,7 @@ sap.ui.define([
       }
     },
     onModify: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
-      debugger
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaClasseAzioneTipo").getSelectedItems();
       if (items.length === 1) {
@@ -340,7 +337,6 @@ sap.ui.define([
       return sURL;
     },
     onCancel: async function () {
-      debugger
       var sel = this.getView().byId("tbTabellaClasseAzioneTipo").getSelectedItems();
       for (var i = (sel.length - 1); i >= 0; i--) {
         var line = JSON.stringify(sel[i].getBindingContext("T_ACT_CL").getObject());
@@ -356,8 +352,8 @@ sap.ui.define([
       oModel.setData(aT_ACT_CL);
       this.getView().setModel(oModel, "T_ACT_CL");
     },
+   
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
 
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
@@ -367,34 +363,30 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
-        var rows = this.getView().getModel("uploadModel").getData();
 
+        var rows = this.getView().getModel("uploadModel").getData();
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sAzione = this.AzioneModel(rows[i]);
-            if (sAzione.Werks.startsWith("C-")) { //Creazione                  
-              await this._saveHana("/T_ACT_CL", sAzione);
-            } else { // Modifica
-              // sAzioni.CONTATORE = await this._getLastItemData("/Azioni", "", "CONTATORE");
-              // sURL = "/Azioni/" + sAzioni.CONTATORE;
-
-              sURL = this.componiURLExcel(sAzione);
-              // sAzioni.DIVISIONE = Number(sAzioni.DIVISIONE);
-              await this._updateHana(sURL, sAzione);
-            }
-          }
-          MessageBox.success("Excel Caricato con successo");
-          sap.ui.core.BusyIndicator.hide(0);
-          this.getView().getModel().refresh();
-          this.byId("UploadTable").close();
         }
+        for (let i = 0; i < rows.length; i++) {
+          var sAzione = this.AzioneModel(rows[i]);
+          sURL = this.componiURLExcel(sAzione);
+          var result = await this._updateHanaNoError(sURL, sAzione);
+          if (result.length === 0) {
+            await this._saveHanaNoError("/T_ACT_CL", sAzione);
+          }
+        }
+        MessageBox.success("Excel Caricato con successo");
       }
+      var aT_ACT_CL = {};
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_ACT_CL);
+      this.getView().setModel(oModel, "T_ACT_CL");
+      sap.ui.getCore().byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
     AzioneModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Classe: (sValue[oResources.getText("Classe")] === undefined) ? undefined : sValue[oResources.getText("Classe")].toString(),

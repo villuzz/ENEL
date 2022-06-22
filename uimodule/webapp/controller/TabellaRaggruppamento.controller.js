@@ -32,7 +32,7 @@ sap.ui.define([
     },
     _onObjectMatched: async function () {
       Validator.clearValidation();
-      
+
       var aT_RAGGR = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_RAGGR);
@@ -131,7 +131,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -148,7 +148,7 @@ sap.ui.define([
       if (selIndex.length >= 1) {
         var aArray = [];
         for (let i = 0; i < selIndex.length; i++) {
-          var oContext = selIndex[i].getBindingContext("T_RAGGR").getObject()
+          var oContext = selIndex[i].getBindingContext("table_T_RAGGR").getObject();
           aArray.push(oContext);
         }
         oSettings = {
@@ -176,7 +176,7 @@ sap.ui.define([
         oSheet.destroy();
       });
     },
-   
+
     handleUploadPress: async function () {
       var oResource = this.getResourceBundle();
 
@@ -187,35 +187,29 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
+
         var rows = this.getView().getModel("uploadModel").getData();
-        var table = this.byId("tbRaggruppamento").getBinding("items").oList;
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
         }
-
-        rows.map((row) => {
-          if (table.findIndex((tRow) => {
-            return row.Divisione === tRow.Divisione && row.Raggruppamento === tRow.Raggruppamento;
-          }) !== -1) {
-            var sRaggruppamentoMod = this.RaggruppamentoModel(row);
-            sURL = this.componiURL(sRaggruppamentoMod);
-            this._updateHana(sURL, sRaggruppamentoMod);
-          } else {
-            var sRaggruppamentoCre = this.RaggruppamentoModel(row);
-            this._saveHana("/T_RAGGR", sRaggruppamentoCre);
+        for (let i = 0; i < rows.length; i++) {
+          var sRaggruppamentoMod = this.RaggruppamentoModel(rows[i]);
+          sURL = this.componiURL(sRaggruppamentoMod);
+          var result = await this._updateHanaNoError(sURL, sRaggruppamentoMod);
+          if (result.length === 0) {
+            await this._saveHanaNoError("/T_RAGGR", sRaggruppamentoMod);
           }
-        });
-        var aT_RAGRR = await this._getTable("/T_RAGGR", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_RAGRR);
-        this.getView().setModel(oModel, "T_RAGGR");
+        }
+        MessageBox.success("Excel Caricato con successo");
       }
 
-      MessageBox.success("Excel Caricato con successo");
-      sap.ui.core.BusyIndicator.hide(0);
-
+      var aT_RAGRR = await this._getTable("/T_RAGGR", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_RAGRR);
+      this.getView().setModel(oModel, "table_T_RAGGR");
       this.byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
     RaggruppamentoModel: function (sValue) {
       var oResources = this.getResourceBundle();
@@ -264,7 +258,7 @@ sap.ui.define([
     onCancel: async function () {
       var sel = this.getView().byId("tbRaggruppamento").getSelectedItems();
       for (var i = (sel.length - 1); i >= 0; i--) {
-        var line = JSON.stringify(sel[i].getBindingContext("T_RAGGR").getObject());
+        var line = JSON.stringify(sel[i].getBindingContext("table_T_RAGGR").getObject());
         line = JSON.parse(line);
         line = this.RaggruppamentoCancelModel(line);
         var sURL = this.componiCancelURL(line);
@@ -274,7 +268,7 @@ sap.ui.define([
       var aT_RAGRR = await this._getTable("/T_RAGGR", []);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_RAGRR);
-      this.getView().setModel(oModel, "T_RAGGR");
+      this.getView().setModel(oModel, "table_T_RAGGR");
     },
     RaggruppamentoCancelModel: function (sValue) {
       var oResources = this.getResourceBundle();
@@ -371,7 +365,7 @@ sap.ui.define([
           var aT_RAGRR = await this._getTable("/T_RAGGR", []);
           var oModel = new sap.ui.model.json.JSONModel();
           oModel.setData(aT_RAGRR);
-          this.getView().setModel(oModel, "T_RAGGR");
+          this.getView().setModel(oModel, "table_T_RAGGR");
           this.byId("navCon").back();
         }
       }
@@ -398,9 +392,9 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbRaggruppamento").getSelectedItems();
       if (items.length === 1) {
-        this.byId("Detail").bindElement({ path: items[0].getBindingContext("T_RAGGR").getPath() });
+        this.byId("Detail").bindElement({ path: items[0].getBindingContext("table_T_RAGGR").getPath() });
         var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(items[0].getBindingContext("T_RAGGR").getObject());
+        oModel.setData(items[0].getBindingContext("table_T_RAGGR").getObject());
         this.getView().setModel(oModel, "sDetail");
         this.byId("navCon").to(this.byId("Detail"));
       } else {
@@ -414,7 +408,7 @@ sap.ui.define([
       var items = this.getView().byId("tbRaggruppamento").getSelectedItems();
       if (items.length === 1) {
         var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(items[0].getBindingContext("T_RAGGR").getObject());
+        oModel.setData(items[0].getBindingContext("table_T_RAGGR").getObject());
         oModel.getData().ID = "New";
         this.getView().setModel(oModel, "sDetail");
         this.byId("navCon").to(this.byId("Detail"));
@@ -453,10 +447,6 @@ sap.ui.define([
       return sData;
     },
     ControlIndex: function (sData) {
-
-      if (sData.Divisione === "" || sData.Divisione === undefined || sData.Divisione === null) {
-        return "Inserire Divisione";
-      }
       if (sData.Raggruppamento === "" || sData.Raggruppamento === undefined || sData.Raggruppamento === null) {
         return "Inserire Raggruppamento";
       }

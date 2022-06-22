@@ -327,7 +327,8 @@ sap.ui.define([
           reader.onload = function (e) {
             var data = e.target.result;
             var workbook = XLSX.read(data, { type: 'binary' });
-            workbook.SheetNames.forEach(function (sheetName) { // Here is your object for every sheet in workbook
+            workbook.SheetNames.forEach(function (sheetName) { 
+              debugger // Here is your object for every sheet in workbook
               excelData = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
               if (excelData.length > 0) {
                 that.getView().getModel("uploadModel").setData(excelData);

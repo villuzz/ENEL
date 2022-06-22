@@ -174,10 +174,19 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>Materiale}" >
                   <form:fields>
-                    <!-- <Input value="{mManutenzione>Materiale}" type="Text" maxLength="12"/> -->
-                    <ComboBox  value="{sDetail>/Matnr}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_PMO_M/Matnr' }" >
-                   <core:Item key="{sHelp>Matnr}" text="{sHelp>Matnr}"/>
-                  </ComboBox>
+                  <Input showSuggestion="true" value="{sDetail>/Matnr}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" >
+                                 <suggestionColumns>
+                                          <Column>
+                                            <Label text="{i18n>Materiale}" />
+                                          </Column>
+                                          
+                                        </suggestionColumns>
+                                        <suggestionRows>
+                                          <ColumnListItem>
+                                            <Label text="{sHelp>Fieldname1}" />
+                                          </ColumnListItem>
+                                  </suggestionRows>
+                    </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TestoBreveMat}">

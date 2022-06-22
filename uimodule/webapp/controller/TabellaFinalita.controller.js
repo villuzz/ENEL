@@ -42,7 +42,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_TP_MAN1: {},
@@ -94,7 +93,6 @@ sap.ui.define([
       this.onSearchFilters();
     },
     onSearchFilters: async function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Divisione"));
@@ -125,11 +123,10 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onNuovo: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
@@ -173,7 +170,6 @@ sap.ui.define([
       }
     },
     FinalitaModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         TipoGestione1: (sValue[oResources.getText("TipoGest")] === undefined) ? undefined : sValue[oResources.getText("TipoGest")].toString(),
@@ -184,7 +180,6 @@ sap.ui.define([
       return rValue;
     },
     onModify: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaFinalita").getSelectedItems();
@@ -336,8 +331,10 @@ sap.ui.define([
       this._oValueHelpDialog.destroy();
 
     },
+   
     handleUploadPress: async function () {
       var oResource = this.getResourceBundle();
+
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
         MessageBox.warning("Inserire un File da caricare");
       } else {
@@ -347,51 +344,29 @@ sap.ui.define([
           msg = "";
 
         var rows = this.getView().getModel("uploadModel").getData();
-        var table = this.byId("tbTabellaFinalita").getBinding("items").oList;
-
-        var aArrayNew = rows.filter(function (o1) {
-          return !table.some(function (o2) {
-            debugger
-            return o1.Divisione === o2.Divisione && o1.Finalita === o2.TipoGestione1 && o1["Descrizione Finalità"] === o2.DesTipoGest1 && o1.Raggruppamento === o2.Raggruppamento; // return the ones with equal id
-          });
-        });
-
-        if (aArrayNew) {
-          if (rows.length == table.length) {
-            for (let i = 0; i < aArrayNew.length; i++) {
-              var sManutenzioneNew = this.FinalitaExcelModel(aArrayNew[i]);
-              sURL = this.componiCancelURL(sManutenzioneNew);
-              await this._updateHana(sURL, sManutenzioneNew);
-            }
-          } else {
-            for (let i = 0; i < aArrayNew.length; i++) {
-              var sManutenzioneNewEX = this.FinalitaExcelModel(aArrayNew[i]);
-              await this._saveHana("/T_ATTPM", sManutenzioneNewEX);
-            }
-          }
-          var intersection = table.filter(item1 => rows.some(item2 => item1.Divisione === item2.Divisione && item1.Finalita === item2.TipoGestione1 && item1["Descrizione Finalità"] === item2.DesTipoGest1 && item1.Raggruppamento === item2.Raggruppamento));
-          if (msg !== "") {
-            sap.ui.core.BusyIndicator.hide(0);
-            MessageBox.error(msg);
-          }
-          for (i = 0; i < intersection.length; i++) {
-            var sFinalitaEx = this.FinalitaExcelModel(intersection[i]);
-            // Modifica
-            sURL = this.componiCancelURL(sFinalitaEx)
-            await this._updateHana(sURL, sFinalitaEx);
-          }
-          MessageBox.success("Excel Caricato con successo");
+        if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
-          var aT_ATTPM = await this._getTable("/T_ATTPM", []);
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(aT_ATTPM);
-          this.getView().setModel(oModel, "T_ATTPM");
-          this.byId("UploadTable").close();
+          MessageBox.error(msg);
         }
+        for (let i = 0; i < rows.length; i++) {
+          var sFinalitaEx = this.FinalitaExcelModel(rows[i]);
+          sURL = this.componiCancelURL(sFinalitaEx)
+          var result = await this._updateHanaNoError(sURL, sFinalitaEx);
+          if (result.length === 0) {
+            await this._saveHanaNoError("/T_ATTPM", sFinalitaEx);
+          }
+        }
+        MessageBox.success("Excel Caricato con successo");
+        this.getValueHelp();
       }
+      var aT_ATTPM = await this._getTable("/T_ATTPM", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_ATTPM);
+      this.getView().setModel(oModel, "T_ATTPM");
+      sap.ui.getCore().byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
     FinalitaExcelModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         TipoGestione1: (sValue[oResources.getText("Finalita")] === undefined) ? undefined : sValue[oResources.getText("Finalita")].toString(),

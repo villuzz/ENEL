@@ -111,7 +111,6 @@ sap.ui.define([
       this.onSearchFilters();
     },
     onSearchFilters: async function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Werks"));
@@ -147,7 +146,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -209,6 +208,7 @@ sap.ui.define([
       }) || [];
       return oCols;
     },
+    
     handleUploadPress: async function () {
       var oResource = this.getResourceBundle();
 
@@ -219,36 +219,32 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
+
         var rows = this.getView().getModel("uploadModel").getData();
-        var table = this.byId("tbTabellaDestinatariUtenti").getBinding("items").oList;
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
         }
-
-        rows.map((row) => {
-          if (table.findIndex((tRow) => {
-            return row.Divisione === tRow.Werks && row["Centro di Lavoro"] === tRow.Arbpl && row.Destinatario === tRow.Destinatario && row.Utente === tRow.Uname && row["Auth Object PMO"] === tRow.Object && row["Auth field"] === tRow.Id && row.z_auth_pmo === tRow.Auto;
-          }) !== -1) {
-            var sControlEX = this.DESTUSERModel(row);
-            sURL = this.componiURLExcel(sControlEX);
-            this._updateHana(sURL, sControlEX);
-          } else {
-            var sControlliNew = this.DESTUSERModel(row);
-            this._saveHana("/T_DEST_USR", sControlliNew);
+        for (let i = 0; i < rows.length; i++) {
+          var sControlEX = this.DESTUSERModel(rows[i]);
+          sURL = this.componiURLExcel(sControlEX);
+          var result = await this._updateHanaNoError(sURL, sControlEX);
+          if (result.length === 0) {
+            var sControlliNew = this.DESTUSERModel(rows[i]);
+            await this._saveHanaNoError("/T_DEST_USR", sControlliNew);
           }
-        });
+        }
         MessageBox.success("Excel Caricato con successo");
-        sap.ui.core.BusyIndicator.hide(0);
-        var aT_DEST_USR = await this._getTable("/T_DEST_USR", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_DEST_USR);
-        this.getView().setModel(oModel, "T_DEST_USR");
       }
+
+      var aT_DEST_USR = await this._getTable("/T_DEST_USR", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_DEST_USR);
+      this.getView().setModel(oModel, "T_DEST_USR");
       this.byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
     DESTUSERModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
@@ -263,7 +259,6 @@ sap.ui.define([
       return rValue;
     },
     componiURLExcel: function (line) {
-      debugger
       var sURL = `/T_DEST_USR(Werks='${line.Werks}',Arbpl='${line.Arbpl}',Destinatario='${line.Destinatario}',Uname='${line.Uname}',Object='${line.Object}',Id='${line.Id}',Auto='${line.Auto}')`;
 
       return sURL;
@@ -386,7 +381,6 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onModify: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaDestinatariUtenti").getSelectedItems();

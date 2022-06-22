@@ -32,10 +32,7 @@ sap.ui.define([
     },
     _onObjectMatched: async function () {
       Validator.clearValidation();
-      // var aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-      // var oModel = new sap.ui.model.json.JSONModel();
-      // oModel.setData(aT_ACT_SYST);
-      // this.getView().setModel(oModel, "T_ACT_SYST");
+
       var aT_ACT_SYST = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_ACT_SYST);
@@ -44,7 +41,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_ACT_SYST: {},
@@ -108,7 +104,6 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onSearchFilters: async function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Werks"));
@@ -138,7 +133,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -281,7 +276,6 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onCancel: async function () {
-      debugger
       var sel = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
       for (var i = (sel.length - 1); i >= 0; i--) {
         var line = JSON.stringify(sel[i].getBindingContext("T_ACT_SYST").getObject());
@@ -331,7 +325,6 @@ sap.ui.define([
       this.byId("UploadTable").close();
     },
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
 
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
@@ -341,39 +334,34 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
+
         var rows = this.getView().getModel("uploadModel").getData();
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sRaggruppamento = this.SistemaModel(rows[i]);
-            if (sRaggruppamento.Werks.startsWith("C-")) { //Creazione                  
-              // sRaggruppamento.Werks = await this._getLastItemData("/T_ACT_SYST", "", "Divisione");
-
-              await this._saveHana("/T_ACT_SYST", sRaggruppamento);
-            } else { // Modifica
-
-              sURL = this.componiURLExcel(sRaggruppamento)
-              await this._updateHana(sURL, sRaggruppamento);
-            }
-          }
-          MessageBox.success("Excel Caricato con successo");
-          sap.ui.core.BusyIndicator.hide(0);
-          var sT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(sT_ACT_SYST);
-          this.getView().setModel(oModel, "T_ACT_SYST");
-          this.byId("UploadTable").close();
         }
+        for (let i = 0; i < rows.length; i++) {
+          var sRaggruppamento = this.SistemaModel(rows[i]);
+          sURL = this.componiURLExcel(sRaggruppamento)
+          var result = await this._updateHanaNoError(sURL, sRaggruppamento);
+          if (result.length === 0) {
+            await this._saveHanaNoError("/T_ACT_SYST", sRaggruppamento);
+          }
+        }
+        MessageBox.success("Excel Caricato con successo");
       }
+      var sT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(sT_ACT_SYST);
+      this.getView().setModel(oModel, "T_ACT_SYST");
+      sap.ui.getCore().byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
     onCloseFileUpload: function () {
       // this.onSearch();
       this._oValueHelpDialog.destroy();
     },
     componiURLExcel: function (line) {
-      debugger
       var sURL = `/T_ACT_SYST(Werks='${line.Werks}',Sistema='${line.Sistema}')`;
 
       // return encodeURIComponent(sURL);

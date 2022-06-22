@@ -49,7 +49,6 @@ sap.ui.define([
 
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_ACT_PROG: {},
@@ -147,7 +146,7 @@ sap.ui.define([
       this.onSearchFilters();
     },
     onSearchFilters: async function () {
-     
+
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Werks"));
@@ -183,11 +182,10 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function (oEvent) {
-      debugger
       var selectedTab = this.byId("tbProgressivoAzioni");
       var selIndex = this.getView().byId("tbProgressivoAzioni").getSelectedItems();
 
@@ -201,7 +199,7 @@ sap.ui.define([
       if (selIndex.length >= 1) {
         var aArray = [];
         for (let i = 0; i < selIndex.length; i++) {
-          var oContext = selIndex[i].getBindingContext("T_ACT_PROG").getObject()
+          var oContext = selIndex[i].getBindingContext("T_ACT_PROG").getObject();
           aArray.push(oContext);
         }
 
@@ -354,54 +352,8 @@ sap.ui.define([
     onCloseFileUpload: function () {
       this.byId("UploadTable").close();
     },
+   
     handleUploadPress: async function () {
-      // var oResource = this.getResourceBundle();
-
-      // if (this.getView().byId("fileUploader").getValue() === "") {
-      //   MessageBox.warning("Inserire un File da caricare");
-      // } else {
-      //   sap.ui.core.BusyIndicator.show();
-      //   var i = 0,
-      //     sURL,
-      //     msg = "";
-      //   var rows = this.getView().getModel("uploadModel").getData();
-      //   var table = this.byId("tbProgressivoAzioni").getBinding("items").oList;
-
-      //   var aArrayNew = rows.filter(function (o1) {
-      //     return !table.some(function (o2) {
-      //       return o1.Divisione === o2.Werks && o1.Sistema === o2.Sistema && o1.Progressivo === o2.Progres; // return the ones with equal id
-      //     });
-      //   });
-      //   if (aArrayNew) {
-      //     for (let i = 0; i < aArrayNew.length; i++) {
-      //       var sAzioni = this.AzioniModel(rows[i]);
-      //       await this._saveHana("/T_ACT_PROG", sAzioni);
-
-      //     }
-      //   }
-      //   var intersection = table.filter(item1 => rows.some(item2 => item1.Divisione === item2.Werks && item1.Sistema === item2.Sistema && item1.Progressivo === item2.Progres));
-      //   if (msg !== "") {
-      //     sap.ui.core.BusyIndicator.hide(0);
-      //     MessageBox.error(msg);
-      //   }
-
-      //   for (i = 0; i < intersection.length; i++) {
-      //     sAzioni = this.AzioniModelModifica(intersection[i]);
-      //     // Modifica
-      //     sURL = this.componiURL(sAzioni);
-      //     await this._updateHana(sURL, sAzioni);
-      //   }
-
-      // MessageBox.success("Excel Caricato con successo");
-      // }
-
-      // sap.ui.core.BusyIndicator.hide(0);
-      // var aT_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
-      // var oModel = new sap.ui.model.json.JSONModel();
-      // oModel.setData(aT_ACT_PROG);
-      // this.getView().setModel(oModel, "T_ACT_PROG");
-      // sap.ui.getCore().byId("UploadTable").close();
-      debugger
       var oResource = this.getResourceBundle();
 
       if (this.byId("fileUploader").getValue() === "") {
@@ -411,37 +363,32 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
+
         var rows = this.getView().getModel("uploadModel").getData();
-        var table = this.byId("tbProgressivoAzioni").getBinding("items").oList;
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
         }
-
-        rows.map((row) => {
-          if (table.findIndex((tRow) => {
-            return row.Divisione === tRow.Werks && row.Sistema === tRow.Sistema && row.Progressivo === tRow.Progres;
-          }) !== -1) {
-            var sAzioni = this.AzioniModelModifica(row);
-            sURL = this.componiURL(sAzioni);
-            this._updateHana(sURL, sAzioni);
-          } else {
-            var sAzioniCre = this.AzioniModel(row);
-            this._saveHana("/T_ACT_PROG", sAzioniCre);
+        for (let i = 0; i < rows.length; i++) {
+          var sAzioni = this.AzioniModelModifica(rows[i]);
+          sURL = this.componiURL(sAzioni);
+          var result = this._updateHanaNoError(sURL, sAzioni);
+          if (result.length === 0) {
+            var sAzioniCre = this.AzioniModel(rows[i]);
+            await this._saveHanaNoError("/T_ACT_PROG", sAzioniCre);;
           }
-        });
+        }
       }
       MessageBox.success("Excel Caricato con successo");
-      sap.ui.core.BusyIndicator.hide(0);
       var T_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(T_ACT_PROG);
       this.getView().setModel(oModel, "T_ACT_PROG");
       this.byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
 
     AzioniModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
@@ -453,7 +400,6 @@ sap.ui.define([
       return rValue;
     },
     AzioniModelModifica: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
@@ -468,14 +414,12 @@ sap.ui.define([
 
 
     componiURL: function (line) {
-      debugger
       var sURL = `/T_ACT_PROG(Werks='${line.Werks}',Sistema='${line.Sistema}',Progres='${line.Progres}')`;
 
       return sURL;
     },
 
     onSave: async function () {
-      debugger
       var ControlValidate = Validator.validateView();
       if (ControlValidate) {
         var line = JSON.stringify(this.getView().getModel("sDetail").getData());
@@ -528,10 +472,6 @@ sap.ui.define([
       }
     },
     ControlIndex: function (sData) {
-
-      if (sData.Werks === "" || sData.Werks === undefined || sData.Werks === null) {
-        return "Inserire Divisione";
-      }
       if (sData.Sistema === "" || sData.Sistema === undefined || sData.Sistema === null) {
         return "Inserire Sistema";
       }

@@ -39,7 +39,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_AGGREG: {},
@@ -132,7 +131,6 @@ sap.ui.define([
       this.onSearchFilters();
     },
     onSearchFilters: async function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Werks"));
@@ -158,7 +156,8 @@ sap.ui.define([
         MessageBox.error("Nessun record trovato");
         model.setData({});
       }
-      model.setData(tableFilters);    },
+      model.setData(tableFilters);
+    },
 
     multiFilterNumber: function (aArray, vName) {
       var aFilter = [];
@@ -170,7 +169,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -288,7 +287,6 @@ sap.ui.define([
     },
 
     onModify: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaAggregazioniAzioniTipo").getSelectedItems();
@@ -337,7 +335,6 @@ sap.ui.define([
       }
     },
     AggregModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
@@ -350,14 +347,12 @@ sap.ui.define([
       return rValue;
     },
     componiURL: function (line) {
-      debugger
       var sURL = `/T_AGGREG(Werks='${line.Werks}',Sistema='${line.Sistema}',Classe='${line.Classe}',ProgAggr='${line.ProgAggr}')`;
 
       // return encodeURIComponent(sURL);
       return sURL;
     },
     onCancel: async function () {
-      debugger
       var sel = this.getView().byId("tbTabellaAggregazioniAzioniTipo").getSelectedItems();
       for (var i = (sel.length - 1); i >= 0; i--) {
         var line = JSON.stringify(sel[i].getBindingContext("T_AGGREG").getObject());
@@ -378,7 +373,6 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     AggregCancelModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Werks: (sValue[oResources.getText("Werks")] === undefined) ? undefined : sValue[oResources.getText("Werks")].toString(),
@@ -405,8 +399,8 @@ sap.ui.define([
       }
       sap.ui.core.BusyIndicator.hide();
     },
+   
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
 
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
@@ -416,37 +410,31 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
+
         var rows = this.getView().getModel("uploadModel").getData();
-
-
-
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sAggregazioni = this.AggregExcelModel(rows[i]);
-            if (sAggregazioni.Werks.startsWith("C-")) { //Creazione 
-              await this._saveHana("/T_AGGREG", sAggregazioni);
-            } else { // Modifica
-
-              sURL = this.componiURL(sAggregazioni)
-              await this._updateHana(sURL, sAggregazioni);
-            }
-          }
-          MessageBox.success("Excel Caricato con successo");
-          sap.ui.core.BusyIndicator.hide(0);
-          var aT_AGGREG = await this._getTable("/T_AGGREG", []);
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(aT_AGGREG);
-          this.getView().setModel(oModel, "T_AGGREG");
-          this.getValueHelp();
-          sap.ui.getCore().byId("UploadTable").byId("UploadTable").close();
         }
+        for (let i = 0; i < rows.length; i++) {
+          var sAggregazioni = this.AggregExcelModel(rows[i]);
+          sURL = this.componiURL(sAggregazioni)
+          var result = await this._updateHanaNoError(sURL, sAggregazioni);
+          if (result.length === 0) {
+            await this._saveHanaNoError("/T_AGGREG", sAggregazioni);
+          }
+        }
+        MessageBox.success("Excel Caricato con successo");
       }
+      var aT_AGGREG = await this._getTable("/T_AGGREG", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_AGGREG);
+      this.getView().setModel(oModel, "T_AGGREG");
+      this.getValueHelp();
+      sap.ui.getCore().byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
     AggregExcelModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),

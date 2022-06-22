@@ -41,7 +41,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_TP_MAN: {},
@@ -93,10 +92,9 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
-   
+
 
     onSearchFilters: async function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Divisione"));
@@ -122,7 +120,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -226,7 +224,6 @@ sap.ui.define([
       this.byId("UploadTable").close();
     },
     onCancel: async function () {
-      debugger
       var sel = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
       for (var i = (sel.length - 1); i >= 0; i--) {
         var line = JSON.stringify(sel[i].getBindingContext("T_TP_MAN").getObject());
@@ -271,12 +268,10 @@ sap.ui.define([
       }
     },
     componiURL: function (line) {
-      debugger
       var sURL = `/T_TP_MAN(TipoGestione='${line.TipoGestione}',Divisione='${line.Divisione}')`;
       return sURL;
     },
     onModify: function () {
-      debugger
       sap.ui.core.BusyIndicator.show();
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       var items = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
@@ -341,7 +336,6 @@ sap.ui.define([
     },
 
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
 
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
@@ -351,36 +345,31 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
+
         var rows = this.getView().getModel("uploadModel").getData();
-
-
-
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sGestione = this.GestioneModelSave(rows[i]);
-            if (sGestione.Divisione.startsWith("C-")) { //Creazione 
-              await this._saveHana("/T_TP_MAN", sGestione);
-            } else { // Modifica
-
-              sURL = this.componiURL(sGestione)
-              await this._updateHana(sURL, sGestione);
-            }
-          }
-          MessageBox.success("Excel Caricato con successo");
-          var aT_TP_MAN = await this._getTable("/T_TP_MAN", []);
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(aT_TP_MAN);
-          this.getView().setModel(oModel, "T_TP_MAN");
-          sap.ui.core.BusyIndicator.hide();
-          this.byId("UploadTable").close();
         }
+        for (let i = 0; i < rows.length; i++) {
+          var sGestione = this.GestioneModelSave(rows[i]);
+          sURL = this.componiURL(sGestione)
+          var result = await this._updateHanaNoError(sURL, sGestione);
+          if (result.length === 0) {
+            await this._saveHanaNoError("/T_TP_MAN", sGestione);
+          }
+        }
+        MessageBox.success("Excel Caricato con successo");
+        this.getValueHelp();
       }
+      var aT_TP_MAN = await this._getTable("/T_TP_MAN", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_TP_MAN);
+      this.getView().setModel(oModel, "T_TP_MAN");
+      sap.ui.getCore().byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
     GestioneModelSave: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione")].toString(),

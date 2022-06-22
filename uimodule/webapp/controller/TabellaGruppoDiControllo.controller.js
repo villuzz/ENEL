@@ -95,7 +95,6 @@ sap.ui.define([
       this.onSearchFilters();
     },
     onSearchFilters: async function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbGruppoControlli").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbGruppoControlli").getSelectedKeys(), "TipoGestione2"));
@@ -127,7 +126,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -174,7 +173,6 @@ sap.ui.define([
     },
 
     _createColumnConfig: function () {
-      debugger
       var oCols = this.byId("tbTabellaGruppoDiControllo").getColumns().map((c) => {
         var templ = "";
         var typ = EdmType.String;
@@ -231,7 +229,6 @@ sap.ui.define([
     },
 
     onNuovo: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
@@ -270,7 +267,6 @@ sap.ui.define([
       }
     },
     ControlloModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         TipoGestione2: (sValue[oResources.getText("TipoGest2")] === undefined) ? undefined : sValue[oResources.getText("TipoGest2")].toString(),
@@ -345,7 +341,6 @@ sap.ui.define([
           msg = "";
         
         var rows = this.getView().getModel("uploadModel").getData();
-        // var table = this.byId("tbTabellaGruppoDiControllo").getBinding("items").oList;
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
@@ -358,8 +353,8 @@ sap.ui.define([
             await this._saveHanaNoError("/T_TP_MAN2", sControlEX);
           }
         }
+        MessageBox.success("Excel Caricato con successo");
       }
-      MessageBox.success("Excel Caricato con successo");
       this.readTable();
       this.byId("UploadTable").close();
       sap.ui.core.BusyIndicator.hide(0);
@@ -376,7 +371,6 @@ sap.ui.define([
       return sURL;
     },
     ControlloExcelModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         TipoGestione2: (sValue[oResources.getText("GruppoControlli")] === undefined) ? undefined : sValue[oResources.getText("GruppoControlli")].toString(),
@@ -387,7 +381,6 @@ sap.ui.define([
       return rValue;
     },
     ControlloSaveEx: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         TipoGestione2: (sValue[oResources.getText("TipoGestione2")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione2")].toString(),
@@ -398,7 +391,6 @@ sap.ui.define([
       return rValue;
     },
     handleChangeCb: function (oEvent) {
-      debugger
       var oValidatedComboBox = oEvent.getSource(),
         sSelectedKey = oValidatedComboBox.getSelectedKey(),
         sValue = oValidatedComboBox.getValue();
@@ -410,7 +402,6 @@ sap.ui.define([
       }
     },
     handleChangeIn: function (oEvent) {
-      debugger
       var oValidatedInput = oEvent.getSource(),
         sSuggestion = oEvent.getSource().getSuggestionRows(),
         sValue = oValidatedInput.getValue();
@@ -433,9 +424,6 @@ sap.ui.define([
 
       if (sData.TipoGestione2 === "" || sData.TipoGestione2 === undefined || sData.TipoGestione2 === null) {
         return "Inserire Gruppo Controlli";
-      }
-      if (sData.Divisione === "" || sData.Divisione === undefined || sData.Divisione === null) {
-        return "Inserire Divisione";
       }
       return "";
     },

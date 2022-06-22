@@ -29,7 +29,6 @@ sap.ui.define([
 
     },
     _onObjectMatched: async function () {
-      debugger
       var aT_APP_WO = await this._getTable("/T_APP_WO", []);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_APP_WO);
@@ -38,7 +37,6 @@ sap.ui.define([
     },
 
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_APP_WO: {},
@@ -146,13 +144,12 @@ sap.ui.define([
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
-    
+
 
     onSearchResult: function () {
       this.onSearchFilters();
     },
     onSearchFilters: function () {
-      debugger
       var aFilters = [];
       if (this.getView().byId("cbIndex").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbIndex").getSelectedKeys(), "IndexOdm"));
@@ -185,7 +182,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({ filters: aFilter, bAnd: false });
       }
     },
     onDataExport: function () {
@@ -198,7 +195,7 @@ sap.ui.define([
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
+      var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
       oSettings = {
         workbook: {
           columns: aCols
@@ -284,21 +281,6 @@ sap.ui.define([
 
     },
 
-    // onSave: function (oEvent) {
-    //   var dataP = oEvent.getSource()._getPropertiesToPropagate().oBindingContexts.mManutenzione.getObject().DataPianificazione;
-    //   var finCar = oEvent.getSource()._getPropertiesToPropagate().oBindingContexts.mManutenzione.getObject().FineCardine;
-    //   var scadNat = oEvent.getSource()._getPropertiesToPropagate().oBindingContexts.mManutenzione.getObject().ScadNaturale;
-    //   if (dataP) {
-    //     dataP.setHours(2);
-    //   }
-    //   if (finCar) {
-    //     finCar.setHours(2);
-    //   }
-    //   if (scadNat) {
-    //     scadNat.setHours(2);
-    //   }
-    //   this.byId("navCon").back();
-    // }
     onNuovo: function () {
 
       sap.ui.core.BusyIndicator.show();
@@ -309,10 +291,7 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onSave: async function () {
-      debugger
-      // // sap.ui.core.BusyIndicator.show();
-      // var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      // line = JSON.parse(line);
+
       var line = Object.assign({}, this.getView().getModel("sDetail").getData());
       line = this.VisualizzazioneModel(line);
       // var metadata = line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length -1];
@@ -336,7 +315,7 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     // VisualizzazioneModel: function (sValue) {
-    //   debugger
+    //   
     //   var oResources = this.getResourceBundle();
     //   var rValue = {
     //     Zcount: (sValue[oResources.getText("Contatore1")] === undefined) ? undefined : sValue[oResources.getText("Contatore1")].toString(),
@@ -354,7 +333,7 @@ sap.ui.define([
     //   return rValue
     // },
     VisualizzazioneModel: function (sValue) {
-      debugger
+
       var oResources = this.getResourceBundle();
       // var a = "2022-01-01T23:01:00.UTC";
       // var a = new Date().toISOString();
@@ -391,7 +370,6 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onModify: function () {
-      debugger
       this.getView().getModel().setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbVisualizzazioneAttribuzioneOdmApp").getSelectedItems();

@@ -153,16 +153,17 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>Divisione}" >
                   <form:fields>
-                     <ComboBox  value="{sDetail>/Divisione}"  required="true" valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                     <ComboBox  value="{sDetail>/Divisione}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneGruppoControlli}">
                   <form:fields>
-                     <ComboBox  value="{sDetail>/DesTipoGest2}"  items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
+                     <!-- <ComboBox  value="{sDetail>/DesTipoGest2}"  items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{}" text="{}"/>
-                  </ComboBox>
+                  </ComboBox> -->
+                  
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}">

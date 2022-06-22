@@ -23,6 +23,9 @@ sap.ui.define([
             this._oTPC = new TablePersoController({table: this.byId("tbMateriali"), persoService: manutenzioneTable}).activate();
         },
         _onObjectMatched: function () {
+          var sData = {};
+          var oModelHelp = new sap.ui.model.json.JSONModel({});
+          this.getView().setModel(oModelHelp, "sHelp");
             this.byId("navCon").back();
         },
         onSearchResult: function () {
@@ -220,6 +223,22 @@ sap.ui.define([
                 MEINS: (sValue[oResource.getText("MEINS")] === undefined) ? undefined : sValue[oResource.getText("MEINS")].toString()
             };
             return rValue;
+        },
+        onSuggestMatnr: async function (oEvent) {
+          sHelp.Matnr = {}
+          if (oEvent.getParameter("suggestValue").length >= 3) {
+          var aFilter = [];
+          aFilter.push({
+              "Shlpname": "ZPM4R_SH_MATNR",
+              "Shlpfield": "Matnr",
+              "Sign": "I",
+              "Option": "CP",
+              "Low": oEvent.getParameter("suggestValue") + "*"
+          });
+          var sHelp = this.getView().getModel("sHelp").getData();
+          sHelp.Matnr = await this.Shpl("ZPM4R_SH_MATNR", "SH", aFilter);
+          this.getView().getModel("sHelp").refresh(true);
         }
+      }
     });
 });

@@ -24,26 +24,16 @@ sap.ui.define([
 
     },
     _onObjectMatched: async function () {
-      debugger
     var T_ACT_TYPE = await this._getTable("/T_ACT_TYPE", []);
     var oModel = new sap.ui.model.json.JSONModel();
     oModel.setData(T_ACT_TYPE);
     this.getView().setModel(oModel, "T_ACT_TYPE");
     
-    // var oData = {
-    //   "Enabled": true
-    // };
-    // var oModelEnabled = new JSONModel(oData);
-    // this.getView().setModel(oModelEnabled, "oDataModel");
-
-    // this.getView().getModel().read('/T_ACT_TYPE', {
-    //   success:function(oData, res){debugger},error:function(err){debugger}
-    // });
+    
     
     this.getValueHelp();
     },
     onSearchResult: function (oEvent) {
-      debugger;
       var oModel = this.getView().getModel("FilterModel");
       var divisione = oModel.getData().Divisione;
       if (!divisione) {

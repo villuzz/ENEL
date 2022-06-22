@@ -33,7 +33,7 @@ sap.ui.define([
     },
     _onObjectMatched: async function () {
       Validator.clearValidation();
-      
+
       var aT_ATTPM = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_ATTPM);
@@ -65,7 +65,7 @@ sap.ui.define([
       sData.ILART = await this.Shpl("H_T350I", "SH");
       oModelHelp.setProperty("/T_ATTPM/Lingua", aArray.filter(a => a.Spras));
       oModelHelp.setProperty("/T_ATTPM/TPAttivita", aArrayIlart.filter(a => a.Ilart));
-       var aArray = [];
+      var aArray = [];
       sData.T_ATTPM_CB.forEach(el => {
         if (!aArray.find(item => item.Ilatx === el.Ilatx)) {
           aArray.push(el);
@@ -118,7 +118,7 @@ sap.ui.define([
         for (var i = 0; i < aArray.length; i++) {
           aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
         }
-        return aFilter;
+        return new Filter({filters: aFilter, bAnd: false});
       }
     },
     onDataExport: function () {
@@ -345,58 +345,6 @@ sap.ui.define([
     },
 
     handleUploadPress: async function () {
-      // var oResource = this.getResourceBundle();
-      // if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-      //   MessageBox.warning("Inserire un File da caricare");
-      // } else {
-      //   sap.ui.core.BusyIndicator.show();
-      //   var i = 0,
-      //     sURL,
-      //     msg = "";
-
-      //   var rows = this.getView().getModel("uploadModel").getData();
-      //   var table = this.byId("tbDefinizioneAttivitaDiManutenzione").getBinding("items").oList;
-
-      //   var aArrayNew = rows.filter(function (o1) {
-      //     return !table.some(function (o2) {
-      //       return o1.Lingua === o2.Spras && o1["TP Attività PM"] === o2.Ilart && o1["Descrizione TP Attività PM"] === o2.Ilatx; // return the ones with equal id
-      //     });
-      //   });
-
-      //   if (aArrayNew) {
-      //     if (rows.length == table.length) {
-      //       for (let i = 0; i < aArrayNew.length; i++) {
-      //         var sManutenzioneNew = this.ManutenzioneModelExcel(aArrayNew[i]);
-      //         sURL = this.componiCancelURL(sManutenzioneNew);
-      //         await this._updateHana(sURL, sManutenzioneNew);
-      //       }
-      //     } else {
-      //       for (let i = 0; i < aArrayNew.length; i++) {
-      //         var sManutenzioneNewEX = this.ManutenzioneModelExcel(aArrayNew[i]);
-      //         await this._saveHana("/T_ATTPM", sManutenzioneNewEX);
-      //       }
-      //     }
-      //     var intersection = table.filter(item1 => rows.some(item2 => item1.Spras === item2.Lingua && item1.Ilart === item2["TP Attività PM"] && item1.Ilatx === item2["Descrizione TP Attività PM"]));
-      //     if (msg !== "") {
-      //       sap.ui.core.BusyIndicator.hide(0);
-      //       MessageBox.error(msg);
-      //     }
-      //     for (i = 0; i < intersection.length; i++) {
-      //       var sManutenzioneEx = this.ManutenzioneModelExcelModifica(intersection[i]);
-      //       // Modifica
-      //       sURL = this.componiCancelURL(sManutenzioneEx)
-      //       await this._updateHana(sURL, sManutenzioneEx);
-      //     }
-      //     MessageBox.success("Excel Caricato con successo");
-      //     sap.ui.core.BusyIndicator.hide(0);
-      //     var aT_ATTPM = await this._getTable("/T_ATTPM", []);
-      //     var oModel = new sap.ui.model.json.JSONModel();
-      //     oModel.setData(aT_ATTPM);
-      //     this.getView().setModel(oModel, "T_ATTPM");
-      //     this.byId("UploadTable").close();
-      //   }
-      // }
-
       var oResource = this.getResourceBundle();
 
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
@@ -406,34 +354,30 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
+
         var rows = this.getView().getModel("uploadModel").getData();
-        var table = this.byId("tbDefinizioneAttivitaDiManutenzione").getBinding("items").oList;
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
         }
-
-        rows.map((row) => {
-          if (table.findIndex((tRow) => {
-            return row.Lingua === tRow.Spras && row["TP Attività PM"] === tRow.Ilart;
-          }) !== -1) {
-            var sManutenzioneNew = this.ManutenzioneModelExcel(row);
-            sURL = this.componiCancelURL(sManutenzioneNew);
-            this._updateHana(sURL, sManutenzioneNew);
-          } else {
-            var sManutenzioneNewEX = this.ManutenzioneModelExcel(row);
-            this._saveHana("/T_ATTPM", sManutenzioneNewEX);
+        for (let i = 0; i < rows.length; i++) {
+          var sManutenzioneNew = this.ManutenzioneModelExcel(rows[i]);
+          sURL = this.componiCancelURL(sManutenzioneNew);
+          var result = await this._updateHanaNoError(sURL, sManutenzioneNew);
+          if (result.length === 0) {
+            var sManutenzioneNewEX = this.ManutenzioneModelExcel(rows[i]);
+            await this._saveHanaNoError("/T_ATTPM", sManutenzioneNewEX);
           }
-        });
+        }
+        MessageBox.success("Excel Caricato con successo");
       }
-      MessageBox.success("Excel Caricato con successo");
-      sap.ui.core.BusyIndicator.hide(0);
       var aT_ATTPM = await this._getTable("/T_ATTPM", []);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_ATTPM);
       this.getView().setModel(oModel, "T_ATTPM");
       this.getValueHelp();
-      sap.ui.getCore().byId("UploadTable").close();
+      sap.ui.getCore() .byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
     },
 
     ManutenzioneModelExcelModifica: function (sValue) {
@@ -486,10 +430,6 @@ sap.ui.define([
       return sData;
     },
     ControlIndex: function (sData) {
-
-      if (sData.Spras === "" || sData.Spras === undefined || sData.Spras === null) {
-        return "Inserire Lingua";
-      }
       if (sData.Ilart === "" || sData.Ilart === undefined) {
         return "Inserire TP Attività PM";
       }

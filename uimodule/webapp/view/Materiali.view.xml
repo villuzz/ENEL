@@ -121,7 +121,20 @@
               <form:formElements>
                 <form:FormElement label="{i18n>MATNR}">
                   <form:fields>
-                    <Input value="{sDetail>/MATNR}" type="Number" maxLength="18"/>
+                    <!-- <Input value="{sDetail>/MATNR}" type="Number" maxLength="18"/> -->
+                  <Input showSuggestion="true" value="{sDetail>/Matnr}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" >
+                                        <suggestionColumns>
+                                          <Column>
+                                            <Label text="{i18n>Materiale}" />
+                                          </Column>
+                                          
+                                        </suggestionColumns>
+                                        <suggestionRows>
+                                          <ColumnListItem>
+                                            <Label text="{sHelp>Fieldname1}" />
+                                          </ColumnListItem>
+                                        </suggestionRows>
+                  </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>MAKTX}" >
