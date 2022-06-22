@@ -417,7 +417,9 @@ sap.ui.define([
         return rValue;
       },
       onSuggestMatnr: async function (oEvent) {
-        sHelp.Matnr = {};
+        if (this.getView().getModel("sHelp")) {
+          this.getView().getModel("sHelp").setProperty("/Matnr", []);
+        }
         if (oEvent.getParameter("suggestValue").length >= 3) {
           var aFilter = [];
           aFilter.push({
