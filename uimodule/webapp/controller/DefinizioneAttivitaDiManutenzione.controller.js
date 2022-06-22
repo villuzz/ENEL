@@ -10,13 +10,18 @@ sap.ui.define([
   'sap/ui/model/FilterOperator',
   'sap/m/MessageToast',
   "PM030/APP1/util/manutenzioneTable",
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, ) {
+  'sap/ui/core/library',
+  "PM030/APP1/util/Validator",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, coreLibrary, Validator) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
   var EdmType = exportLibrary.EdmType;
 
+  var ValueState = coreLibrary.ValueState;
+
   return Controller.extend("PM030.APP1.controller.DefinizioneAttivitaDiManutenzione", {
+    Validator: Validator,
     onInit: function () {
       sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("DefinizioneAttivitaDiManutenzione").attachPatternMatched(this._onObjectMatched, this);
@@ -27,7 +32,9 @@ sap.ui.define([
       this.getView().setModel(oModelEnabled, "oDataModel");
     },
     _onObjectMatched: async function () {
-      var aT_ATTPM = await this._getTable("/T_ATTPM", []);
+      Validator.clearValidation();
+      
+      var aT_ATTPM = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_ATTPM);
       this.getView().setModel(oModel, "T_ATTPM");
@@ -35,7 +42,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_ATTPM: {},
@@ -49,11 +55,23 @@ sap.ui.define([
           aArray.push(el);
         }
       })
+      var aArrayIlart = []
+      sData.T_ATTPM_CB.forEach(el => {
+        if (!aArrayIlart.find(item => item.Ilart === el.Ilart)) {
+          aArrayIlart.push(el);
+        }
+      })
       sData.SPRAS = await this.Shpl("H_T002", "SH");
       sData.ILART = await this.Shpl("H_T350I", "SH");
       oModelHelp.setProperty("/T_ATTPM/Lingua", aArray.filter(a => a.Spras));
-      oModelHelp.setProperty("/T_ATTPM/TPAttivita", sData.T_ATTPM_CB.filter(a => a.Ilart));
-      oModelHelp.setProperty("/T_ATTPM/DescrizioneTPAttivita", sData.T_ATTPM_CB.filter(a => a.Ilatx));
+      oModelHelp.setProperty("/T_ATTPM/TPAttivita", aArrayIlart.filter(a => a.Ilart));
+       var aArray = [];
+      sData.T_ATTPM_CB.forEach(el => {
+        if (!aArray.find(item => item.Ilatx === el.Ilatx)) {
+          aArray.push(el);
+        }
+      })
+      oModelHelp.setProperty("/T_ATTPM/DescrizioneTPAttivita", aArray.filter(a => a.Ilatx));
       aArray = [];
       sData.ILART.forEach(el => {
         if (!aArray.find(item => item.Fieldname1 === el.Fieldname1)) {
@@ -61,7 +79,7 @@ sap.ui.define([
         }
       });
       oModelHelp.setProperty("/H_T002/Lingua", sData.SPRAS);
-      oModelHelp.setProperty("/H_T350I/TPAttivita", aArray);
+      oModelHelp.setProperty("/H_T350I/TPAttivita", aArray.filter(a => a.Fieldname1));
       // oModelHelp.setData(sData);
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
@@ -70,8 +88,7 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
-    onSearchFilters: function () {
-      debugger
+    onSearchFilters: async function () {
       var aFilters = [];
       if (this.getView().byId("cbLingua").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbLingua").getSelectedKeys(), "Spras"));
@@ -82,7 +99,13 @@ sap.ui.define([
       if (this.getView().byId("cbDescrizioneTPAttivitaPM").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDescrizioneTPAttivitaPM").getSelectedKeys(), "Ilatx"));
       }
-      this.byId("tbDefinizioneAttivitaDiManutenzione").getBinding("items").filter(aFilters);
+      var model = this.getView().getModel("T_ATTPM");
+      var tableFilters = await this._getTableNoError("/T_ATTPM", aFilters);
+      if (tableFilters.length === 0) {
+        MessageBox.error("Nessun record trovato");
+        model.setData({});
+      }
+      model.setData(tableFilters);
     },
 
     multiFilterNumber: function (aArray, vName) {
@@ -146,7 +169,6 @@ sap.ui.define([
       var oCols = this.byId("tbDefinizioneAttivitaDiManutenzione").getColumns().map((c) => {
         var templ = "";
         var typ = EdmType.String;
-        //var prop = c.mAggregations.header.getText(); 
         var prop = c.getCustomData()[0].getValue();
         return {
           label: c.getHeader().getText(),
@@ -159,8 +181,13 @@ sap.ui.define([
       return oCols;
     },
     onNuovo: function () {
-      debugger
       sap.ui.core.BusyIndicator.show();
+      this.resetValueState();
+      var oModel = new sap.ui.model.json.JSONModel();
+      var sIndex = {},
+        sIndex = this.initModel()
+      oModel.setData(sIndex);
+      this.getView().setModel(oModel, "sSelect");
       this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
@@ -168,7 +195,17 @@ sap.ui.define([
       this.byId("navCon").to(this.byId("Detail"));
       sap.ui.core.BusyIndicator.hide();
     },
+    resetValueState: function () {
+      //Get All fields
+      var allRegisteredControls = sap.ui.getCore().byFieldGroupId("");
+      var aComboBox = allRegisteredControls.filter(c => c.isA("sap.m.ComboBox"));
 
+      for (var i = 0; i < aComboBox.length; i++) {
+        if (aComboBox[i].getValueState() === sap.ui.core.ValueState.Error) {
+          aComboBox[i].setValueState("None")
+        }
+      }
+    },
     onBack: function () {
       var sPreviousHash = History.getInstance().getPreviousHash();
       if (sPreviousHash !== undefined) {
@@ -208,7 +245,6 @@ sap.ui.define([
 
     },
     onCloseFileUpload: function () {
-      // this.onSearch();
       this._oValueHelpDialog.destroy();
 
     },
@@ -216,33 +252,38 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onSave: async function () {
-      debugger
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
-
-      if (line.ID === "New") {
-        delete line.ID;
-        // get Last Index
-        // var sDestUsr = this.DESTUSERModel(line);
-        var sManutenzione = this.ManutenzioneModel(line);
-        await this._saveHana("/T_ATTPM", sManutenzione);
-        var aT_ATTPM = await this._getTable("/T_ATTPM", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_ATTPM);
-        this.getView().setModel(oModel, "T_ATTPM");
-      } else {
-        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._updateHana(sURL, line);
-        aT_ATTPM = await this._getTable("/T_ATTPM", []);
-        oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_ATTPM);
-        this.getView().setModel(oModel, "T_ATTPM");
+      var ControlValidate = Validator.validateView();
+      if (ControlValidate) {
+        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+        line = JSON.parse(line);
+        var msg = "",
+          sURL;
+        msg = await this.ControlIndex(line);
+        if (msg !== "") {
+          MessageBox.error(msg);
+        } else {
+          if (line.ID === "New") {
+            delete line.ID;
+            // get Last Index
+            // var sDestUsr = this.DESTUSERModel(line);
+            var sManutenzione = this.ManutenzioneModel(line);
+            await this._saveHana("/T_ATTPM", sManutenzione);
+          } else {
+            var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+            await this._updateHana(sURL, line);
+          }
+          aT_ATTPM = await this._getTable("/T_ATTPM", []);
+          oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(aT_ATTPM);
+          this.getView().setModel(oModel, "T_ATTPM");
+          this.byId("navCon").back();
+        };
       }
-      this.byId("navCon").back();
+
+      sap.ui.core.BusyIndicator.hide(0);
 
     },
     ManutenzioneModel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Spras: (sValue[oResources.getText("Spras")] === undefined) ? undefined : sValue[oResources.getText("Spras")].toString(),
@@ -252,7 +293,6 @@ sap.ui.define([
       return rValue;
     },
     onModify: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbDefinizioneAttivitaDiManutenzione").getSelectedItems();
@@ -299,52 +339,66 @@ sap.ui.define([
     },
 
     componiCancelURL: function (line) {
-      debugger
       var sURL = `/T_ATTPM(Spras='${line.Spras}',Ilart='${line.Ilart}')`;
-
       // return encodeURIComponent(sURL);
       return sURL;
     },
-    // handleUploadPress: async function () {
-    //   debugger
-    //   var oResource = this.getResourceBundle();
-    //   if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-    //     MessageBox.warning("Inserire un File da caricare");
-    //   } else {
-    //     sap.ui.core.BusyIndicator.show();
-    //     var i = 0,
-    //       sURL,
-    //       msg = "";
-    //     var rows = this.getView().getModel("uploadModel").getData();
-    //     if (msg !== "") {
-    //       sap.ui.core.BusyIndicator.hide(0);
-    //       MessageBox.error(msg);
-    //     } else {
-    //       for (i = 0; i < rows.length; i++) {
-    //         var sManutenzioneEx = this.ManutenzioneModelExcel(rows[i]);
-    //         if (sManutenzioneEx.Ilart.startsWith("C-")) { //Creazione                  
-    //           // sDestUsr.Werks = await this._getLastItemData("/T_DEST_USR", "", "Divisione");
-
-    //           await this._saveHana("/T_ATTPM", sManutenzioneEx);
-    //         } else { // Modifica
-    //           sURL = this.componiCancelURL(sManutenzioneEx)
-    //           await this._updateHana(sURL, sManutenzioneEx);
-    //         }
-    //       }
-    //       MessageBox.success("Excel Caricato con successo");
-    //       sap.ui.core.BusyIndicator.hide(0);
-    //       var aT_ATTPM = await this._getTable("/T_ATTPM", []);
-    //       var oModel = new sap.ui.model.json.JSONModel();
-    //       oModel.setData(aT_ATTPM);
-    //       this.getView().setModel(oModel, "T_ATTPM");
-    //       sap.ui.getCore().byId("UploadTable").close();
-    //     }
-    //   }
-    // },
 
     handleUploadPress: async function () {
-      debugger
+      // var oResource = this.getResourceBundle();
+      // if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
+      //   MessageBox.warning("Inserire un File da caricare");
+      // } else {
+      //   sap.ui.core.BusyIndicator.show();
+      //   var i = 0,
+      //     sURL,
+      //     msg = "";
+
+      //   var rows = this.getView().getModel("uploadModel").getData();
+      //   var table = this.byId("tbDefinizioneAttivitaDiManutenzione").getBinding("items").oList;
+
+      //   var aArrayNew = rows.filter(function (o1) {
+      //     return !table.some(function (o2) {
+      //       return o1.Lingua === o2.Spras && o1["TP Attività PM"] === o2.Ilart && o1["Descrizione TP Attività PM"] === o2.Ilatx; // return the ones with equal id
+      //     });
+      //   });
+
+      //   if (aArrayNew) {
+      //     if (rows.length == table.length) {
+      //       for (let i = 0; i < aArrayNew.length; i++) {
+      //         var sManutenzioneNew = this.ManutenzioneModelExcel(aArrayNew[i]);
+      //         sURL = this.componiCancelURL(sManutenzioneNew);
+      //         await this._updateHana(sURL, sManutenzioneNew);
+      //       }
+      //     } else {
+      //       for (let i = 0; i < aArrayNew.length; i++) {
+      //         var sManutenzioneNewEX = this.ManutenzioneModelExcel(aArrayNew[i]);
+      //         await this._saveHana("/T_ATTPM", sManutenzioneNewEX);
+      //       }
+      //     }
+      //     var intersection = table.filter(item1 => rows.some(item2 => item1.Spras === item2.Lingua && item1.Ilart === item2["TP Attività PM"] && item1.Ilatx === item2["Descrizione TP Attività PM"]));
+      //     if (msg !== "") {
+      //       sap.ui.core.BusyIndicator.hide(0);
+      //       MessageBox.error(msg);
+      //     }
+      //     for (i = 0; i < intersection.length; i++) {
+      //       var sManutenzioneEx = this.ManutenzioneModelExcelModifica(intersection[i]);
+      //       // Modifica
+      //       sURL = this.componiCancelURL(sManutenzioneEx)
+      //       await this._updateHana(sURL, sManutenzioneEx);
+      //     }
+      //     MessageBox.success("Excel Caricato con successo");
+      //     sap.ui.core.BusyIndicator.hide(0);
+      //     var aT_ATTPM = await this._getTable("/T_ATTPM", []);
+      //     var oModel = new sap.ui.model.json.JSONModel();
+      //     oModel.setData(aT_ATTPM);
+      //     this.getView().setModel(oModel, "T_ATTPM");
+      //     this.byId("UploadTable").close();
+      //   }
+      // }
+
       var oResource = this.getResourceBundle();
+
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
         MessageBox.warning("Inserire un File da caricare");
       } else {
@@ -352,48 +406,37 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
-
         var rows = this.getView().getModel("uploadModel").getData();
         var table = this.byId("tbDefinizioneAttivitaDiManutenzione").getBinding("items").oList;
-
-        var aArrayNew = rows.filter(function (o1) {
-          return !table.some(function (o2) {
-            return o1.Lingua === o2.Spras && o1["TP Attività PM"] === o2.Ilart && o1["Descrizione TP Attività PM"] === o2.Ilatx; // return the ones with equal id
-          });
-        });
-        if (aArrayNew) {
-          for (let i = 0; i < aArrayNew.length; i++) {
-            var sManutenzioneExNew = this.ManutenzioneModelExcel(aArrayNew[i]);
-            await this._saveHana("/T_ATTPM", sManutenzioneExNew);
-
-          }
-        }
-        var intersection = table.filter(item1 => rows.some(item2 => item1.Spras === item2.Lingua && item1.Ilart === item2["TP Attività PM"] && item1.Ilatx === item2["Descrizione TP Attività PM"]));
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
         }
 
-        for (i = 0; i < intersection.length; i++) {
-          var sManutenzioneEx = this.ManutenzioneModelExcelModifica(intersection[i]);
-          // Modifica
-          sURL = this.componiCancelURL(sManutenzioneEx)
-          await this._updateHana(sURL, sManutenzioneEx);
-        }
-
-        MessageBox.success("Excel Caricato con successo");
-        sap.ui.core.BusyIndicator.hide(0);
-        var aT_ATTPM = await this._getTable("/T_ATTPM", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_ATTPM);
-        this.getView().setModel(oModel, "T_ATTPM");
-        sap.ui.getCore().byId("UploadTable").close();
-
+        rows.map((row) => {
+          if (table.findIndex((tRow) => {
+            return row.Lingua === tRow.Spras && row["TP Attività PM"] === tRow.Ilart;
+          }) !== -1) {
+            var sManutenzioneNew = this.ManutenzioneModelExcel(row);
+            sURL = this.componiCancelURL(sManutenzioneNew);
+            this._updateHana(sURL, sManutenzioneNew);
+          } else {
+            var sManutenzioneNewEX = this.ManutenzioneModelExcel(row);
+            this._saveHana("/T_ATTPM", sManutenzioneNewEX);
+          }
+        });
       }
+      MessageBox.success("Excel Caricato con successo");
+      sap.ui.core.BusyIndicator.hide(0);
+      var aT_ATTPM = await this._getTable("/T_ATTPM", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_ATTPM);
+      this.getView().setModel(oModel, "T_ATTPM");
+      this.getValueHelp();
+      sap.ui.getCore().byId("UploadTable").close();
     },
 
-
-    ManutenzioneModelExcelModifica: function(sValue) {
+    ManutenzioneModelExcelModifica: function (sValue) {
       var oResources = this.getResourceBundle();
       var rValue = {
         Spras: (sValue[oResources.getText("Spras")] === undefined) ? undefined : sValue[oResources.getText("Spras")].toString(),
@@ -404,7 +447,6 @@ sap.ui.define([
     },
 
     ManutenzioneModelExcel: function (sValue) {
-      debugger
       var oResources = this.getResourceBundle();
       var rValue = {
         Spras: (sValue[oResources.getText("Lingua")] === undefined) ? undefined : sValue[oResources.getText("Lingua")].toString(),
@@ -412,6 +454,46 @@ sap.ui.define([
         Ilatx: (sValue[oResources.getText("DescrizioneTPAttivitaPM")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneTPAttivitaPM")].toString()
       };
       return rValue;
+    },
+    handleChangeCb: function (oEvent) {
+      var oValidatedComboBox = oEvent.getSource(),
+        sSelectedKey = oValidatedComboBox.getSelectedKey(),
+        sValue = oValidatedComboBox.getValue();
+
+      if (!sSelectedKey && sValue) {
+        oValidatedComboBox.setValueState(ValueState.Error);
+      } else {
+        oValidatedComboBox.setValueState(ValueState.None);
+      }
+    },
+    handleChangeIn: function (oEvent) {
+      var oValidatedInput = oEvent.getSource(),
+        sSuggestion = oEvent.getSource().getSuggestionRows(),
+        sValue = oValidatedInput.getValue();
+      if (!_.contains(sSuggestion, sValue)) {
+        oValidatedInput.setValueState(ValueState.Error);
+      } else {
+        oValidatedInput.setValueState(ValueState.None);
+      }
+    },
+
+    initModel: function () {
+      var sData = {
+        Spras: "",
+        Ilart: "",
+        Ilarx: ""
+      }
+      return sData;
+    },
+    ControlIndex: function (sData) {
+
+      if (sData.Spras === "" || sData.Spras === undefined || sData.Spras === null) {
+        return "Inserire Lingua";
+      }
+      if (sData.Ilart === "" || sData.Ilart === undefined) {
+        return "Inserire TP Attività PM";
+      }
+      return "";
     },
   });
 });

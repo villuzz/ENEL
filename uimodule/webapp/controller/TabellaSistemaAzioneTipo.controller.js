@@ -9,14 +9,17 @@ sap.ui.define([
   "PM030/APP1/util/manutenzioneTable",
   'sap/ui/model/Filter',
   'sap/ui/model/FilterOperator',
-  'sap/m/MessageToast'
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, Filter, FilterOperator, MessageToast) {
+  'sap/m/MessageToast',
+  'sap/ui/core/library',
+  "PM030/APP1/util/Validator",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, Filter, FilterOperator, MessageToast, coreLibrary, Validator) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
   var EdmType = exportLibrary.EdmType;
-
+  var ValueState = coreLibrary.ValueState;
   return Controller.extend("PM030.APP1.controller.TabellaSistemaAzioneTipo", {
+    Validator: Validator,
     onInit: function () {
       var oData = {
         "Enabled": false
@@ -28,7 +31,12 @@ sap.ui.define([
 
     },
     _onObjectMatched: async function () {
-      var aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
+      Validator.clearValidation();
+      // var aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
+      // var oModel = new sap.ui.model.json.JSONModel();
+      // oModel.setData(aT_ACT_SYST);
+      // this.getView().setModel(oModel, "T_ACT_SYST");
+      var aT_ACT_SYST = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_ACT_SYST);
       this.getView().setModel(oModel, "T_ACT_SYST");
@@ -99,7 +107,7 @@ sap.ui.define([
     onBackDetail: function () {
       this.byId("navCon").back();
     },
-    onSearchFilters: function () {
+    onSearchFilters: async function () {
       debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
@@ -111,7 +119,13 @@ sap.ui.define([
       if (this.getView().byId("cbTesto").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbTesto").getSelectedKeys(), "Txt"));
       }
-      this.byId("tbTabellaSistemaAzioneTipo").getBinding("items").filter(aFilters);
+      var model = this.getView().getModel("T_ACT_SYST");
+      var tableFilters = await this._getTableNoError("/T_ACT_SYST", aFilters);
+      if (tableFilters.length === 0) {
+        MessageBox.error("Nessun record trovato");
+        model.setData({});
+      }
+      model.setData(tableFilters);
     },
 
     multiFilterNumber: function (aArray, vName) {
@@ -210,6 +224,13 @@ sap.ui.define([
     },
 
     onNuovo: function () {
+      sap.ui.core.BusyIndicator.show();
+      this.resetValueState();
+      var oModel = new sap.ui.model.json.JSONModel();
+      var sIndex = {},
+        sIndex = this.initModel()
+      oModel.setData(sIndex);
+      this.getView().setModel(oModel, "sSelect");
       this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
@@ -218,8 +239,18 @@ sap.ui.define([
       this.byId("navCon").to(this.byId("Detail"));
       sap.ui.core.BusyIndicator.hide();
     },
+    resetValueState: function () {
+      //Get All fields
+      var allRegisteredControls = sap.ui.getCore().byFieldGroupId("");
+      var aComboBox = allRegisteredControls.filter(c => c.isA("sap.m.ComboBox"));
+
+      for (var i = 0; i < aComboBox.length; i++) {
+        if (aComboBox[i].getValueState() === sap.ui.core.ValueState.Error) {
+          aComboBox[i].setValueState("None")
+        }
+      }
+    },
     onModify: function () {
-      debugger
       this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
       var items = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
@@ -265,29 +296,36 @@ sap.ui.define([
       this.getView().setModel(oModel, "T_ACT_SYST");
     },
     onSave: async function () {
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
+      var ControlValidate = Validator.validateView();
+      if (ControlValidate) {
+        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+        line = JSON.parse(line);
+        var msg = "",
+          sURL;
+        msg = await this.ControlIndex(line);
+        if (msg !== "") {
+          MessageBox.error(msg);
+        } else {
+          var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+          line = JSON.parse(line);
 
-      if (line.ID === "New") {
-        delete line.ID;
-        delete line.__metadata
-        // get Last Index
-        await this._saveHana("/T_ACT_SYST", line);
-        var aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_ACT_SYST);
-        this.getView().setModel(oModel, "T_ACT_SYST");
-      } else {
-        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._updateHana(sURL, line);
-        aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-        oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_ACT_SYST);
-        this.getView().setModel(oModel, "T_ACT_SYST");
+          if (line.ID === "New") {
+            delete line.ID;
+            delete line.__metadata
+            // get Last Index
+            await this._saveHana("/T_ACT_SYST", line);
+          } else {
+            var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+            await this._updateHana(sURL, line);
+          }
+          var aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
+          var oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(aT_ACT_SYST);
+          this.getView().setModel(oModel, "T_ACT_SYST");
+          this.getValueHelp();
+          this.byId("navCon").back();
+        }
       }
-      this.getValueHelp();
-      this.byId("navCon").back();
-
     },
     onCloseFileUpload: function () {
       this.byId("UploadTable").close();
@@ -350,6 +388,47 @@ sap.ui.define([
       };
       return rValue;
     },
+    handleChangeCb: function (oEvent) {
+      var oValidatedComboBox = oEvent.getSource(),
+        sSelectedKey = oValidatedComboBox.getSelectedKey(),
+        sValue = oValidatedComboBox.getValue();
 
+      if (!sSelectedKey && sValue) {
+        oValidatedComboBox.setValueState(ValueState.Error);
+      } else {
+        oValidatedComboBox.setValueState(ValueState.None);
+      }
+    },
+    handleChangeIn: function (oEvent) {
+      var oValidatedInput = oEvent.getSource(),
+        sSuggestion = oEvent.getSource().getSuggestionRows(),
+        sValue = oValidatedInput.getValue();
+      if (!_.contains(sSuggestion, sValue)) {
+        oValidatedInput.setValueState(ValueState.Error);
+      } else {
+        oValidatedInput.setValueState(ValueState.None);
+      }
+    },
+    initModel: function () {
+      var sData = {
+        Divisione: "",
+        Sistema: "",
+        Txt: ""
+      }
+      return sData;
+    },
+    ControlIndex: function (sData) {
+
+      if (sData.Werks === "" || sData.Werks === undefined || sData.Werks === null) {
+        return "Inserire Divisione";
+      }
+      if (sData.Sistema === "" || sData.Sistema === undefined || sData.Sistema === null) {
+        return "Inserire Sistema";
+      }
+      if (sData.Txt === "" || sData.Txt === undefined || sData.Txt === null) {
+        return "Inserire Testo";
+      }
+      return "";
+    },
   });
 });

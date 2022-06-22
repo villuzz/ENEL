@@ -28,7 +28,6 @@
 
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" required="true" maxLength="4"/> -->
                               <MultiComboBox id="cbDivisione"  value="{sRaggruppamento>/DIVISIONE}" items="{ path: 'sHelp>/T_AGGREG/Divisione', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}" />
                                 </MultiComboBox>
@@ -173,39 +172,39 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox value="{sDetail>/Werks}" enabled="{oDataModel>/Enabled}"  items="{ path: 'sHelp>/H_T001W_C/DIVISIONENew', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/Werks}" required="true" valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}"  items="{ path: 'sHelp>/H_T001W_C/DIVISIONENew', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Sistema}" >
                   <form:fields>
-                  <ComboBox value="{sDetail>/Sistema}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/Sistema}" required="true" valueStateText="{i18n>valueState} {i18n>Sistema}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Classe}">
                   <form:fields>
-                  <ComboBox value="{sDetail>/Classe}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_CLAS/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/Classe}" required="true" valueStateText="{i18n>valueState} {i18n>Classe}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_CLAS/SISTEMANew', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Classe}" text="{sHelp>Classe}"/>
                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>NProAggr}">
                   <form:fields>
-                  <Input value="{sDetail>/ProgAggr}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: '', descending: false, group:false }] }" >
+                  <ComboBox value="{sDetail>/ProgAggr}" required="true" valueStateText="{i18n>valueState} {i18n>NProAggr}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_AGGREG/ProgAggr', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}"/>
-                   </Input>
+                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TitoloAzioneAggregativo1}">
-                <ComboBox value="{sDetail>/AggrActTitle}"  items="{ path: 'sHelp>/T_AGGREG/AggrActTitle', sorter: [{ path: '', descending: false, group:false }] }" >
+                <ComboBox value="{sDetail>/AggrActTitle}" valueStateText="{i18n>valueState} {i18n>NProAggr}" change="handleChangeCb" items="{ path: 'sHelp>/T_AGGREG/AggrActTitle', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>AggrActTitle}" text="{sHelp>AggrActTitle}"/>
                    </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>ComponenteAzioneAggregativo1}">
-                <ComboBox value="{sDetail>/AggrActComponent}"  items="{ path: 'sHelp>/T_AGGREG/AggrActComponent', sorter: [{ path: '', descending: false, group:false }] }" >
+                <ComboBox value="{sDetail>/AggrActComponent}" valueStateText="{i18n>valueState} {i18n>NProAggr}" change="handleChangeCb" items="{ path: 'sHelp>/T_AGGREG/AggrActComponent', sorter: [{ path: '', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>AggrActComponent}" text="{sHelp>AggrActComponent}"/>
                    </ComboBox>
                 </form:FormElement>

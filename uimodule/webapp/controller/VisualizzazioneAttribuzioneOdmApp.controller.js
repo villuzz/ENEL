@@ -29,6 +29,7 @@ sap.ui.define([
 
     },
     _onObjectMatched: async function () {
+      debugger
       var aT_APP_WO = await this._getTable("/T_APP_WO", []);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_APP_WO);

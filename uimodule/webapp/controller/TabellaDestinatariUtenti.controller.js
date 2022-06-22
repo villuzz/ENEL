@@ -10,15 +10,17 @@ sap.ui.define([
   'sap/ui/model/Filter',
   'sap/ui/model/FilterOperator',
   "PM030/APP1/util/manutenzioneTable",
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, MessageToast, Filter, FilterOperator, manutenzioneTable, ) {
+  'sap/ui/core/library',
+  "PM030/APP1/util/Validator",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, MessageToast, Filter, FilterOperator, manutenzioneTable, coreLibrary, Validator) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
   var EdmType = exportLibrary.EdmType;
-
+  var ValueState = coreLibrary.ValueState;
   return Controller.extend("PM030.APP1.controller.TabellaDestinatariUtenti", {
+    Validator: Validator,
     onInit: function () {
-
       var oData = {
         "Enabled": false
       };
@@ -26,13 +28,11 @@ sap.ui.define([
       this.getView().setModel(oModelEnabled, "oDataModel");
       this.getOwnerComponent().getRouter().getRoute("TabellaDestinatariUtenti").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbTabellaDestinatariUtenti"), componentName: "Piani", persoService: manutenzioneTable }).activate();
-
-
     },
     _onObjectMatched: async function () {
-      debugger
+      Validator.clearValidation();
       sap.ui.core.BusyIndicator.show();
-      var aT_DEST_USR = await this._getTable("/T_DEST_USR", []);
+      var aT_DEST_USR = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_DEST_USR);
       this.getView().setModel(oModel, "T_DEST_USR");
@@ -40,7 +40,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_DEST_USR: {},
@@ -111,7 +110,7 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
-    onSearchFilters: function () {
+    onSearchFilters: async function () {
       debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
@@ -129,7 +128,13 @@ sap.ui.define([
       if (this.getView().byId("cbUtente").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbUtente").getSelectedKeys(), "Uname"));
       }
-      this.byId("tbTabellaDestinatariUtenti").getBinding("items").filter(aFilters);
+      var model = this.getView().getModel("T_DEST_USR");
+      var tableFilters = await this._getTableNoError("/T_DEST_USR", aFilters);
+      if (tableFilters.length === 0) {
+        MessageBox.error("Nessun record trovato");
+        model.setData({});
+      }
+      model.setData(tableFilters);
     },
 
     multiFilterNumber: function (aArray, vName) {
@@ -205,9 +210,9 @@ sap.ui.define([
       return oCols;
     },
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
-      if (this.getView().byId("fileUploader").getValue() === "") {
+
+      if (this.byId("fileUploader").getValue() === "") {
         MessageBox.warning("Inserire un File da caricare");
       } else {
         sap.ui.core.BusyIndicator.show();
@@ -215,30 +220,32 @@ sap.ui.define([
           sURL,
           msg = "";
         var rows = this.getView().getModel("uploadModel").getData();
+        var table = this.byId("tbTabellaDestinatariUtenti").getBinding("items").oList;
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sDestUsr = this.DESTUSERModel(rows[i]);
-            if (sDestUsr.Werks.startsWith("C-")) { //Creazione                  
-              // sDestUsr.Werks = await this._getLastItemData("/T_DEST_USR", "", "Divisione");
-
-              await this._saveHana("/T_DEST_USR", sDestUsr);
-            } else { // Modifica
-              sURL = this.componiURLExcel(sDestUsr)
-              await this._updateHana(sURL, sDestUsr);
-            }
-          }
-          MessageBox.success("Excel Caricato con successo");
-          sap.ui.core.BusyIndicator.hide(0);
-          var aT_DEST_USR = await this._getTable("/T_DEST_USR", []);
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(aT_DEST_USR);
-          this.getView().setModel(oModel, "T_DEST_USR");
-          this.byId("UploadTable").close();
         }
+
+        rows.map((row) => {
+          if (table.findIndex((tRow) => {
+            return row.Divisione === tRow.Werks && row["Centro di Lavoro"] === tRow.Arbpl && row.Destinatario === tRow.Destinatario && row.Utente === tRow.Uname && row["Auth Object PMO"] === tRow.Object && row["Auth field"] === tRow.Id && row.z_auth_pmo === tRow.Auto;
+          }) !== -1) {
+            var sControlEX = this.DESTUSERModel(row);
+            sURL = this.componiURLExcel(sControlEX);
+            this._updateHana(sURL, sControlEX);
+          } else {
+            var sControlliNew = this.DESTUSERModel(row);
+            this._saveHana("/T_DEST_USR", sControlliNew);
+          }
+        });
+        MessageBox.success("Excel Caricato con successo");
+        sap.ui.core.BusyIndicator.hide(0);
+        var aT_DEST_USR = await this._getTable("/T_DEST_USR", []);
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(aT_DEST_USR);
+        this.getView().setModel(oModel, "T_DEST_USR");
       }
+      this.byId("UploadTable").close();
     },
     DESTUSERModel: function (sValue) {
       debugger
@@ -296,38 +303,51 @@ sap.ui.define([
       this.byId("UploadTable").open();
     },
     onCloseFileUpload: function () {
-      // this.onSearch();
-      this._oValueHelpDialog.destroy();
+      this.byId("UploadTable").close();
 
     },
 
 
     onSave: async function () {
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
-
-      if (line.ID === "New") {
-        delete line.ID;
-        // get Last Index
-        // var sDestUsr = this.DESTUSERModel(line);
-        await this._saveHana("/T_DEST_USR", line);
-        var aT_RAGRR = await this._getTable("/T_DEST_USR", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_RAGRR);
-        this.getView().setModel(oModel, "T_DEST_USR");
-      } else {
-        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._updateHana(sURL, line);
-        aT_RAGRR = await this._getTable("/T_DEST_USR", []);
-        oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_RAGRR);
-        this.getView().setModel(oModel, "T_DEST_USR");
+      var ControlValidate = Validator.validateView();
+      if (ControlValidate) {
+        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+        line = JSON.parse(line);
+        var msg = "",
+          sURL;
+        msg = await this.ControlIndex(line);
+        if (msg !== "") {
+          MessageBox.error(msg);
+        } else {
+          if (line.ID === "New") {
+            delete line.ID;
+            // get Last Index
+            // var sDestUsr = this.DESTUSERModel(line);
+            await this._saveHana("/T_DEST_USR", line);
+            var aT_RAGRR = await this._getTable("/T_DEST_USR", []);
+            var oModel = new sap.ui.model.json.JSONModel();
+            oModel.setData(aT_RAGRR);
+            this.getView().setModel(oModel, "T_DEST_USR");
+          } else {
+            var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+            await this._updateHana(sURL, line);
+            aT_RAGRR = await this._getTable("/T_DEST_USR", []);
+            oModel = new sap.ui.model.json.JSONModel();
+            oModel.setData(aT_RAGRR);
+            this.getView().setModel(oModel, "T_DEST_USR");
+          }
+        }
+        this.byId("navCon").back();
       }
-      this.byId("navCon").back();
-
     },
     onNuovo: function () {
-      debugger
+      sap.ui.core.BusyIndicator.show();
+      this.resetValueState();
+      var oModel = new sap.ui.model.json.JSONModel();
+      var sIndex = {},
+        sIndex = this.initModel()
+      oModel.setData(sIndex);
+      this.getView().setModel(oModel, "sSelect");
       this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
@@ -335,6 +355,17 @@ sap.ui.define([
       this.getView().setModel(oModel, "sDetail");
       this.byId("navCon").to(this.byId("Detail"));
       sap.ui.core.BusyIndicator.hide();
+    },
+    resetValueState: function () {
+      //Get All fields
+      var allRegisteredControls = sap.ui.getCore().byFieldGroupId("");
+      var aComboBox = allRegisteredControls.filter(c => c.isA("sap.m.ComboBox"));
+
+      for (var i = 0; i < aComboBox.length; i++) {
+        if (aComboBox[i].getValueState() === sap.ui.core.ValueState.Error) {
+          aComboBox[i].setValueState("None")
+        }
+      }
     },
     onBackDetail: function () {
       this.byId("navCon").back();
@@ -370,6 +401,64 @@ sap.ui.define([
       }
       sap.ui.core.BusyIndicator.hide();
     },
+    handleChangeCb: function (oEvent) {
+      var oValidatedComboBox = oEvent.getSource(),
+        sSelectedKey = oValidatedComboBox.getSelectedKey(),
+        sValue = oValidatedComboBox.getValue();
 
+      if (!sSelectedKey && sValue) {
+        oValidatedComboBox.setValueState(ValueState.Error);
+      } else {
+        oValidatedComboBox.setValueState(ValueState.None);
+      }
+    },
+    handleChangeIn: function (oEvent) {
+      var oValidatedInput = oEvent.getSource(),
+        sSuggestion = oEvent.getSource().getSuggestionRows(),
+        sValue = oValidatedInput.getValue();
+      if (!_.contains(sSuggestion, sValue)) {
+        oValidatedInput.setValueState(ValueState.Error);
+      } else {
+        oValidatedInput.setValueState(ValueState.None);
+      }
+    },
+    initModel: function () {
+      var sData = {
+        Werks: "",
+        Arbpl: "",
+        Destinatario: "",
+        Uname: "",
+        Object: "",
+        Id: "",
+        Auto: "",
+        Raggruppamento: ""
+      };
+      return sData;
+    },
+    ControlIndex: function (sData) {
+
+      if (sData.Werks === "" || sData.Werks === undefined || sData.Werks === null) {
+        return "Inserire Divisione";
+      }
+      if (sData.Arbpl === "" || sData.Arbpl === undefined || sData.Arbpl === null) {
+        return "Inserire Centro di Lavoro";
+      }
+      if (sData.Destinatario === "" || sData.Destinatario === undefined || sData.Destinatario === null) {
+        return "Inserire Destinatario";
+      }
+      if (sData.Uname === "" || sData.Uname === undefined || sData.Uname === null) {
+        return "Inserire Uname";
+      }
+      if (sData.Object === "" || sData.Object === undefined || sData.Object === null) {
+        return "Inserire Object";
+      }
+      if (sData.Id === "" || sData.Id === undefined || sData.Id === null) {
+        return "Inserire Id";
+      }
+      if (sData.Auto === "" || sData.Auto === undefined || sData.Auto === null) {
+        return "Inserire Auto";
+      }
+      return "";
+    },
   });
 });

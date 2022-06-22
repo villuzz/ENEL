@@ -10,13 +10,16 @@ sap.ui.define([
   'sap/ui/model/FilterOperator',
   'sap/m/MessageToast',
   "PM030/APP1/util/manutenzioneTable",
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, ) {
+  'sap/ui/core/library',
+  "PM030/APP1/util/Validator",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, coreLibrary, Validator) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
   var EdmType = exportLibrary.EdmType;
-
+  var ValueState = coreLibrary.ValueState;
   return Controller.extend("PM030.APP1.controller.TabellaGruppoDiControllo", {
+    Validator: Validator,
     onInit: function () {
       sap.ui.core.BusyIndicator.show();
       var oData = {
@@ -29,8 +32,8 @@ sap.ui.define([
 
     },
     _onObjectMatched: async function () {
-      debugger
-      var aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
+      Validator.clearValidation();
+      var aT_TP_MAN2 = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_TP_MAN2);
       this.getView().setModel(oModel, "T_TP_MAN2");
@@ -39,7 +42,6 @@ sap.ui.define([
       this.getValueHelp();
     },
     getValueHelp: async function () {
-      debugger
       var sData = {};
       var oModelHelp = new sap.ui.model.json.JSONModel({
         T_TP_MAN2: {},
@@ -88,11 +90,11 @@ sap.ui.define([
       this.getView().setModel(oModelHelp, "sHelp");
       sap.ui.core.BusyIndicator.hide();
     },
-   
+
     onSearchResult: function () {
       this.onSearchFilters();
     },
-    onSearchFilters: function () {
+    onSearchFilters: async function () {
       debugger
       var aFilters = [];
       if (this.getView().byId("cbGruppoControlli").getSelectedKeys().length !== 0) {
@@ -106,7 +108,13 @@ sap.ui.define([
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbRaggruppamento").getSelectedKeys(), "Raggruppamento"));
       }
 
-      this.byId("tbTabellaGruppoDiControllo").getBinding("items").filter(aFilters);
+      var model = this.getView().getModel("T_TP_MAN2");
+      var tableFilters = await this._getTableNoError("/T_TP_MAN2", aFilters);
+      if (tableFilters.length === 0) {
+        MessageBox.error("Nessun record trovato");
+        model.setData({});
+      }
+      model.setData(tableFilters);
     },
 
     multiFilterNumber: function (aArray, vName) {
@@ -148,17 +156,17 @@ sap.ui.define([
           worker: false
         };
       } else {
-        var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: aFilters,
-        fileName: "TabellaGruppoDiControllo.xlsx",
-        worker: false
-      };
+        var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aFilters,
+          fileName: "TabellaGruppoDiControllo.xlsx",
+          worker: false
+        };
       }
-      
+
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();
@@ -166,6 +174,7 @@ sap.ui.define([
     },
 
     _createColumnConfig: function () {
+      debugger
       var oCols = this.byId("tbTabellaGruppoDiControllo").getColumns().map((c) => {
         var templ = "";
         var typ = EdmType.String;
@@ -213,16 +222,12 @@ sap.ui.define([
       this.getView().getModel("tabCheckModel").setProperty("/editEnabled", true);
     },
     handleUploadPiani: function () {
-      this._oValueHelpDialog = sap.ui.xmlfragment("PM030.APP1.view.fragment.UploadTable", this);
-      this.getView().addDependent(this._oValueHelpDialog);
-      this.getView().setModel(this.oEmployeeModel);
-      this._oValueHelpDialog.open();
+      this.byId("fileUploader").setValue("");
+      this.byId("UploadTable").open();
 
     },
     onCloseFileUpload: function () {
-      // this.onSearch();
-      this._oValueHelpDialog.destroy();
-
+      this.byId("UploadTable").close();
     },
 
     onNuovo: function () {
@@ -236,29 +241,33 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onSave: async function () {
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
-
-      if (line.ID === "New") {
-        delete line.ID;
-        // get Last Index
-        delete line["__metadata"];
-        var sControllo = this.ControlloModel(line);
-        await this._saveHana("/T_TP_MAN2", sControllo);
-        var aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_TP_MAN2);
-        this.getView().setModel(oModel, "T_TP_MAN2");
-      } else {
-        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._updateHana(sURL, line);
-        aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
-        oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_TP_MAN2);
-        this.getView().setModel(oModel, "T_TP_MAN2");
+      var ControlValidate = Validator.validateView();
+      if (ControlValidate) {
+        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+        line = JSON.parse(line);
+        var msg = "",
+          sURL;
+        msg = await this.ControlIndex(line);
+        if (msg !== "") {
+          MessageBox.error(msg);
+        } else {
+          if (line.ID === "New") {
+            delete line.ID;
+            // get Last Index
+            delete line["__metadata"];
+            var sControllo = this.ControlloModel(line);
+            await this._saveHana("/T_TP_MAN2", sControllo);
+          } else {
+            var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+            await this._updateHana(sURL, line);
+          }
+          var aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
+          var oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(aT_TP_MAN2);
+          this.getView().setModel(oModel, "T_TP_MAN2");
+          this.byId("navCon").back();
+        }
       }
-      this.byId("navCon").back();
-
     },
     ControlloModel: function (sValue) {
       debugger
@@ -325,38 +334,46 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
-      if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
+
+      if (this.byId("fileUploader").getValue() === "") {
         MessageBox.warning("Inserire un File da caricare");
       } else {
         sap.ui.core.BusyIndicator.show();
         var i = 0,
           sURL,
           msg = "";
+        
         var rows = this.getView().getModel("uploadModel").getData();
+        // var table = this.byId("tbTabellaGruppoDiControllo").getBinding("items").oList;
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sControlloEx = this.ControlloExcelModel(rows[i]);
-            if (sControlloEx.TipoGestione2.startsWith("C-")) { //Creazione                  
-              await this._saveHana("/T_TP_MAN2", sControlloEx);
-            } else { // Modifica
-              sURL = this.componiCancelURL(sControlloEx)
-              await this._updateHana(sURL, sControlloEx);
-            }
+        }
+        for (let i = 0; i < rows.length; i++) {
+          var sControlEX = this.ControlloExcelModel(rows[i]);
+          sURL = this.componiURL(sControlEX);
+          var result = await this._updateHanaNoError(sURL, sControlEX);
+          if (result.length === 0) {
+            await this._saveHanaNoError("/T_TP_MAN2", sControlEX);
           }
-          MessageBox.success("Excel Caricato con successo");
-          sap.ui.core.BusyIndicator.hide(0);
-          var aT_TP_MAN1 = await this._getTable("/T_TP_MAN2", []);
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(aT_TP_MAN1);
-          this.getView().setModel(oModel, "T_TP_MAN2");
-          sap.ui.getCore().byId("UploadTable").close();
         }
       }
+      MessageBox.success("Excel Caricato con successo");
+      this.readTable();
+      this.byId("UploadTable").close();
+      sap.ui.core.BusyIndicator.hide(0);
+    },
+    readTable: async function () {
+      var aT_TP_MAN2 = await this._getTable("/T_TP_MAN2", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(aT_TP_MAN2);
+      this.getView().setModel(oModel, "T_TP_MAN2");
+    },
+    componiURL: function (line) {
+      var sURL = "/T_TP_MAN2(" + "TipoGestione2=" + "'" + line.TipoGestione2 + "'," +
+        "Divisione=" + "'" + line.Divisione + "'" + ")";
+      return sURL;
     },
     ControlloExcelModel: function (sValue) {
       debugger
@@ -369,6 +386,58 @@ sap.ui.define([
       };
       return rValue;
     },
+    ControlloSaveEx: function (sValue) {
+      debugger
+      var oResources = this.getResourceBundle();
+      var rValue = {
+        TipoGestione2: (sValue[oResources.getText("TipoGestione2")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione2")].toString(),
+        Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
+        DesTipoGest2: (sValue[oResources.getText("DesTipoGest2")] === undefined) ? undefined : sValue[oResources.getText("DesTipoGest2")].toString(),
+        Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+      };
+      return rValue;
+    },
+    handleChangeCb: function (oEvent) {
+      debugger
+      var oValidatedComboBox = oEvent.getSource(),
+        sSelectedKey = oValidatedComboBox.getSelectedKey(),
+        sValue = oValidatedComboBox.getValue();
 
+      if (!sSelectedKey && sValue) {
+        oValidatedComboBox.setValueState(ValueState.Error);
+      } else {
+        oValidatedComboBox.setValueState(ValueState.None);
+      }
+    },
+    handleChangeIn: function (oEvent) {
+      debugger
+      var oValidatedInput = oEvent.getSource(),
+        sSuggestion = oEvent.getSource().getSuggestionRows(),
+        sValue = oValidatedInput.getValue();
+      if (!_.contains(sSuggestion, sValue)) {
+        oValidatedInput.setValueState(ValueState.Error);
+      } else {
+        oValidatedInput.setValueState(ValueState.None);
+      }
+    },
+    initModel: function () {
+      var sData = {
+        TipoGestione2: "",
+        Divisione: "",
+        DesTipoGest2: "",
+        Raggruppamento: ""
+      }
+      return sData;
+    },
+    ControlIndex: function (sData) {
+
+      if (sData.TipoGestione2 === "" || sData.TipoGestione2 === undefined || sData.TipoGestione2 === null) {
+        return "Inserire Gruppo Controlli";
+      }
+      if (sData.Divisione === "" || sData.Divisione === undefined || sData.Divisione === null) {
+        return "Inserire Divisione";
+      }
+      return "";
+    },
   });
 });

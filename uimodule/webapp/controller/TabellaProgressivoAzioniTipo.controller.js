@@ -10,13 +10,16 @@ sap.ui.define([
   'sap/ui/model/Filter',
   'sap/ui/model/FilterOperator',
   'sap/m/MessageToast',
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, Filter, FilterOperator, MessageToast) {
+  'sap/ui/core/library',
+  "PM030/APP1/util/Validator",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, Filter, FilterOperator, MessageToast, coreLibrary, Validator) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
   var EdmType = exportLibrary.EdmType;
-
+  var ValueState = coreLibrary.ValueState;
   return Controller.extend("PM030.APP1.controller.TabellaProgressivoAzioniTipo", {
+    Validator: Validator,
     onInit: function () {
       var oData = {
         "Enabled": false
@@ -35,9 +38,9 @@ sap.ui.define([
     },
 
     _onObjectMatched: async function () {
-      debugger
+      Validator.clearValidation();
       sap.ui.core.BusyIndicator.show();
-      var aT_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
+      var aT_ACT_PROG = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_ACT_PROG);
       this.getView().setModel(oModel, "T_ACT_PROG");
@@ -143,7 +146,8 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
-    onSearchFilters: function () {
+    onSearchFilters: async function () {
+     
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Werks"));
@@ -160,7 +164,13 @@ sap.ui.define([
       if (this.getView().byId("cbComponentTipo").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbComponentTipo").getSelectedKeys(), "ComponentTipo"));
       }
-      this.byId("tbProgressivoAzioni").getBinding("items").filter(aFilters);
+      var model = this.getView().getModel("T_ACT_PROG");
+      var tableFilters = await this._getTableNoError("/T_ACT_PROG", aFilters);
+      if (tableFilters.length === 0) {
+        MessageBox.error("Nessun record trovato");
+        model.setData({});
+      }
+      model.setData(tableFilters);
     },
 
     multiFilterNumber: function (aArray, vName) {
@@ -242,12 +252,29 @@ sap.ui.define([
     },
     onNuovo: function () {
       sap.ui.core.BusyIndicator.show();
+      this.resetValueState();
+      var oModel = new sap.ui.model.json.JSONModel();
+      var sIndex = {},
+        sIndex = this.initModel();
+      oModel.setData(sIndex);
+      this.getView().setModel(oModel, "sSelect");
       this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData({ ID: "New" });
       this.getView().setModel(oModel, "sDetail");
       this.byId("navCon").to(this.byId("Detail"));
       sap.ui.core.BusyIndicator.hide();
+    },
+    resetValueState: function () {
+      //Get All fields
+      var allRegisteredControls = sap.ui.getCore().byFieldGroupId("");
+      var aComboBox = allRegisteredControls.filter(c => c.isA("sap.m.ComboBox"));
+
+      for (var i = 0; i < aComboBox.length; i++) {
+        if (aComboBox[i].getValueState() === sap.ui.core.ValueState.Error) {
+          aComboBox[i].setValueState("None")
+        }
+      }
     },
     onBackDetail: function () {
       this.byId("navCon").back();
@@ -328,9 +355,56 @@ sap.ui.define([
       this.byId("UploadTable").close();
     },
     handleUploadPress: async function () {
+      // var oResource = this.getResourceBundle();
+
+      // if (this.getView().byId("fileUploader").getValue() === "") {
+      //   MessageBox.warning("Inserire un File da caricare");
+      // } else {
+      //   sap.ui.core.BusyIndicator.show();
+      //   var i = 0,
+      //     sURL,
+      //     msg = "";
+      //   var rows = this.getView().getModel("uploadModel").getData();
+      //   var table = this.byId("tbProgressivoAzioni").getBinding("items").oList;
+
+      //   var aArrayNew = rows.filter(function (o1) {
+      //     return !table.some(function (o2) {
+      //       return o1.Divisione === o2.Werks && o1.Sistema === o2.Sistema && o1.Progressivo === o2.Progres; // return the ones with equal id
+      //     });
+      //   });
+      //   if (aArrayNew) {
+      //     for (let i = 0; i < aArrayNew.length; i++) {
+      //       var sAzioni = this.AzioniModel(rows[i]);
+      //       await this._saveHana("/T_ACT_PROG", sAzioni);
+
+      //     }
+      //   }
+      //   var intersection = table.filter(item1 => rows.some(item2 => item1.Divisione === item2.Werks && item1.Sistema === item2.Sistema && item1.Progressivo === item2.Progres));
+      //   if (msg !== "") {
+      //     sap.ui.core.BusyIndicator.hide(0);
+      //     MessageBox.error(msg);
+      //   }
+
+      //   for (i = 0; i < intersection.length; i++) {
+      //     sAzioni = this.AzioniModelModifica(intersection[i]);
+      //     // Modifica
+      //     sURL = this.componiURL(sAzioni);
+      //     await this._updateHana(sURL, sAzioni);
+      //   }
+
+      // MessageBox.success("Excel Caricato con successo");
+      // }
+
+      // sap.ui.core.BusyIndicator.hide(0);
+      // var aT_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
+      // var oModel = new sap.ui.model.json.JSONModel();
+      // oModel.setData(aT_ACT_PROG);
+      // this.getView().setModel(oModel, "T_ACT_PROG");
+      // sap.ui.getCore().byId("UploadTable").close();
+      debugger
       var oResource = this.getResourceBundle();
 
-      if (this.getView().byId("fileUploader").getValue() === "") {
+      if (this.byId("fileUploader").getValue() === "") {
         MessageBox.warning("Inserire un File da caricare");
       } else {
         sap.ui.core.BusyIndicator.show();
@@ -339,34 +413,33 @@ sap.ui.define([
           msg = "";
         var rows = this.getView().getModel("uploadModel").getData();
         var table = this.byId("tbProgressivoAzioni").getBinding("items").oList;
-
-        var aArrayNew = rows.filter(function (o1) {
-          return !table.some(function (o2) {
-            return o1.Divisione === o2.Werks && o1.Sistema === o2.Sistema && o1.Progressivo === o2.Progres; // return the ones with equal id
-          });
-        });
-        if (aArrayNew) {
-          for (let i = 0; i < aArrayNew.length; i++) {
-            var sAzioni = this.AzioniModel(rows[i]);
-            await this._saveHana("/T_ACT_PROG", sAzioni);
-
-          }
-        }
-        var intersection = table.filter(item1 => rows.some(item2 => item1.Divisione === item2.Werks && item1.Sistema === item2.Sistema && item1.Progressivo === item2.Progres));
         if (msg !== "") {
           sap.ui.core.BusyIndicator.hide(0);
           MessageBox.error(msg);
         }
 
-        for (i = 0; i < intersection.length; i++) {
-          sAzioni = this.AzioniModelModifica(intersection[i]);
-          // Modifica
-          sURL = this.componiURL(sAzioni);
-          await this._updateHana(sURL, sAzioni);
-        }
+        rows.map((row) => {
+          if (table.findIndex((tRow) => {
+            return row.Divisione === tRow.Werks && row.Sistema === tRow.Sistema && row.Progressivo === tRow.Progres;
+          }) !== -1) {
+            var sAzioni = this.AzioniModelModifica(row);
+            sURL = this.componiURL(sAzioni);
+            this._updateHana(sURL, sAzioni);
+          } else {
+            var sAzioniCre = this.AzioniModel(row);
+            this._saveHana("/T_ACT_PROG", sAzioniCre);
+          }
+        });
       }
+      MessageBox.success("Excel Caricato con successo");
+      sap.ui.core.BusyIndicator.hide(0);
+      var T_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
+      var oModel = new sap.ui.model.json.JSONModel();
+      oModel.setData(T_ACT_PROG);
+      this.getView().setModel(oModel, "T_ACT_PROG");
+      this.byId("UploadTable").close();
     },
-      
+
     AzioniModel: function (sValue) {
       debugger
       var oResources = this.getResourceBundle();
@@ -383,11 +456,11 @@ sap.ui.define([
       debugger
       var oResources = this.getResourceBundle();
       var rValue = {
-        Werks: (sValue[oResources.getText("Werks")] === undefined) ? undefined : sValue[oResources.getText("Werks")].toString(),
+        Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
         Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
-        Progres: (sValue[oResources.getText("Progres")] === undefined) ? undefined : sValue[oResources.getText("Progres")].toString(),
-        Txt: (sValue[oResources.getText("Txt")] === undefined) ? undefined : sValue[oResources.getText("Txt")].toString(),
-        ComponentTipo: (sValue[oResources.getText("ComponentTipo")] === undefined) ? undefined : sValue[oResources.getText("ComponentTipo")].toString()
+        Progres: (sValue[oResources.getText("Progressivo")] === undefined) ? undefined : sValue[oResources.getText("Progressivo")].toString(),
+        Txt: (sValue[oResources.getText("DescrizioneProgressivo")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneProgressivo")].toString(),
+        ComponentTipo: (sValue[oResources.getText("ComponenteTipo")] === undefined) ? undefined : sValue[oResources.getText("ComponenteTipo")].toString()
       };
       return rValue;
     },
@@ -401,29 +474,81 @@ sap.ui.define([
       return sURL;
     },
 
-
-
     onSave: async function () {
       debugger
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
-      if (line.ID === "New") {
-        // get Last Index
-        delete line.ID;
-        delete line['__metadata'];
-        // var sURL = this.componiURL(line);
-        // var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._saveHana("/T_ACT_PROG", line);
-      } else {
-        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._updateHana(sURL, line);
+      var ControlValidate = Validator.validateView();
+      if (ControlValidate) {
+        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+        line = JSON.parse(line);
+        var msg = "",
+          sURL;
+        msg = await this.ControlIndex(line);
+        if (msg !== "") {
+          MessageBox.error(msg);
+        } else {
+          if (line.ID === "New") {
+            // get Last Index
+            delete line.ID;
+            delete line['__metadata'];
+            // var sURL = this.componiURL(line);
+            // var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+            await this._saveHana("/T_ACT_PROG", line);
+          } else {
+            var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+            await this._updateHana(sURL, line);
+          }
+          var T_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
+          var oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(T_ACT_PROG);
+          this.getView().setModel(oModel, "T_ACT_PROG");
+          this.getValueHelp();
+          this.byId("navCon").back();
+        }
       }
-      var T_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData(T_ACT_PROG);
-      this.getView().setModel(oModel, "T_ACT_PROG");
-      this.getValueHelp();
-      this.byId("navCon").back();
+    },
+    handleChangeCb: function (oEvent) {
+      var oValidatedComboBox = oEvent.getSource(),
+        sSelectedKey = oValidatedComboBox.getSelectedKey(),
+        sValue = oValidatedComboBox.getValue();
+
+      if (!sSelectedKey && sValue) {
+        oValidatedComboBox.setValueState(ValueState.Error);
+      } else {
+        oValidatedComboBox.setValueState(ValueState.None);
+      }
+    },
+    handleChangeIn: function (oEvent) {
+      var oValidatedInput = oEvent.getSource(),
+        sSuggestion = oEvent.getSource().getSuggestionRows(),
+        sValue = oValidatedInput.getValue();
+      if (!_.contains(sSuggestion, sValue)) {
+        oValidatedInput.setValueState(ValueState.Error);
+      } else {
+        oValidatedInput.setValueState(ValueState.None);
+      }
+    },
+    ControlIndex: function (sData) {
+
+      if (sData.Werks === "" || sData.Werks === undefined || sData.Werks === null) {
+        return "Inserire Divisione";
+      }
+      if (sData.Sistema === "" || sData.Sistema === undefined || sData.Sistema === null) {
+        return "Inserire Sistema";
+      }
+      if (sData.Progres === "" || sData.Progres === undefined || sData.Progres === null) {
+        return "Inserire Progressivo";
+      }
+      return "";
+    },
+    initModel: function () {
+      var sData = {
+        Werks: "",
+        Sistema: "",
+        Progres: "",
+        Txt: "",
+        ComponentTipo: ""
+      }
+      return sData;
     },
   });
 });

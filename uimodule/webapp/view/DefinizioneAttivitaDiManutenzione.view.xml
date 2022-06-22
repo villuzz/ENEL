@@ -145,21 +145,21 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Lingua}">
                   <form:fields>
-                    <ComboBox  value="{sDetail>/Spras}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/H_T002/Lingua', sorter: [{ path: 'SPRAS', descending: false, group:false }] }" >
+                    <ComboBox required="true" value="{sDetail>/Spras}" valueStateText="{i18n>valueState} {i18n>Lingua}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/H_T002/Lingua', sorter: [{ path: 'SPRAS', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TPAttivitaPM}" >
                   <form:fields>
-                    <ComboBox  value="{sDetail>/Ilart}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/H_T350I/TPAttivita', sorter: [{ path: 'ILART', descending: false, group:false }] }" >
+                    <ComboBox required="true"  value="{sDetail>/Ilart}" valueStateText="{i18n>valueState} {i18n>TPAttivitaPM}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/H_T350I/TPAttivita', sorter: [{ path: 'ILART', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneTPAttivitaPM}">
                   <form:fields>
-                    <ComboBox  value="{sDetail>/Ilatx}"  items="{ path: 'sHelp>/aRAGGRUPPAMENTO', sorter: [{ path: 'aRAGGRUPPAMENTO', descending: false, group:false }] }" >
+                    <ComboBox  value="{sDetail>/Ilatx}" items="{ path: 'sHelp>/aRAGGRUPPAMENTO', sorter: [{ path: 'aRAGGRUPPAMENTO', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
                   </ComboBox>
                   </form:fields>

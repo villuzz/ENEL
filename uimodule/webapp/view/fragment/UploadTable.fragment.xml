@@ -14,10 +14,10 @@
 			</HBox>
 		</content>
 		<beginButton>
-      <Button text="{i18n>Carica}" press="handleUploadPress"/>
+      <Button text="{i18n>Carica}" type="Emphasized" press="handleUploadPress"/>
 		</beginButton>
 		<endButton>
-			<Button text="{i18n>Cancel}" type="Emphasized" press="onCloseFileUpload"/>
+			<Button text="{i18n>Cancel}" press="onCloseFileUpload"/>
 		</endButton>
 	</Dialog>
 </core:FragmentDefinition>

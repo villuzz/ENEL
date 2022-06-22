@@ -10,13 +10,16 @@ sap.ui.define([
   'sap/ui/model/FilterOperator',
   'sap/m/MessageToast',
   "PM030/APP1/util/manutenzioneTable",
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, ) {
+  'sap/ui/core/library',
+  "PM030/APP1/util/Validator",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, Filter, FilterOperator, MessageToast, manutenzioneTable, coreLibrary, Validator) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
   var EdmType = exportLibrary.EdmType;
-
+  var ValueState = coreLibrary.ValueState;
   return Controller.extend("PM030.APP1.controller.TabellaFinalita", {
+    Validator: Validator,
     onInit: function () {
       sap.ui.core.BusyIndicator.show();
       var oData = {
@@ -28,7 +31,8 @@ sap.ui.define([
 
     },
     _onObjectMatched: async function () {
-      var aT_TP_MAN1 = await this._getTable("/T_TP_MAN1", []);
+      Validator.clearValidation();
+      var aT_TP_MAN1 = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_TP_MAN1);
       this.getView().setModel(oModel, "T_TP_MAN1");
@@ -89,7 +93,7 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
-    onSearchFilters: function () {
+    onSearchFilters: async function () {
       debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
@@ -102,7 +106,13 @@ sap.ui.define([
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbRaggruppamento").getSelectedKeys(), "Raggruppamento"));
       }
 
-      this.byId("tbTabellaFinalita").getBinding("items").filter(aFilters);
+      var model = this.getView().getModel("T_TP_MAN1");
+      var tableFilters = await this._getTableNoError("/T_TP_MAN1", aFilters);
+      if (tableFilters.length === 0) {
+        MessageBox.error("Nessun record trovato");
+        model.setData({});
+      }
+      model.setData(tableFilters);
     },
 
     multiFilterNumber: function (aArray, vName) {
@@ -132,28 +142,35 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onSave: async function () {
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
+      var ControlValidate = Validator.validateView();
+      if (ControlValidate) {
+        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+        line = JSON.parse(line);
+        var msg = "",
+          sURL;
+        msg = await this.ControlIndex(line);
+        if (msg !== "") {
+          MessageBox.error(msg);
+        } else {
+          var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+          line = JSON.parse(line);
 
-      if (line.ID === "New") {
-        delete line.ID;
-        // get Last Index
-        var sFinalita = this.FinalitaModel(line);
-        await this._saveHana("/T_TP_MAN1", sFinalita);
-        var aT_RAGRR = await this._getTable("/T_TP_MAN1", []);
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_RAGRR);
-        this.getView().setModel(oModel, "T_TP_MAN1");
-      } else {
-        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._updateHana(sURL, line);
-        aT_RAGRR = await this._getTable("/T_TP_MAN1", []);
-        oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(aT_RAGRR);
-        this.getView().setModel(oModel, "T_TP_MAN1");
+          if (line.ID === "New") {
+            delete line.ID;
+            // get Last Index
+            var sFinalita = this.FinalitaModel(line);
+            await this._saveHana("/T_TP_MAN1", sFinalita);
+          } else {
+            var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+            await this._updateHana(sURL, line);
+          }
+          var aT_RAGRR = await this._getTable("/T_TP_MAN1", []);
+          var oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(aT_RAGRR);
+          this.getView().setModel(oModel, "T_TP_MAN1");
+          this.byId("navCon").back();
+        }
       }
-      this.byId("navCon").back();
-
     },
     FinalitaModel: function (sValue) {
       debugger
@@ -320,7 +337,6 @@ sap.ui.define([
 
     },
     handleUploadPress: async function () {
-      debugger
       var oResource = this.getResourceBundle();
       if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
         MessageBox.warning("Inserire un File da caricare");
@@ -329,29 +345,48 @@ sap.ui.define([
         var i = 0,
           sURL,
           msg = "";
-        var rows = this.getView().getModel("uploadModel").getData();
-        if (msg !== "") {
-          sap.ui.core.BusyIndicator.hide(0);
-          MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sFinalitaEx = this.FinalitaExcelModel(rows[i]);
-            if (sFinalitaEx.TipoGestione1.startsWith("C-")) { //Creazione                  
-              // sDestUsr.Werks = await this._getLastItemData("/T_DEST_USR", "", "Divisione");
 
-              await this._saveHana("/T_TP_MAN1", sFinalitaEx);
-            } else { // Modifica
-              sURL = this.componiCancelURL(sFinalitaEx)
-              await this._updateHana(sURL, sFinalitaEx);
+        var rows = this.getView().getModel("uploadModel").getData();
+        var table = this.byId("tbTabellaFinalita").getBinding("items").oList;
+
+        var aArrayNew = rows.filter(function (o1) {
+          return !table.some(function (o2) {
+            debugger
+            return o1.Divisione === o2.Divisione && o1.Finalita === o2.TipoGestione1 && o1["Descrizione Finalità"] === o2.DesTipoGest1 && o1.Raggruppamento === o2.Raggruppamento; // return the ones with equal id
+          });
+        });
+
+        if (aArrayNew) {
+          if (rows.length == table.length) {
+            for (let i = 0; i < aArrayNew.length; i++) {
+              var sManutenzioneNew = this.FinalitaExcelModel(aArrayNew[i]);
+              sURL = this.componiCancelURL(sManutenzioneNew);
+              await this._updateHana(sURL, sManutenzioneNew);
             }
+          } else {
+            for (let i = 0; i < aArrayNew.length; i++) {
+              var sManutenzioneNewEX = this.FinalitaExcelModel(aArrayNew[i]);
+              await this._saveHana("/T_ATTPM", sManutenzioneNewEX);
+            }
+          }
+          var intersection = table.filter(item1 => rows.some(item2 => item1.Divisione === item2.Divisione && item1.Finalita === item2.TipoGestione1 && item1["Descrizione Finalità"] === item2.DesTipoGest1 && item1.Raggruppamento === item2.Raggruppamento));
+          if (msg !== "") {
+            sap.ui.core.BusyIndicator.hide(0);
+            MessageBox.error(msg);
+          }
+          for (i = 0; i < intersection.length; i++) {
+            var sFinalitaEx = this.FinalitaExcelModel(intersection[i]);
+            // Modifica
+            sURL = this.componiCancelURL(sFinalitaEx)
+            await this._updateHana(sURL, sFinalitaEx);
           }
           MessageBox.success("Excel Caricato con successo");
           sap.ui.core.BusyIndicator.hide(0);
-          var aT_TP_MAN1 = await this._getTable("/T_TP_MAN1", []);
+          var aT_ATTPM = await this._getTable("/T_ATTPM", []);
           var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(aT_TP_MAN1);
-          this.getView().setModel(oModel, "T_TP_MAN1");
-          sap.ui.getCore().byId("UploadTable").close();
+          oModel.setData(aT_ATTPM);
+          this.getView().setModel(oModel, "T_ATTPM");
+          this.byId("UploadTable").close();
         }
       }
     },
@@ -366,6 +401,45 @@ sap.ui.define([
       };
       return rValue;
     },
+    handleChangeCb: function (oEvent) {
+      var oValidatedComboBox = oEvent.getSource(),
+        sSelectedKey = oValidatedComboBox.getSelectedKey(),
+        sValue = oValidatedComboBox.getValue();
 
+      if (!sSelectedKey && sValue) {
+        oValidatedComboBox.setValueState(ValueState.Error);
+      } else {
+        oValidatedComboBox.setValueState(ValueState.None);
+      }
+    },
+    handleChangeIn: function (oEvent) {
+      var oValidatedInput = oEvent.getSource(),
+        sSuggestion = oEvent.getSource().getSuggestionRows(),
+        sValue = oValidatedInput.getValue();
+      if (!_.contains(sSuggestion, sValue)) {
+        oValidatedInput.setValueState(ValueState.Error);
+      } else {
+        oValidatedInput.setValueState(ValueState.None);
+      }
+    },
+    initModel: function () {
+      var sData = {
+        TipoGestione1: "",
+        Divisione: "",
+        DesTipoGest1: "",
+        Raggruppamento: ""
+      }
+      return sData;
+    },
+    ControlIndex: function (sData) {
+
+      if (sData.TipoGestione1 === "" || sData.TipoGestione1 === undefined || sData.TipoGestione1 === null) {
+        return "Inserire Finalità";
+      }
+      if (sData.Divisione === "" || sData.Divisione === undefined || sData.Divisione === null) {
+        return "Inserire Divisione";
+      }
+      return "";
+    },
   });
 });

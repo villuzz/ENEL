@@ -144,21 +144,21 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Werks}"  enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
+                  <ComboBox  value="{sDetail>/Werks}" required="true" valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
                     <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                   </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Sistema}" >
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Sistema}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SistemaNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
+                  <ComboBox  value="{sDetail>/Sistema}" required="true" valueStateText="{i18n>valueState} {i18n>Sistema}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SistemaNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Testo}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Txt}" items="{ path: 'sHelp>/T_ACT_SYST/TxtNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
+                  <ComboBox  value="{sDetail>/Txt}" valueStateText="{i18n>valueState} {i18n>Testo}" change="handleChangeCb" items="{ path: 'sHelp>/T_ACT_SYST/TxtNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
                    <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                    </ComboBox>
                   </form:fields>

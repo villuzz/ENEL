@@ -10,20 +10,24 @@ sap.ui.define([
   'sap/ui/model/Filter',
   'sap/ui/model/FilterOperator',
   "PM030/APP1/util/manutenzioneTable",
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, MessageToast, Filter, FilterOperator, manutenzioneTable, ) {
+  'sap/ui/core/library',
+  "PM030/APP1/util/Validator"
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, MessageToast, Filter, FilterOperator, manutenzioneTable, coreLibrary, Validator) {
   "use strict";
   var oResource;
   oResource = new sap.ui.model.resource.ResourceModel({ bundleName: "PM030.APP1.i18n.i18n" }).getResourceBundle();
   var EdmType = exportLibrary.EdmType;
-
+  var ValueState = coreLibrary.ValueState;
   return Controller.extend("PM030.APP1.controller.TabellaAggregazioniAzioniTipo", {
+    Validator: Validator,
     onInit: function () {
       sap.ui.core.BusyIndicator.show();
       this.getOwnerComponent().getRouter().getRoute("TabellaAggregazioniAzioniTipo").attachPatternMatched(this._onObjectMatched, this);
 
     },
     _onObjectMatched: async function () {
-      var aT_AGGREG = await this._getTable("/T_AGGREG", []);
+      Validator.clearValidation();
+      var aT_AGGREG = {};
       var oModel = new sap.ui.model.json.JSONModel();
       oModel.setData(aT_AGGREG);
       this.getView().setModel(oModel, "T_AGGREG");
@@ -127,7 +131,7 @@ sap.ui.define([
     onSearchResult: function () {
       this.onSearchFilters();
     },
-    onSearchFilters: function () {
+    onSearchFilters: async function () {
       debugger
       var aFilters = [];
       if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
@@ -148,8 +152,13 @@ sap.ui.define([
       if (this.getView().byId("cbComponenteAzioneAggregativo").getSelectedKeys().length !== 0) {
         aFilters.push(this.multiFilterNumber(this.getView().byId("cbComponenteAzioneAggregativo").getSelectedKeys(), "AggrActComponent"));
       }
-      this.byId("tbTabellaAggregazioniAzioniTipo").getBinding("items").filter(aFilters);
-    },
+      var model = this.getView().getModel("T_AGGREG");
+      var tableFilters = await this._getTableNoError("/T_AGGREG", aFilters);
+      if (tableFilters.length === 0) {
+        MessageBox.error("Nessun record trovato");
+        model.setData({});
+      }
+      model.setData(tableFilters);    },
 
     multiFilterNumber: function (aArray, vName) {
       var aFilter = [];
@@ -190,18 +199,18 @@ sap.ui.define([
           worker: false
         };
       } else {
-        var aFilters = oRowBinding.aIndices.map((i)=> selectedTab.getBinding("items").oList[i]);
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: aFilters,
-        fileName: "TabellaAggregazioniAzioniTipo.xlsx",
-        worker: false
-      };
+        var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+        oSettings = {
+          workbook: {
+            columns: aCols
+          },
+          dataSource: aFilters,
+          fileName: "TabellaAggregazioniAzioniTipo.xlsx",
+          worker: false
+        };
       }
 
-      
+
       oSheet = new Spreadsheet(oSettings);
       oSheet.build().finally(function () {
         oSheet.destroy();
@@ -248,9 +257,16 @@ sap.ui.define([
       this._oValueHelpDialog.open();
 
     },
-    
+
 
     onNuovo: function () {
+      sap.ui.core.BusyIndicator.show();
+      this.resetValueState();
+      var oModel = new sap.ui.model.json.JSONModel();
+      var sIndex = {},
+        sIndex = this.initModel()
+      oModel.setData(sIndex);
+      this.getView().setModel(oModel, "sSelect");
       this.getView().getModel("oDataModel").setProperty("/Enabled", true);
       sap.ui.core.BusyIndicator.show();
       var oModel = new sap.ui.model.json.JSONModel();
@@ -258,6 +274,17 @@ sap.ui.define([
       this.getView().setModel(oModel, "sDetail");
       this.byId("navCon").to(this.byId("Detail"));
       sap.ui.core.BusyIndicator.hide();
+    },
+    resetValueState: function () {
+      //Get All fields
+      var allRegisteredControls = sap.ui.getCore().byFieldGroupId("");
+      var aComboBox = allRegisteredControls.filter(c => c.isA("sap.m.ComboBox"));
+
+      for (var i = 0; i < aComboBox.length; i++) {
+        if (aComboBox[i].getValueState() === sap.ui.core.ValueState.Error) {
+          aComboBox[i].setValueState("None")
+        }
+      }
     },
 
     onModify: function () {
@@ -277,28 +304,37 @@ sap.ui.define([
       sap.ui.core.BusyIndicator.hide();
     },
     onSave: async function () {
-      // sap.ui.core.BusyIndicator.show();
-      var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-      line = JSON.parse(line);
-      if (line.ID === "New") {
-        // get Last Index
-        delete line.ID;
-        // line = this.AggregCancelModel(line);
-        await this._saveHana("/T_AGGREG", line);
-      } else {
-        // line = this.DestinatariModelSave(line);
-        delete line.__metadata
-        var sURL = this.componiURL(line);
-        // var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+      var ControlValidate = Validator.validateView();
+      if (ControlValidate) {
+        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
+        line = JSON.parse(line);
+        var msg = "",
+          sURL;
+        msg = await this.ControlIndex(line);
+        if (msg !== "") {
+          MessageBox.error(msg);
+        } else {
+          if (line.ID === "New") {
+            // get Last Index
+            delete line.ID;
+            // line = this.AggregCancelModel(line);
+            await this._saveHana("/T_AGGREG", line);
+          } else {
+            // line = this.DestinatariModelSave(line);
+            delete line.__metadata
+            var sURL = this.componiURL(line);
+            // var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
 
-        await this._updateHana(sURL, line);
+            await this._updateHana(sURL, line);
+          }
+          var aT_AGGREG = await this._getTable("/T_AGGREG", []);
+          var oModel = new sap.ui.model.json.JSONModel();
+          oModel.setData(aT_AGGREG);
+          this.getView().setModel(oModel, "T_AGGREG");
+          this.getValueHelp();
+          this.byId("navCon").back();
+        }
       }
-      var aT_AGGREG = await this._getTable("/T_AGGREG", []);
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData(aT_AGGREG);
-      this.getView().setModel(oModel, "T_AGGREG");
-      this.getValueHelp();
-      this.byId("navCon").back();
     },
     AggregModel: function (sValue) {
       debugger
@@ -337,7 +373,7 @@ sap.ui.define([
       this.getView().setModel(oModel, "T_AGGREG");
     },
 
-    
+
     onBackDetail: function () {
       this.byId("navCon").back();
     },
@@ -425,6 +461,54 @@ sap.ui.define([
     onCloseFileUpload: function () {
       // this.onSearch();
       this._oValueHelpDialog.destroy();
+    },
+    handleChangeCb: function (oEvent) {
+      var oValidatedComboBox = oEvent.getSource(),
+        sSelectedKey = oValidatedComboBox.getSelectedKey(),
+        sValue = oValidatedComboBox.getValue();
+
+      if (!sSelectedKey && sValue) {
+        oValidatedComboBox.setValueState(ValueState.Error);
+      } else {
+        oValidatedComboBox.setValueState(ValueState.None);
+      }
+    },
+    handleChangeIn: function (oEvent) {
+      var oValidatedInput = oEvent.getSource(),
+        sSuggestion = oEvent.getSource().getSuggestionRows(),
+        sValue = oValidatedInput.getValue();
+      if (!_.contains(sSuggestion, sValue)) {
+        oValidatedInput.setValueState(ValueState.Error);
+      } else {
+        oValidatedInput.setValueState(ValueState.None);
+      }
+    },
+    initModel: function () {
+      var sData = {
+        Werks: "",
+        Sistema: "",
+        Classe: "",
+        ProgAggr: "",
+        AggrActTitle: "",
+        AggrActComponent: ""
+      }
+      return sData;
+    },
+    ControlIndex: function (sData) {
+
+      if (sData.Werks === "" || sData.Werks === undefined || sData.Werks === null) {
+        return "Inserire Divisione";
+      }
+      if (sData.Sistema === "" || sData.Sistema === undefined || sData.Sistema === null) {
+        return "Inserire Sistema";
+      }
+      if (sData.Classe === "" || sData.Classe === undefined || sData.Classe === null) {
+        return "Inserire Classe";
+      }
+      if (sData.ProgAggr === "" || sData.ProgAggr === undefined || sData.ProgAggr === null) {
+        return "Inserire ProgAggr";
+      }
+      return "";
     },
   });
 });

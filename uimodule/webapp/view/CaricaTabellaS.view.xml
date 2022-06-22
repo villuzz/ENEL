@@ -5,27 +5,18 @@
     <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
         <f:title>
             <f:DynamicPageTitle>
-                <f:content>
+                 <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                         <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"/>
                         <Title text="{i18n>TitoloCTZTPS}" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
                 <f:navigationActions>
-                    <Button press="handleNav" class="sapUiTinyMarginBegin" text="{i18n>Modifica}" enabled="{tabCheckModel>/editEnabled}">
-                      <layoutData>
-                        <FlexItemData growFactor="1" />
-                      </layoutData>
-                      <customData>
-                        <core:CustomData
-                          key="target"
-                          value="p1" />
-                      </customData>
-			              </Button>
-                    <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
-                    <Button icon="sap-icon://home" press="onBack" class="sapUiTinyMarginBegin" tooltip="{i18n>TitoloGTA}"/>
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>   
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -37,19 +28,28 @@
 
                             <fb:FilterGroupItem id="Azione" visible="true" groupName="__$INTERNAL$" name="ind" label="{i18n>Azione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Number" value="{FilterModel>/IndexAzioni}" maxLength="12"/>
+                                    <!-- <Input type="Number" value="{FilterModel>/IndexAzioni}" maxLength="12"/> -->
+                                <MultiComboBox id="cbAzione"  items="{ path: 'sHelp>/T_PMO_M/Azione'}" > 
+                                    <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
+                                </MultiComboBox> 
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="nAttivita" visible="true" groupName="__$INTERNAL$" name="na" label="{i18n>NAttivita}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/NAttivita}" maxLength="18"/>
+                                    <!-- <Input type="Text" value="{FilterModel>/NAttivita}" maxLength="18"/> -->
+                                    <MultiComboBox id="cbAttivita"  items="{ path: 'sHelp>/T_PMO_M/Azione'}" > 
+                                    <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
+                                </MultiComboBox> 
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="divisa" visible="true" groupName="__$INTERNAL$" name="di" label="{i18n>Divisa}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <Input type="Text" value="{FilterModel>/Divisa}" maxLength="5"/>
+                                    <!-- <Input type="Text" value="{FilterModel>/Divisa}" maxLength="5"/> -->
+                                    <MultiComboBox id="cbDivisa"  items="{ path: 'sHelp>/T_PMO_M/Azione'}" > 
+                                    <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
+                                </MultiComboBox> 
                                 </fb:control>
                             </fb:FilterGroupItem>
 

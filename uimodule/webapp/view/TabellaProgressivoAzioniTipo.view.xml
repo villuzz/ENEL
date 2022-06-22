@@ -156,21 +156,21 @@
               <form:formElements>
               <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                   <ComboBox id="cbDivisioneNew" value="{sDetail>/Werks}" enabled="{oDataModel>/Enabled}"  items="{ path: 'sHelp>/H_T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" > 
+                   <ComboBox id="cbDivisioneNew" required="true" value="{sDetail>/Werks}" valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}"  items="{ path: 'sHelp>/H_T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" > 
                          <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Sistema}">
                   <form:fields>
-                    <ComboBox id="cbSistemaNew" value="{sDetail>/Sistema}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/Sistema', sorter: [{ path: 'SISTEMANew', descending: false, group:false }] }" > 
+                    <ComboBox id="cbSistemaNew" required="true" value="{sDetail>/Sistema}" valueStateText="{i18n>valueState} {i18n>Sistema}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/Sistema', sorter: [{ path: 'SISTEMANew', descending: false, group:false }] }" > 
                          <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Progressivo}" >
                   <form:fields>
-                    <ComboBox id="cbProgressivoNew" value="{sDetail>/Progres}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_PROG/ProgresNew', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                    <ComboBox id="cbProgressivoNew" required="true" value="{sDetail>/Progres}" valueStateText="{i18n>valueState} {i18n>Progressivo}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_PROG/ProgresNew', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
                          <core:Item key="{sHelp>Progres}" text="{sHelp>Progres}"/>
                     </ComboBox>
                   </form:fields>
