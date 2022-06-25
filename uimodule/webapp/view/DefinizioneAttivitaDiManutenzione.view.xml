@@ -26,33 +26,36 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="lingua" visible="true" groupName="__$INTERNAL$" name="lin" label="{i18n>Lingua}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                    <MultiComboBox  id="cbLingua" items="{ path: 'sHelp>/T_ATTPM/Lingua', sorter: [{ path: 'Lingua', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Spras}" text="{sHelp>Spras}"/>
+                            <fb:FilterGroupItem id="Spras" visible="true" groupName="__$INTERNAL$" name="Spras" label="{i18n>Lingua}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Spras}" items="{ path: 'sHelp>/Spras', sorter: [{ path: 'Spras', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Spras}" text="{sHelp>Spras}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="tPAttivitaPM" visible="true" groupName="__$INTERNAL$" name="tap" label="{i18n>TPAttivitaPM}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                    <MultiComboBox id="cbTPAttivitaPM"  items="{ path: 'sHelp>/T_ATTPM/TPAttivita', sorter: [{ path: 'TPAttivita', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Ilart}" text="{sHelp>Ilart}"/>
+                            <fb:FilterGroupItem id="Ilart" visible="true" groupName="__$INTERNAL$" name="Ilart" label="{i18n>TPAttivitaPM}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Ilart}" items="{ path: 'sHelp>/Ilart', sorter: [{ path: 'Ilart', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Ilart}" text="{sHelp>Ilart}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="descrizioneTPAttivitaPM" visible="true" groupName="__$INTERNAL$" name="dtpp" label="{i18n>DescrizioneTPAttivitaPM}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                    <MultiComboBox id="cbDescrizioneTPAttivitaPM"  items="{ path: 'sHelp>/T_ATTPM/DescrizioneTPAttivita', sorter: [{ path: 'DescrizioneTPAttivita', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Ilatx}" text="{sHelp>Ilatx}"/>
+                            <fb:FilterGroupItem id="Ilatx" visible="true" groupName="__$INTERNAL$" name="Ilatx" label="{i18n>DescrizioneTPAttivitaPM}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Ilatx}" items="{ path: 'sHelp>/Ilatx', sorter: [{ path: 'Ilatx', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Ilatx}" text="{sHelp>Ilatx}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
+
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                      <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                     <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                       <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
@@ -87,7 +90,9 @@
                 <ToolbarSpacer/>
             </OverflowToolbar>
         </f:footer>
-          <f:dependents>
+        <f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
     </f:dependents>
     </f:DynamicPage>
@@ -145,21 +150,19 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Lingua}">
                   <form:fields>
-                    <ComboBox  value="{sDetail>/Spras}" valueStateText="{i18n>valueState} {i18n>Lingua}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/H_T002/Lingua', sorter: [{ path: 'SPRAS', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                  </ComboBox>
+                    <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Lingua}" showSecondaryValues= "true" items="{ path: 'sHelp>/SPRAS', length:4000 }" selectedKey="{sSelect>/Spras}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TPAttivitaPM}" >
                   <form:fields>
-                   <Input value="{sDetail>/Ilart}"/>
+                   <Input value="{sSelect>/Ilart}" maxLength="3" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneTPAttivitaPM}">
                   <form:fields>
-                    <ComboBox  value="{sDetail>/Ilatx}" items="{ path: 'sHelp>/aRAGGRUPPAMENTO', sorter: [{ path: 'aRAGGRUPPAMENTO', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
-                  </ComboBox>
+                    <Input value="{sSelect>/Ilatx}" maxLength="30"/>
                   </form:fields>
                 </form:FormElement>
               </form:formElements>

@@ -25,37 +25,53 @@
                 <f:content>
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
-                            
-                            <fb:FilterGroupItem id="Azione" visible="true" groupName="__$INTERNAL$" name="ind" label="{i18n>Azione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+
+                            <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Number" value="{FilterModel>/Azione}" maxLength="12"/> -->
-                                      <MultiComboBox id="cbAzione"  items="{ path: 'sHelp>/T_PMO_M/Azione'}" > 
-                                    <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
-                                </MultiComboBox> 
+                                    <MultiInput id="inIndex" type="Number" showValueHelp="false" />
                                 </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="materiale" visible="true" groupName="__$INTERNAL$" name="mat" label="{i18n>Materiale}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="FIIContActEl" visible="true" groupName="__$INTERNAL$" name="FYIContActEl" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Materiale}" maxLength="18"/> -->
-                                  <MultiComboBox id="cbMateriale"  items="{ path: 'sHelp>/T_PMO_M/Materiale' }" > 
-                                    <core:Item key="{sHelp>Matnr}" text="{sHelp>Matnr}"/>
-                                </MultiComboBox> 
+                                    <MultiInput id="IContActEl" type="Number" showValueHelp="false"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="FIMatnr" visible="true" groupName="__$INTERNAL$" name="FYIMatnr" label="{i18n>MATNR}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <Input showSuggestion="true" value="{sFilter>/Matnr}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" >
+                                        <suggestionColumns>
+                                          <Column>
+                                            <Label text="{i18n>Matnr}" />
+                                          </Column>
+                                          <Column hAlign="End">
+                                            <Label text="{i18n>Description}" />
+                                          </Column>
+                                        </suggestionColumns>
+                                        <suggestionRows>
+                                          <ColumnListItem>
+                                            <Label text="{sHelp>Fieldname1}" />
+                                            <Label text="{sHelp>Fieldname4}" />
+                                          </ColumnListItem>
+                                        </suggestionRows>
+                                      </Input>
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <!-- <Input type="Text" value="{FilterModel>/Divisione}" maxLength="4"/> -->
-                                  <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_PMO_M/Divisione' }" > 
-                                    <core:Item key="{sHelp>}" text="{sHelp>Werks}"/>
-                                </MultiComboBox> 
+                                <MultiComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKeys="{sSelect>/Werks}">
+                                  <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                                </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                      <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                      <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                       <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
@@ -68,7 +84,8 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbCaricaTabellaM" items="{path: 'T_PMO_M>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col91" app:property="IndexPmo"><Text text="{i18n>Azione}"/></Column>
+                        <Column width="15em" id="col190" app:property="IndexPmo"><Text text="{i18n>IndexPmo}"/></Column>
+                        <Column width="15em" id="col91" app:property="Cont"><Text text="{i18n>Cont}"/></Column>
                         <Column width="15em" id="col92" app:property="Matnr"><Text text="{i18n>Materiale}"/></Column>
                         <Column width="15em" id="col93" app:property="Maktx"><Text text="{i18n>TestoBreveMat}"/></Column>
                         <Column width="15em" id="col94" app:property="Menge"><Text text="{i18n>QuantFabbisogno}"/></Column>
@@ -86,7 +103,8 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{T_PMO_M>IndexPmo}"/>
+                                <Text text="{ parts:[{path:'T_PMO_M>IndexPmo'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_PMO_M>Cont'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{T_PMO_M>Matnr}"/>
                                 <Text text="{T_PMO_M>Maktx}"/>
                                 <Text text="{T_PMO_M>Menge}"/>
@@ -112,6 +130,10 @@
                 <ToolbarSpacer/>
             </OverflowToolbar>
         </f:footer>
+        <f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+        </f:dependents>
     </f:DynamicPage>
   
     <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
@@ -164,75 +186,82 @@
           <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
-                <form:FormElement label="{i18n>IndexAzioni}">
+                <form:FormElement label="{i18n>IndexPmo}">
                   <form:fields>
-                    <!-- <Input value="{mManutenzione>IndexAzioni}" type="Number" maxLength="12"/> -->
-                    <ComboBox  value="{sDetail>/IndexPmo}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_PMO_M/IndexPmo' }" >
-                   <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
-                  </ComboBox>
+                    <Input value="{sSelect>/IndexPmo}" type="Text" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
+                  </form:fields>
+                </form:FormElement>
+                 <form:FormElement label="{i18n>Cont}">
+                  <form:fields>
+                    <Input value="{sSelect>/Cont}" type="Text" maxLength="10" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Materiale}" >
                   <form:fields>
-                  <Input showSuggestion="true" value="{sDetail>/Matnr}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" >
-                                 <suggestionColumns>
-                                          <Column>
-                                            <Label text="{i18n>Materiale}" />
-                                          </Column>
-                                          
-                                        </suggestionColumns>
-                                        <suggestionRows>
-                                          <ColumnListItem>
-                                            <Label text="{sHelp>Fieldname1}" />
-                                          </ColumnListItem>
-                                  </suggestionRows>
+                    <Input showSuggestion="true" value="{sSelect>/Matnr}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <suggestionColumns>
+                              <Column>
+                                <Label text="{i18n>Materiale}" />
+                              </Column>
+                              <Column hAlign="End">
+                                <Label text="{i18n>Description}" />
+                              </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                              <ColumnListItem>
+                                <Label text="{sHelp>Fieldname1}" />
+                                <Label text="{sHelp>Fieldname4}" />
+                              </ColumnListItem>
+                      </suggestionRows>
                     </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TestoBreveMat}">
                   <form:fields>
-                    <Input value="{sDetail>/Maktx}" enabled="{oDataModel>/Enabled}" type="Text" maxLength="40"/>
+                    <Input value="{sSelect>/Maktx}" type="Text" maxLength="40" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>QuantFabbisogno}">
                   <form:fields>
-                    <Input value="{sDetail>/Menge}" type="Number" maxLength="13"/>
+                    <Input value="{sSelect>/Menge}" type="Number" maxLength="13"/>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Unita}">
                   <form:fields>
-                    <Input value="{sDetail>/Meins}" type="Number" maxLength="3"/>
+                    <ComboBox  selectedKey="{sSelect>/Meins}" valueStateText="{i18n>valueState} {i18n>Unita}" items="{ path: 'sHelp>/MEINS' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Magazzino}">
-                  <Input value="{sDetail>/Lgort}" type="Text" maxLength="4"/>
+                    <ComboBox  selectedKey="{sSelect>/Lgort}" valueStateText="{i18n>valueState} {i18n>Magazzino}" items="{ path: 'sHelp>/LGORT' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Divisione}">
-                  <!-- <Input value="{sDetail>Divisione}" type="Text" maxLength="4"/> -->
-                  <ComboBox  value="{sDetail>/Werks}" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_PMO_M/Werks' }" >
-                   <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
-                  </ComboBox>
-                </form:FormElement>
-                <form:FormElement label="{i18n>Partita}">
-                  <Input value="{sDetail>/Charg}" type="Text" maxLength="10"/>
-                </form:FormElement>
-                <form:FormElement label="{i18n>PrezzoLordo}">
-                  <Input value="{sDetail>/Tbtwr}" type="Number" maxLength="11"/>
-                </form:FormElement>
-                <form:FormElement label="{i18n>Divisa}">
-                  <Input value="{sDetail>/Waers}" type="Text" maxLength="5"/>
+                    <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}">
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>GrupAcq}">
-                  <Input value="{sDetail>/Ekgrp}" type="Text" maxLength="3"/>
+                    <ComboBox  selectedKey="{sSelect>/Ekgrp}" valueStateText="{i18n>valueState} {i18n>GrupAcq}" items="{ path: 'sHelp>/EKGRP' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>OrgAcq}">
-                  <Input value="{sDetail>/Ekorg}" type="Text" maxLength="4"/>
+                    <ComboBox  selectedKey="{sSelect>/Ekorg}" valueStateText="{i18n>valueState} {i18n>OrgAcq}" items="{ path: 'sHelp>/EKORG' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Richiedente}">
-                  <Input value="{sDetail>/Afnam}" type="Text" maxLength="12"/>
+                    <ComboBox  selectedKey="{sSelect>/Afnam}" valueStateText="{i18n>valueState} {i18n>Richiedente}" items="{ path: 'sHelp>/AFNAM' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>GrupMerci}">
-                  <Input value="{sDetail>/Matkl}" type="Text" maxLength="9"/>
+                    <ComboBox  selectedKey="{sSelect>/Matkl}" valueStateText="{i18n>valueState} {i18n>GrupMerci}" items="{ path: 'sHelp>/MATKL' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>

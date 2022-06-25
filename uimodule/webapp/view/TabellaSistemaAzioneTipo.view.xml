@@ -26,33 +26,35 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Werks" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                              <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_ACT_SYST/Divisione', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
-                                </MultiComboBox> 
+                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
+                                </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="clas" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                <MultiComboBox id="cbSistema"  items="{ path: 'sHelp>/T_ACT_SYST/Sistema', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
-                                </MultiComboBox> 
-                                </fb:control>
+                            <fb:FilterGroupItem id="Sistema" visible="true" groupName="__$INTERNAL$" name="Sistema" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Sistema}" items="{ path: 'sHelp>/Sistema', sorter: [{ path: 'Sistema', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
+                                </MultiComboBox>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="testo" visible="true" groupName="__$INTERNAL$" name="testo" label="{i18n>Testo}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                <MultiComboBox id="cbTesto"  items="{ path: 'sHelp>/T_ACT_SYST/Txt', sorter: [{ path: 'T_ACT_SYST', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
-                                </MultiComboBox> 
-                                </fb:control>
+                            <fb:FilterGroupItem id="Txt" visible="true" groupName="__$INTERNAL$" name="Txt" label="{i18n>Testo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Txt}" items="{ path: 'sHelp>/Txt', sorter: [{ path: 'Txt', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
+                                </MultiComboBox>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                           <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                          <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                       <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
@@ -89,7 +91,9 @@
         </f:footer>
         <f:dependents>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
-    </f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+        </f:dependents>
     </f:DynamicPage>
     
     <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
@@ -144,23 +148,19 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Werks}" required="true" valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                    <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                  </ComboBox>
+                    <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Sistema}" >
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Sistema}" required="true" valueStateText="{i18n>valueState} {i18n>Sistema}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/SistemaNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
-                   </ComboBox>
+                   <Input value="{sSelect>/Sistema}" maxLength="2" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Testo}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Txt}" valueStateText="{i18n>valueState} {i18n>Testo}" change="handleChangeCb" items="{ path: 'sHelp>/T_ACT_SYST/TxtNew', sorter: [{ path: 'aSISTEMA', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Txt}" maxLength="60"/>
                   </form:fields>
                 </form:FormElement>
               </form:formElements>

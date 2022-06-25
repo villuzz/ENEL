@@ -5,14 +5,14 @@
     <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
         <f:title>
             <f:DynamicPageTitle>
-                 <f:content>
+                <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
                          <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"/>
                         <Title text="{i18n>TitoloCTZTPS}" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
-                <f:navigationActions>
+               <f:navigationActions>
                     <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
                     <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
                     <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
@@ -26,35 +26,45 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="Azione" visible="true" groupName="__$INTERNAL$" name="ind" label="{i18n>Azione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Number" value="{FilterModel>/IndexAzioni}" maxLength="12"/> -->
-                                <MultiComboBox id="cbAzione"  items="{ path: 'sHelp>/T_PMO_M/Azione'}" > 
-                                    <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
-                                </MultiComboBox> 
+                                    <MultiInput id="inIndex" type="Number" showValueHelp="false"/>
                                 </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="nAttivita" visible="true" groupName="__$INTERNAL$" name="na" label="{i18n>NAttivita}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="FIIContActEl" visible="true" groupName="__$INTERNAL$" name="FYIContActEl" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/NAttivita}" maxLength="18"/> -->
-                                    <MultiComboBox id="cbAttivita"  items="{ path: 'sHelp>/T_PMO_M/Azione'}" > 
-                                    <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
-                                </MultiComboBox> 
+                                    <MultiInput id="IContActEl" type="Number" showValueHelp="false"/>
                                 </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="divisa" visible="true" groupName="__$INTERNAL$" name="di" label="{i18n>Divisa}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="FIAsnum" visible="true" groupName="__$INTERNAL$" name="FYAsnum" label="{i18n>Asnum}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
-                                    <!-- <Input type="Text" value="{FilterModel>/Divisa}" maxLength="5"/> -->
-                                    <MultiComboBox id="cbDivisa"  items="{ path: 'sHelp>/T_PMO_M/Azione'}" > 
-                                    <core:Item key="{sHelp>IndexPmo}" text="{sHelp>IndexPmo}"/>
-                                </MultiComboBox> 
+                                    <Input showSuggestion="true" value="{sFilter>/Asnum}" suggestionRows="{sHelp>/Asnum}" suggest=".onSuggestAsnum" >
+                                        <suggestionColumns>
+                                          <Column>
+                                            <Label text="{i18n>Asnum}" />
+                                          </Column>
+                                        </suggestionColumns>
+                                        <suggestionRows>
+                                          <ColumnListItem>
+                                            <Label text="{sHelp>Fieldname1}" />
+                                          </ColumnListItem>
+                                        </suggestionRows>
+                                      </Input>
                                 </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
+                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                      <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
+                      <ToolbarSpacer/>
+                      <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
+                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
+                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                    </OverflowToolbar>
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
@@ -62,32 +72,34 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbCaricaTabellaS" items="{path: 'T_PMO_S>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col105" app:property="Azione"><Text text="{i18n>Azione}"/></Column>
-                        <Column width="15em" id="col106" app:property="NAttivita"><Text text="{i18n>NAttivita}"/></Column>
-                        <Column width="15em" id="col108" app:property="TestoBreveServizio"><Text text="{i18n>TestoBreveServizio}"/></Column>
-                        <Column width="15em" id="col109" app:property="Qta"><Text text="{i18n>Qta}"/></Column>
-                        <Column width="15em" id="col110" app:property="Unita"><Text text="{i18n>Unita}"/></Column>
-                        <Column width="15em" id="col111" app:property="PrezzoLordo"><Text text="{i18n>PrezzoLordo}"/></Column>
-                        <Column width="15em" id="col112" app:property="Divisa"><Text text="{i18n>Divisa}"/></Column>
-                        <Column width="15em" id="col113" app:property="GrupAcq"><Text text="{i18n>GrupAcq}"/></Column>
-                        <Column width="15em" id="col114" app:property="OrgAcq"><Text text="{i18n>OrgAcq}"/></Column>
-                        <Column width="15em" id="col115" app:property="Richiedente"><Text text="{i18n>Richiedente}"/></Column>
-                        <Column width="15em" id="col116" app:property="GrupMerci"><Text text="{i18n>GrupMerci}"/></Column>
+                        <Column width="15em" id="col190" app:property="IndexPmo"><Text text="{i18n>IndexPmo}"/></Column>
+                        <Column width="15em" id="col91" app:property="Cont"><Text text="{i18n>Cont}"/></Column>
+                        <Column width="15em" id="col92" app:property="Asnum"><Text text="{i18n>Asnum}"/></Column>
+                        <Column width="15em" id="col93" app:property="Asktx"><Text text="{i18n>Asktx}"/></Column>
+                        <Column width="15em" id="col94" app:property="Menge"><Text text="{i18n>Menge}"/></Column>
+                        <Column width="15em" id="col95" app:property="Meins" ><Text text="{i18n>Meins}"/></Column>
+                        <Column width="15em" id="col99" app:property="Tbtwr"><Text text="{i18n>Tbtwr}"/></Column>
+                        <Column width="15em" id="col100" app:property="Waers"><Text text="{i18n>Divisa}"/></Column>
+                        <Column width="15em" id="col101" app:property="Ekgrp"><Text text="{i18n>GrupAcq}"/></Column>
+                        <Column width="15em" id="col102" app:property="Ekorg"><Text text="{i18n>OrgAcq}"/></Column>
+                        <Column width="15em" id="col103" app:property="Afnam"><Text text="{i18n>Richiedente}"/></Column>
+                        <Column width="15em" id="col104" app:property="Matkl"><Text text="{i18n>GrupMerci}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{mManutenzione>Azione}"/>
-                                <Text text="{mManutenzione>NAttivita}"/>
-                                <Text text="{mManutenzione>TestoBreveServizio}"/>
-                                <Text text="{mManutenzione>Qta}"/>
-                                <Text text="{mManutenzione>Unita}"/>
-                                <Text text="{mManutenzione>PrezzoLordo}"/>
-                                <Text text="{mManutenzione>Divisa}"/>
-                                <Text text="{mManutenzione>GrupAcq}"/>
-                                <Text text="{mManutenzione>OrgAcq}"/>
-                                <Text text="{mManutenzione>Richiedente}"/>
-                                <Text text="{mManutenzione>GrupMerci}"/>                                  
+                                <Text text="{ parts:[{path:'T_PMO_S>IndexPmo'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_PMO_S>Cont'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{T_PMO_S>Asnum}"/>
+                                <Text text="{T_PMO_S>Asktx}"/>
+                                <Text text="{T_PMO_S>Menge}"/>
+                                <Text text="{T_PMO_S>Meins}"/>
+                                <Text text="{T_PMO_S>Tbtwr}"/>
+                                <Text text="{T_PMO_S>Waers}"/>
+                                <Text text="{T_PMO_S>Ekgrp}"/>
+                                <Text text="{T_PMO_S>Ekorg}"/>
+                                <Text text="{T_PMO_S>Afnam}"/>
+                                <Text text="{T_PMO_S>Matkl}"/>                                  
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -100,12 +112,36 @@
                 <ToolbarSpacer/>
             </OverflowToolbar>
         </f:footer>
+        <f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+        </f:dependents>
     </f:DynamicPage>
-    <Page
-			id="p1"
-			title="{i18n>editPage}" showNavButton="true" navButtonPress="handleNav">
-      <VBox class="sapUiSmallMargin">
-        <form:Form id="FormToolbar"
+  
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:content>
+                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd"></Button>
+                        <Title title="{i18n>editPage}"  id="TitleDetail"  class="sapUiTinyMarginTop"/>
+                    </HBox>
+                </f:content>
+                <f:actions></f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <f:content>
+                 
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <form:Form id="FormToolbar"
           editable="true"
           ariaLabelledBy="Title1">
           <form:toolbar>
@@ -132,57 +168,74 @@
           <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
-                <form:FormElement label="{i18n>IndexAzioni}">
+                <form:FormElement label="{i18n>IndexPmo}">
                   <form:fields>
-                    <Input value="{mManutenzione>IndexAzioni}" type="Number" maxLength="12"/>
+                    <Input value="{sSelect>/IndexPmo}" type="Text" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>NAttivita}" >
+                 <form:FormElement label="{i18n>Cont}">
                   <form:fields>
-                    <Input value="{mManutenzione>NAttivita}" type="Text" maxLength="18"/>
+                    <Input value="{sSelect>/Cont}" type="Text" maxLength="10" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>TestoBreveServizio}">
+                <form:FormElement label="{i18n>Asnum}" >
                   <form:fields>
-                    <Input value="{mManutenzione>TestoBreveServizio}" type="Text" maxLength="40"/>
+                  <Input showSuggestion="true" value="{sSelect>/Asnum}" suggestionRows="{sHelp>/Asnum}" suggest=".onSuggestAsnum" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}"  >
+                                        <suggestionColumns>
+                                          <Column>
+                                            <Label text="{i18n>Asnum}" />
+                                          </Column>
+                                        </suggestionColumns>
+                                        <suggestionRows>
+                                          <ColumnListItem>
+                                            <Label text="{sHelp>Fieldname1}" />
+                                          </ColumnListItem>
+                                        </suggestionRows>
+                                      </Input>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Qta}">
+                <form:FormElement label="{i18n>Asktx}">
                   <form:fields>
-                    <Input value="{mManutenzione>Qta}" type="Number" maxLength="13"/>
+                    <Input value="{sSelect>/Asktx}" type="Text" maxLength="40" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Unita}">
-                  <Input value="{mManutenzione>Unita}" type="Number" maxLength="3"/>
+                <form:FormElement label="{i18n>Menge}">
+                  <form:fields>
+                    <Input value="{sSelect>/Menge}" type="Number" maxLength="13" />
+                  </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>PrezzoLordo}">
-                  <Input value="{mManutenzione>PrezzoLordo}" type="Number" maxLength="11"/>
+                <form:FormElement label="{i18n>Meins}">
+                  <form:fields>
+                    <ComboBox  selectedKey="{sSelect>/Meins}" valueStateText="{i18n>valueState} {i18n>Unita}" items="{ path: 'sHelp>/MEINS' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
+                  </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Divisa}">
-                  <Input value="{mManutenzione>Divisa}" type="Text" maxLength="5"/>
+                <form:FormElement label="{i18n>Ekgrp}">
+                    <ComboBox  selectedKey="{sSelect>/Ekgrp}" valueStateText="{i18n>valueState} {i18n>GrupAcq}" items="{ path: 'sHelp>/EKGRP' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
-                <form:FormElement label="{i18n>GrupAcq}">
-                  <Input value="{mManutenzione>GrupAcq}" type="Text" maxLength="3"/>
+                <form:FormElement label="{i18n>Ekorg}">
+                    <ComboBox  selectedKey="{sSelect>/Ekorg}" valueStateText="{i18n>valueState} {i18n>OrgAcq}" items="{ path: 'sHelp>/EKORG' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
-                <form:FormElement label="{i18n>OrgAcq}">
-                  <Input value="{mManutenzione>OrgAcq}" type="Text" maxLength="4"/>
+                <form:FormElement label="{i18n>Afnam}">
+                    <ComboBox  selectedKey="{sSelect>/Afnam}" valueStateText="{i18n>valueState} {i18n>Richiedente}" items="{ path: 'sHelp>/AFNAM' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Richiedente}">
-                  <Input value="{mManutenzione>Richiedente}" type="Text" maxLength="12"/>
-                </form:FormElement>
-                <form:FormElement label="{i18n>GrupMerci}">
-                  <Input value="{mManutenzione>GrupMerci}" type="Text" maxLength="9"/>
+                <form:FormElement label="{i18n>Matkl}">
+                    <ComboBox  selectedKey="{sSelect>/Matkl}" valueStateText="{i18n>valueState} {i18n>GrupMerci}" items="{ path: 'sHelp>/MATKL' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>
         </form:Form>
-            <Toolbar>
-              	<ToolbarSpacer/>
-                  <Button icon="sap-icon://save" press="onSave" class="sapUiTinyMarginBegin" tooltip="{i18n>Salva}" width="auto" text="{i18n>Salva}" enabled="{tabCheckModel>/editEnabled}"/>
-				        <ToolbarSpacer/> 
-            </Toolbar>
-        </VBox>
-		</Page>
+        </f:content>
+    </f:DynamicPage>
   </NavContainer>
 </mvc:View>

@@ -21,80 +21,43 @@ sap.ui.define([
   return Controller.extend("PM030.APP1.controller.TabellaSistemaAzioneTipo", {
     Validator: Validator,
     onInit: function () {
-      var oData = {
-        "Enabled": false
-      };
-      var oModelEnabled = new JSONModel(oData);
-      this.getView().setModel(oModelEnabled, "oDataModel");
-      sap.ui.core.BusyIndicator.show();
-      this.getOwnerComponent().getRouter().getRoute("TabellaSistemaAzioneTipo").attachPatternMatched(this._onObjectMatched, this);
 
+      this.getOwnerComponent().getRouter().getRoute("TabellaSistemaAzioneTipo").attachPatternMatched(this._onObjectMatched, this);
+      this._oTPC = new TablePersoController({ table: this.byId("tbTabellaSistemaAzioneTipo"), componentName: "Piani", persoService: manutenzioneTable }).activate();
+      var oModel = new sap.ui.model.json.JSONModel();
+            var sData = {};
+            oModel.setData(sData);
+            this.getView().setModel(oModel, "sFilter");
     },
     _onObjectMatched: async function () {
       Validator.clearValidation();
 
-      var aT_ACT_SYST = {};
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData(aT_ACT_SYST);
-      this.getView().setModel(oModel, "T_ACT_SYST");
-      this._oTPC = new TablePersoController({ table: this.byId("tbTabellaSistemaAzioneTipo"), componentName: "Piani", persoService: manutenzioneTable }).activate();
-      this.getValueHelp();
+            var oModel = new sap.ui.model.json.JSONModel();
+            oModel.setData({});
+            this.getView().setModel(oModel, "T_ACT_SYST");
+
+            this.getValueHelp();
     },
     getValueHelp: async function () {
-      var sData = {};
-      var oModelHelp = new sap.ui.model.json.JSONModel({
-        T_ACT_SYST: {},
-        T001W: {}
-      });
-      oModelHelp.setSizeLimit(2000);
-      sData.T_ACT_SYST = await this._getTableDistinct("/T_ACT_SYST", []);
-      var aArray = [];
-      sData.T_ACT_SYST.forEach(el => {
-        if (!aArray.find(item => item.Werks === el.Werks)) {
-          aArray.push(el);
-        }
-      });
-      oModelHelp.setProperty("/T_ACT_SYST/Divisione", aArray.filter(a => a.Werks));
+      sap.ui.core.BusyIndicator.show();
+            var sData = {};
+            var oModelHelp = new sap.ui.model.json.JSONModel();
+            oModelHelp.setSizeLimit(2000);
 
-      aArray = [];
-      sData.T_ACT_SYST.forEach(el => {
-        if (!aArray.find(item => item.Sistema === el.Sistema)) {
-          aArray.push(el);
-        }
-      });
-      oModelHelp.setProperty("/T_ACT_SYST/Sistema", aArray.filter(a => a.Sistema));
+            var T_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
 
-      aArray = [];
-      sData.T_ACT_SYST.forEach(el => {
-        if (!aArray.find(item => item.Txt === el.Txt)) {
-          aArray.push(el);
-        }
-      });
-      oModelHelp.setProperty("/T_ACT_SYST/Txt", aArray.filter(a => a.Txt));
+            sData.Werks = this.distinctBy(T_ACT_SYST, "Werks");
+            sData.Sistema = this.distinctBy(T_ACT_SYST, "Sistema");
+            sData.Txt = this.distinctBy(T_ACT_SYST, "Txt");
+            sData.DIVISIONE = await this.Shpl("H_T001W", "SH");
 
-      sData.DIVISIONENew = await this.Shpl("T001W", "CH");
-      oModelHelp.setProperty("/T001W/DivisioneNew", sData.DIVISIONENew);
+            var oModel1 = new sap.ui.model.json.JSONModel();
+            oModel1.setData(T_ACT_SYST);
+            this.getView().setModel(oModel1, "T_ACT_SYST");
 
-      sData.ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-      aArray = []
-      sData.ACT_SYST.forEach(el => {
-        if (!aArray.find(item => item.Sistema === el.Sistema)) {
-          aArray.push(el);
-        }
-      });
-      oModelHelp.setProperty("/T_ACT_SYST/SistemaNew", aArray.filter(a => a.Sistema));
-
-
-      aArray = []
-      sData.ACT_SYST.forEach(el => {
-        if (!aArray.find(item => item.Txt === el.Txt)) {
-          aArray.push(el);
-        }
-      });
-      oModelHelp.setProperty("/T_ACT_SYST/TxtNew", aArray.filter(a => a.Txt));
-
-      this.getView().setModel(oModelHelp, "sHelp");
-      sap.ui.core.BusyIndicator.hide();
+            oModelHelp.setData(sData);
+            this.getView().setModel(oModelHelp, "sHelp");
+            sap.ui.core.BusyIndicator.hide();
     },
 
     onSearchResult: function () {
@@ -104,37 +67,39 @@ sap.ui.define([
       this.byId("navCon").back();
     },
     onSearchFilters: async function () {
-      var aFilters = [];
-      if (this.getView().byId("cbDivisione").getSelectedKeys().length !== 0) {
-        aFilters.push(this.multiFilterNumber(this.getView().byId("cbDivisione").getSelectedKeys(), "Werks"));
-      }
-      if (this.getView().byId("cbSistema").getSelectedKeys().length !== 0) {
-        aFilters.push(this.multiFilterNumber(this.getView().byId("cbSistema").getSelectedKeys(), "Sistema"));
-      }
-      if (this.getView().byId("cbTesto").getSelectedKeys().length !== 0) {
-        aFilters.push(this.multiFilterNumber(this.getView().byId("cbTesto").getSelectedKeys(), "Txt"));
-      }
-      var model = this.getView().getModel("T_ACT_SYST");
-      var tableFilters = await this._getTableNoError("/T_ACT_SYST", aFilters);
-      if (tableFilters.length === 0) {
-        MessageBox.error("Nessun record trovato");
-        model.setData({});
-      }
-      model.setData(tableFilters);
-    },
+      sap.ui.core.BusyIndicator.show();
+            this.getView().byId("tbTabellaSistemaAzioneTipo").removeSelections();
+            var sFilter = this.getModel("sFilter").getData();
+            var aFilters = [],
+                tempFilter = [];
 
-    multiFilterNumber: function (aArray, vName) {
-      var aFilter = [];
-      if (aArray.length === 0) {
-        return new Filter(vName, FilterOperator.EQ, "");
-      } else if (aArray.length === 1) {
-        return new Filter(vName, FilterOperator.EQ, aArray[0]);
-      } else {
-        for (var i = 0; i < aArray.length; i++) {
-          aFilter.push(new Filter(vName, FilterOperator.EQ, aArray[i]));
-        }
-        return new Filter({filters: aFilter, bAnd: false});
-      }
+            if (sFilter.Werks !== undefined) {
+                if (sFilter.Werks.length !== 0) {
+                    tempFilter = this.multiFilterText(sFilter.Werks, "Werks");
+                    aFilters = aFilters.concat(tempFilter);
+                }
+            }
+            if (sFilter.Sistema !== undefined) {
+                if (sFilter.Sistema.length !== 0) {
+                    tempFilter = this.multiFilterText(sFilter.Sistema, "Sistema");
+                    aFilters = aFilters.concat(tempFilter);
+                }
+            }
+            if (sFilter.Txt !== undefined) {
+                if (sFilter.Txt.length !== 0) {
+                    tempFilter = this.multiFilterText(sFilter.Txt, "Txt");
+                    aFilters = aFilters.concat(tempFilter);
+                }
+            }
+
+            var model = this.getView().getModel("T_ACT_SYST");
+            var tableFilters = await this._getTableNoError("/T_ACT_SYST", aFilters);
+            if (tableFilters.length === 0) {
+                MessageBox.error("Nessun record trovato");
+                model.setData({});
+            } else {
+                model.setData(tableFilters);
+            } sap.ui.core.BusyIndicator.hide();
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbTabellaSistemaAzioneTipo");
@@ -196,19 +161,11 @@ sap.ui.define([
     },
 
     onBack: function () {
-      var sPreviousHash = History.getInstance().getPreviousHash();
-      if (sPreviousHash !== undefined) {
-        history.go(-1);
-      } else {
-        this.getRouter().navTo("ViewPage", {}, true);
-      }
-    },
+      this.navTo("ViewPage");
+  },
 
     onPersoButtonPressed: function () {
       this._oTPC.openDialog();
-    },
-    onSelectRow: function () {
-      this.getView().getModel("tabCheckModel").setProperty("/editEnabled", true);
     },
     handleUploadPiani: function () {
       this._oValueHelpDialog = sap.ui.xmlfragment("PM030.APP1.view.fragment.UploadTable", this);
@@ -220,106 +177,83 @@ sap.ui.define([
 
     onNuovo: function () {
       sap.ui.core.BusyIndicator.show();
-      this.resetValueState();
-      var oModel = new sap.ui.model.json.JSONModel();
-      var sIndex = {},
-        sIndex = this.initModel()
-      oModel.setData(sIndex);
-      this.getView().setModel(oModel, "sSelect");
-      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
-      sap.ui.core.BusyIndicator.show();
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData({ ID: "New" });
-      this.getView().setModel(oModel, "sDetail");
-      this.byId("navCon").to(this.byId("Detail"));
-      sap.ui.core.BusyIndicator.hide();
-    },
-    resetValueState: function () {
-      //Get All fields
-      var allRegisteredControls = sap.ui.getCore().byFieldGroupId("");
-      var aComboBox = allRegisteredControls.filter(c => c.isA("sap.m.ComboBox"));
+            Validator.clearValidation();
 
-      for (var i = 0; i < aComboBox.length; i++) {
-        if (aComboBox[i].getValueState() === sap.ui.core.ValueState.Error) {
-          aComboBox[i].setValueState("None")
-        }
-      }
+            var oModel = new sap.ui.model.json.JSONModel();
+            var items = this.initModel();
+            items.stato = "N";
+            oModel.setData(items);
+            this.getView().setModel(oModel, "sSelect");
+
+            this.byId("navCon").to(this.byId("Detail"));
+
+            sap.ui.core.BusyIndicator.hide();
     },
+
     onModify: function () {
-      this.getView().getModel("oDataModel").setProperty("/Enabled", false);
       sap.ui.core.BusyIndicator.show();
+      Validator.clearValidation();
       var items = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
       if (items.length === 1) {
-        this.byId("Detail").bindElement({ path: items[0].getBindingContext("T_ACT_SYST").getPath() });
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(items[0].getBindingContext("T_ACT_SYST").getObject());
-        this.getView().setModel(oModel, "sDetail");
-        this.byId("navCon").to(this.byId("Detail"));
+          var oModel = new sap.ui.model.json.JSONModel();
+          items = items[0].getBindingContext("T_ACT_SYST").getObject();
+          items.stato = "M";
+          oModel.setData(items);
+          this.getView().setModel(oModel, "sSelect");
+          this.byId("navCon").to(this.byId("Detail"));
       } else {
-        MessageToast.show("Seleziona una riga");
-      }
-      sap.ui.core.BusyIndicator.hide();
+          MessageToast.show("Seleziona una riga");
+      } sap.ui.core.BusyIndicator.hide();
     },
     onCopy: function () {
       sap.ui.core.BusyIndicator.show();
-      this.getView().getModel("oDataModel").setProperty("/Enabled", true);
-      var items = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
-      if (items.length === 1) {
-        var oModel = new sap.ui.model.json.JSONModel();
-        oModel.setData(items[0].getBindingContext("T_ACT_SYST").getObject());
-        oModel.getData().ID = "New";
-        this.getView().setModel(oModel, "sDetail");
-        this.byId("navCon").to(this.byId("Detail"));
-      } else {
-        MessageToast.show("Seleziona una riga");
-      }
-      sap.ui.core.BusyIndicator.hide();
+            Validator.clearValidation();
+            var items = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
+            if (items.length === 1) {
+                var oModel = new sap.ui.model.json.JSONModel();
+                items = items[0].getBindingContext("T_ACT_SYST").getObject();
+                items.stato = "C";
+                oModel.setData(items);
+                this.getView().setModel(oModel, "sSelect");
+                this.byId("navCon").to(this.byId("Detail"));
+            } else {
+                MessageToast.show("Seleziona una riga");
+            } sap.ui.core.BusyIndicator.hide();
     },
     onCancel: async function () {
       var sel = this.getView().byId("tbTabellaSistemaAzioneTipo").getSelectedItems();
-      for (var i = (sel.length - 1); i >= 0; i--) {
-        var line = JSON.stringify(sel[i].getBindingContext("T_ACT_SYST").getObject());
-        line = JSON.parse(line);
-        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-        await this._removeHana(sURL);
-      }
-      this.getView().byId("tbTabellaSistemaAzioneTipo").removeSelections();
-      var aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData(aT_ACT_SYST);
-      this.getView().setModel(oModel, "T_ACT_SYST");
+            for (var i =( sel.length - 1); i >= 0; i--) {
+                var line = JSON.stringify(sel[i].getBindingContext("T_ACT_SYST").getObject());
+                line = JSON.parse(line);
+
+                var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+                await this._removeHana(sURL);
+            }
+            this.onSearchFilters();
     },
     onSave: async function () {
       var ControlValidate = Validator.validateView();
-      if (ControlValidate) {
-        var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-        line = JSON.parse(line);
-        var msg = "",
-          sURL;
-        msg = await this.ControlIndex(line);
-        if (msg !== "") {
-          MessageBox.error(msg);
-        } else {
-          var line = JSON.stringify(this.getView().getModel("sDetail").getData());
-          line = JSON.parse(line);
-
-          if (line.ID === "New") {
-            delete line.ID;
-            delete line.__metadata
-            // get Last Index
-            await this._saveHana("/T_ACT_SYST", line);
-          } else {
-            var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
-            await this._updateHana(sURL, line);
-          }
-          var aT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-          var oModel = new sap.ui.model.json.JSONModel();
-          oModel.setData(aT_ACT_SYST);
-          this.getView().setModel(oModel, "T_ACT_SYST");
-          this.getValueHelp();
-          this.byId("navCon").back();
-        }
-      }
+            if (ControlValidate) {
+                var line = JSON.stringify(this.getView().getModel("sSelect").getData());               line = JSON.parse(line);
+                var msg = await this.ControlIndex(line);
+                if (msg !== "") {
+                    MessageBox.error(msg);
+                } else {
+                    if (line.stato === "M") {
+                        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+                        delete line.stato;
+                        delete line.__metadata;
+                        await this._updateHana(sURL, line);
+                    } else {
+                        delete line.stato;
+                        delete line.__metadata;
+                        await this._saveHana("/T_ACT_SYST", line);
+                    }
+                    MessageBox.success("Dati salvati con successo");
+                    this.onSearchFilters();
+                    this.byId("navCon").back();
+                }
+            }
     },
     onCloseFileUpload: function () {
       this.byId("UploadTable").close();
@@ -350,10 +284,6 @@ sap.ui.define([
         }
         MessageBox.success("Excel Caricato con successo");
       }
-      var sT_ACT_SYST = await this._getTable("/T_ACT_SYST", []);
-      var oModel = new sap.ui.model.json.JSONModel();
-      oModel.setData(sT_ACT_SYST);
-      this.getView().setModel(oModel, "T_ACT_SYST");
       sap.ui.getCore().byId("UploadTable").close();
       sap.ui.core.BusyIndicator.hide(0);
     },
@@ -387,19 +317,9 @@ sap.ui.define([
         oValidatedComboBox.setValueState(ValueState.None);
       }
     },
-    handleChangeIn: function (oEvent) {
-      var oValidatedInput = oEvent.getSource(),
-        sSuggestion = oEvent.getSource().getSuggestionRows(),
-        sValue = oValidatedInput.getValue();
-      if (!_.contains(sSuggestion, sValue)) {
-        oValidatedInput.setValueState(ValueState.Error);
-      } else {
-        oValidatedInput.setValueState(ValueState.None);
-      }
-    },
     initModel: function () {
       var sData = {
-        Divisione: "",
+        Werks: "",
         Sistema: "",
         Txt: ""
       }
@@ -407,9 +327,9 @@ sap.ui.define([
     },
     ControlIndex: function (sData) {
 
-      if (sData.Werks === "" || sData.Werks === undefined || sData.Werks === null) {
+      /*if (sData.Werks === "" || sData.Werks === undefined || sData.Werks === null) {
         return "Inserire Divisione";
-      }
+      }*/
       if (sData.Sistema === "" || sData.Sistema === undefined || sData.Sistema === null) {
         return "Inserire Sistema";
       }

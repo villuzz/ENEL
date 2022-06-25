@@ -25,6 +25,18 @@ sap.ui.define([
 
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");
+
+                $.ajax({
+                  url: "/getuserinfo",
+                  type: "GET",
+                  dataType: "json",
+                  contentType: "application/json",
+                  success: function (data) {
+                    debugger
+                  },
+                  error: function (jqXHR, textStatus, errorThrown) {
+                  }
+              });
             }
         });
     }

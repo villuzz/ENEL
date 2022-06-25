@@ -13,10 +13,7 @@
                 </f:content>
                 <f:actions></f:actions>
                 <f:navigationActions>
-                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
-                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
-                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
-                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>
+
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -26,62 +23,58 @@
                     <fb:FilterBar useToolbar="true" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="index" visible="true" groupName="__$INTERNAL$" name="ind" label="{i18n>Index}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <MultiInput id="inIndex" type="Number" showValueHelp="false"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="FIIContActEl" visible="true" groupName="__$INTERNAL$" name="FYIContActEl" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <MultiInput id="IContActEl" type="Number" showValueHelp="false"/>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="Appuntam" visible="true" groupName="__$INTERNAL$" name="Appuntam" label="{i18n>Appuntamenti}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                              <MultiComboBox id="cbIndex" items="{ path: 'sHelp>/T_APP_WO/IndexOdm', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>IndexOdm}" text="{sHelp>IndexOdm}" />
+                                <MultiComboBox selectedKeys="{sFilter>/Appuntam}" items="{ path: 'sHelp>/Appuntam', sorter: [{ path: 'Appuntam', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Appuntam}" text="{sHelp>Appuntam}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="cont" visible="true" groupName="__$INTERNAL$" name="cont" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                <MultiComboBox id="cbCont" items="{ path: 'sHelp>/T_APP_WO/Zcount', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Zcount}" text="{sHelp>Zcount}" />
+                            <fb:FilterGroupItem id="Aufpl" visible="true" groupName="__$INTERNAL$" name="Aufpl" label="{i18n>Odm}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Aufpl}" items="{ path: 'sHelp>/Aufpl', sorter: [{ path: 'Aufpl', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Aufpl}" text="{sHelp>Aufpl}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="appuntamenti" visible="true" groupName="__$INTERNAL$" name="app" label="{i18n>Appuntamenti}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                <MultiComboBox id="cbAppuntamenti" items="{ path: 'sHelp>/T_APP_WO/Appuntam', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Appuntam}" text="{sHelp>Appuntam}" />
+                            <fb:FilterGroupItem id="StatoOdm" visible="true" groupName="__$INTERNAL$" name="StatoOdm" label="{i18n>StatoODM}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/StatoOdm}" items="{ path: 'sHelp>/StatoOdm', sorter: [{ path: 'StatoOdm', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>StatoOdm}" text="{sHelp>StatoOdm}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="odm" visible="true" groupName="__$INTERNAL$" name="odm" label="{i18n>Odm}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                <MultiComboBox id="cbOdm" items="{ path: 'sHelp>/T_APP_WO/Aufpl', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Aufpl}" text="{sHelp>Aufpl}" />
+                          <fb:FilterGroupItem id="DettConf" visible="true" groupName="__$INTERNAL$" name="DettConf" label="{i18n>DettaglioConferma}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/DettConf}" items="{ path: 'sHelp>/DettConf', sorter: [{ path: 'DettConf', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>DettConf}" text="{sHelp>DettConf}"/>
                                 </MultiComboBox>
-                                </fb:control>
-                            </fb:FilterGroupItem>
-
-                            <fb:FilterGroupItem id="statoODM" visible="true" groupName="__$INTERNAL$" name="sodm" label="{i18n>StatoODM}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                <MultiComboBox id="cbStatoODM" items="{ path: 'sHelp>/T_APP_WO/StatoOdm', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>StatoOdm}" text="{sHelp>StatoOdm}" />
-                                </MultiComboBox>
-                                </fb:control>
-                            </fb:FilterGroupItem>
-
-                            <fb:FilterGroupItem id="dettaglioConferma" visible="true" groupName="__$INTERNAL$" name="dc" label="{i18n>DettaglioConferma}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                <MultiComboBox id="cbDettaglioConferma" items="{ path: 'sHelp>/T_APP_WO/DettConf', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>DettConf}" text="{sHelp>DettConf}" />
-                                </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                      <OverflowToolbar class="sapUiMediumMarginTop" style="Clear">
+                     <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
-                      <Button text="Elimina pianificazione appuntamento" icon="sap-icon://delete" press="onElimina" class="sapUiTinyMarginBegin"/>
-                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
-                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
-                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                        <Button text="Elimina pianificazione appuntamento" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>
+                        <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                     </OverflowToolbar>
                 </f:content>
             </f:DynamicPageHeader>
@@ -90,8 +83,8 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbVisualizzazioneAttribuzioneOdmApp" items="{path: 'T_APP_WO>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col69" app:property="Zcount"><Text text="{i18n>Cont}"/></Column>
                         <Column width="15em" id="col70" app:property="Index"><Text text="{i18n>Index}"/></Column>
+                        <Column width="15em" id="col69" app:property="Zcount"><Text text="{i18n>Cont}"/></Column>
                         <Column width="15em" id="col71" app:property="Appuntamenti"><Text text="{i18n>Appuntamenti}"/></Column>
                         <Column width="15em" id="col72" app:property="Odm"><Text text="{i18n>Odm}"/></Column>
                         <Column width="15em" id="col73" app:property="Odm"><Text text="{i18n>CicloOperaz}"/></Column>
@@ -113,17 +106,16 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{T_APP_WO>Zcount}"/>
-                                <Text text="{T_APP_WO>IndexOdm}"/>
+                                <Text text="{ parts:[{path:'T_APP_WO>IndexOdm'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_APP_WO>Zcount'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{T_APP_WO>Appuntam}"/>
                                 <Text text="{T_APP_WO>Aufnr}"/>
-                                <Text text="{T_APP_WO>Aufpl}"/>
-                                <Text text="{T_APP_WO>Aplzl}"/>
-                                <Text text="{T_APP_WO>Aplzl1}"/>
-                                <Text text="{T_APP_WO>Aplzl2}"/>
-                                <Text text="{T_APP_WO>Aplzl3}"/>
-                                <Text text="{T_APP_WO>Aplzl4}"/>
-                                <Text text="{T_APP_WO>Aplzl5}"/>
+                                <Text text="{ parts:[{path:'T_APP_WO>Aplzl'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_APP_WO>Aplzl1'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_APP_WO>Aplzl2'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_APP_WO>Aplzl3'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_APP_WO>Aplzl4'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
+                                <Text text="{ parts:[{path:'T_APP_WO>Aplzl5'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{T_APP_WO>Qmnum}"/>
                                 <Text text="{T_APP_WO>StatoOdm}"/>
                                 <Text text="{T_APP_WO>DettConf}"/>
@@ -159,7 +151,9 @@
         </f:footer>
          <f:dependents>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
-    </f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+        </f:dependents>
     </f:DynamicPage>
    
 
@@ -213,104 +207,73 @@
           <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
-                <form:FormElement label="{i18n>Cont}">
-                  <form:fields>
-                  <ComboBox  value="{sDetail>/Zcount}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Zcount', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Zcount}" text="{sHelp>Zcount}"/>
-                   </ComboBox>
-                  </form:fields>
-                </form:FormElement>
                 <form:FormElement label="{i18n>Index}" >
                   <form:fields>
-                  <ComboBox  value="{sDetail>/IndexOdm}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/IndexOdm', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>IndexOdm}" text="{sHelp>IndexOdm}"/>
-                   </ComboBox>
+                   <Input value="{sSelect>/IndexOdm}" type="Number" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
+                  </form:fields>
+                </form:FormElement>
+                <form:FormElement label="{i18n>Cont}">
+                  <form:fields>
+                   <Input value="{sSelect>/Zcount}" type="Number" maxLength="10" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Appuntamenti}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Appuntam}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Appuntam', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Appuntam}" text="{sHelp>Appuntam}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Appuntam}" type="Number" maxLength="16" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
+
                 <form:FormElement label="{i18n>Odm}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Aufnr}" enabled="{/Enabled}" items="{ path: '', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{}" text="{}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aufnr}" type="Number" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>CicloOperaz}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Aufpl}" enabled="{/Enabled}" items="{ path: '', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{}" text="{}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aufpl}" type="Number" maxLength="10" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper}">
-                <ComboBox  value="{sDetail>/Aplzl}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Aufpl}" text="{sHelp>Aufpl}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aplzl}" type="Text" maxLength="8" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper1}">
-                <ComboBox  value="{sDetail>/Aplzl1}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl1', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Aplzl1}" text="{sHelp>Aplzl1}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aplzl1}" type="Text" maxLength="8" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper2}">
-                <ComboBox  value="{sDetail>/Aplzl2}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl2', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Aplzl2}" text="{sHelp>Aplzl2}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aplzl2}" type="Text" maxLength="8" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper3}">
-                <ComboBox  value="{sDetail>/Aplzl3}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl3', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Aplzl3}" text="{sHelp>Aplzl3}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aplzl3}" type="Text" maxLength="8" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper4}">
-                <ComboBox  value="{sDetail>/Aplzl4}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl4', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Aplzl4}" text="{sHelp>Aplzl4}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aplzl4}" type="Text" maxLength="8" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                 </form:FormElement>
                 <form:FormElement label="{i18n>NOper5}">
-                <ComboBox  value="{sDetail>/Aplzl5}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/Aplzl5', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Aplzl5}" text="{sHelp>Aplzl5}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aplzl5}" type="Text" maxLength="8" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                 </form:FormElement>
                 <form:FormElement label="{i18n>Adm}">
-                <ComboBox  value="{sDetail>/Qmnum}" enabled="{/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Qmnum}" type="Text" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                 </form:FormElement>
                 <form:FormElement label="{i18n>StatoODM}">
-                <ComboBox  value="{sDetail>/StatoOdm}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/StatoOdm', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>StatoOdm}" text="{sHelp>StatoOdm}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/StatoOdm}" type="Text" maxLength="4"/>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DettaglioConferma}">
-                <ComboBox  value="{sDetail>/DettConf}" enabled="{/Enabled}" items="{ path: 'sHelp>/T_APP_WO/DettConf', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>DettConf}" text="{sHelp>DettConf}"/>
-                   </ComboBox>                
+                  <Input value="{sSelect>/DettConf}" type="Text" maxLength="40"/>          
                 </form:FormElement>
                 <form:FormElement label="{i18n>DataPianificazione}">
-                  <DatePicker placeholder="Inserisci giorno" id="dataPianificazione" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sDetail>/DataPian}"/>
+                  <DatePicker placeholder="Inserisci giorno" id="dataPianificazione" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/DataPian}"/>
                 </form:FormElement>
                 <form:FormElement label="{i18n>FineCardine}">
-                  <DatePicker placeholder="Inserisci giorno" id="dataFineCard" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sDetail>/DataFineCard}"/>
+                  <DatePicker placeholder="Inserisci giorno" id="dataFineCard" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/DataFineCard}"/>
                 </form:FormElement>
                 <form:FormElement label="{i18n>ScadNaturale}">
-                  <DatePicker placeholder="Inserisci giorno" id="scadNaturale" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sDetail>/DataPianNatur}"/>
+                  <DatePicker placeholder="Inserisci giorno" id="scadNaturale" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/DataPianNatur}"/>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Aggregatore}">
-                <ComboBox value="{sDetail>/Aggregatore}" enabled="{/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/Aggregatore}" type="Text" maxLength="12"/> 
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneAggregatore}">
-                <ComboBox  value="{sDetail>/DescAggregatore}" enabled="{/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                   </ComboBox>
+                  <Input value="{sSelect>/DescAggregatore}" type="Text" maxLength="40"/> 
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>

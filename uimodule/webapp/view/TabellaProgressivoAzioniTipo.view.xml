@@ -26,49 +26,51 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Werks" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox id="cbDivisione" items="{ path: 'sHelp>/T_ACT_PROG/Divisione', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="sistema" visible="true" groupName="__$INTERNAL$" name="sis" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbSistema" items="{ path: 'sHelp>/T_ACT_PROG/Sistema', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                            <fb:FilterGroupItem id="Sistema" visible="true" groupName="__$INTERNAL$" name="Sistema" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Sistema}" items="{ path: 'sHelp>/Sistema', sorter: [{ path: 'Sistema', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="progressivo" visible="true" groupName="__$INTERNAL$" name="pr" label="{i18n>Progressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbProgressivo" items="{ path: 'sHelp>/T_ACT_PROG/Progres', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                            <fb:FilterGroupItem id="Progres" visible="true" groupName="__$INTERNAL$" name="Progres" label="{i18n>Progressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Progres}" items="{ path: 'sHelp>/Progres', sorter: [{ path: 'Progres', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Progres}" text="{sHelp>Progres}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="descrizioneProgressivo" visible="true" groupName="__$INTERNAL$" name="dp" label="{i18n>DescrizioneProgressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbDescrizioneProgressivo" items="{ path: 'sHelp>/T_ACT_PROG/Txt', sorter: [{ path: 'T_ACT_PROG', length:1000, descending: false, group:false }] }" > 
+                            <fb:FilterGroupItem id="Txt" visible="true" groupName="__$INTERNAL$" name="Txt" label="{i18n>DescrizioneProgressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Txt}" items="{ path: 'sHelp>/Txt', sorter: [{ path: 'Txt', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="componenteTipo" visible="true" groupName="__$INTERNAL$" name="ct" label="{i18n>ComponenteTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbComponentTipo" items="{ path: 'sHelp>/T_ACT_PROG/ComponentTipo', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
+                            <fb:FilterGroupItem id="ComponentTipo" visible="true" groupName="__$INTERNAL$" name="ComponentTipo" label="{i18n>ComponenteTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/ComponentTipo}" items="{ path: 'sHelp>/ComponentTipo', sorter: [{ path: 'ComponentTipo', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>ComponentTipo}" text="{sHelp>ComponentTipo}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                    <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                       <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
@@ -79,7 +81,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbProgressivoAzioni"  growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/', templateShareable:false}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbProgressivoAzioni"  growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/', sorter: [{ path: 'Werks', descending: false, group:false }] }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col1"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col2"><Text text="{i18n>Sistema}"/></Column>
@@ -109,7 +111,9 @@
         </f:footer>
      <f:dependents>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
-    </f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+        </f:dependents>
    </f:DynamicPage>
     <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
         <f:title>
@@ -156,35 +160,31 @@
               <form:formElements>
               <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                   <ComboBox id="cbDivisioneNew" value="{sDetail>/Werks}" enabled="{oDataModel>/Enabled}"  items="{ path: 'sHelp>/H_T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" > 
-                         <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
+                    <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Sistema}">
                   <form:fields>
-                    <ComboBox id="cbSistemaNew" value="{sDetail>/Sistema}" valueStateText="{i18n>valueState} {i18n>Sistema}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_ACT_SYST/Sistema', sorter: [{ path: 'SISTEMANew', descending: false, group:false }] }" > 
-                         <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
+                    <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>SISTEMA}" showSecondaryValues= "true" items="{ path: 'sHelp>/SISTEMA', length:4000 }" selectedKey="{sSelect>/Sistema}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Sistema}" text="{sHelp>Sistema}" additionalText="{sHelp>Txt}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Progressivo}" >
                   <form:fields>
-                    <Input required="true"  enabled="{oDataModel>/Enabled}" value="{sDetail>/Progres}"/>
+                    <Input value="{sSelect>/Progres}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneProgressivo}" >
                   <form:fields>
-                    <ComboBox id="cbDescrizioneProgressivoNew" value="{sDetail>/Txt}" items="{ path: 'sHelp>/T_ACT_PROG/DESCRNew', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
-                         <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
-                    </ComboBox>
+                    <Input value="{sSelect>/Txt}"/>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>ComponenteTipo}" >
                   <form:fields>
-                    <ComboBox id="cbComponenteTipoNew" value="{sDetail>/ComponentTipo}" items="{ path: 'sHelp>/T_ACT_PROG/COMPNew', sorter: [{ path: 'T_ACT_PROG', descending: false, group:false }] }" > 
-                         <core:Item key="{sHelp>ComponentTipo}" text="{sHelp>ComponentTipo}"/>
-                    </ComboBox>
+                    <Input value="{sSelect>/ComponentTipo}"/>
                   </form:fields>
                 </form:FormElement>
               </form:formElements>
@@ -193,6 +193,5 @@
         </form:Form>
         </f:content>
     </f:DynamicPage>
-   
   </NavContainer>
 </mvc:View>

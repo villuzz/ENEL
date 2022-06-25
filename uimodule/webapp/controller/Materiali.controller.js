@@ -18,7 +18,6 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.Materiali", {
     onInit: function () {
-
       this.getOwnerComponent().getRouter().getRoute("Materiali").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbMateriali"), persoService: manutenzioneTable }).activate();
     },

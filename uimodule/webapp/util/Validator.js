@@ -6,7 +6,6 @@ sap.ui.define([
 	return {
 
 		validateView: function () {
-debugger
 			var bError = false;
       var vTxt = "";
 

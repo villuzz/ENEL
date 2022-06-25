@@ -26,49 +26,59 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Werks" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                              <MultiComboBox id="cbDivisione"   items="{ path: 'sHelp>/T_DEST/Divisione', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}" />
-                              </MultiComboBox>
+                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
+                                </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="centroDiLavoro" visible="true" groupName="__$INTERNAL$" name="cdl" label="{i18n>CentroDiLavoro}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                   <MultiComboBox id="cbCentroDiLavoro"    items="{ path: 'sHelp>/T_DEST/Arbpl', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Arbpl}" text="{sHelp>Arbpl}" />
+                            <fb:FilterGroupItem id="Arbpl" visible="true" groupName="__$INTERNAL$" name="Arbpl" label="{i18n>Arbpl}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Arbpl}" items="{ path: 'sHelp>/Arbpl', sorter: [{ path: 'Arbpl', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Arbpl}" text="{sHelp>Arbpl}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="destinatario" visible="true" groupName="__$INTERNAL$" name="dest" label="{i18n>Destinatario}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbDestinatario"   items="{ path: 'sHelp>/T_DEST/Destinatario', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Destinatario}" text="{sHelp>Destinatario}" />
+                            <fb:FilterGroupItem id="Destinatario" visible="true" groupName="__$INTERNAL$" name="Destinatario" label="{i18n>Destinatario}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Destinatario}" items="{ path: 'sHelp>/Destinatario', sorter: [{ path: 'Destinatario', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Destinatario}" text="{sHelp>Destinatario}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="descrizioneDestinatario" visible="true" groupName="__$INTERNAL$" name="dd" label="{i18n>DescrizioneDestinatario}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbDescrizioneDestinatario"  items="{ path: 'sHelp>/T_DEST/Txt', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}" />
+                            <fb:FilterGroupItem id="Txt" visible="true" groupName="__$INTERNAL$" name="Txt" label="{i18n>Txt}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Txt}" items="{ path: 'sHelp>/Txt', sorter: [{ path: 'Txt', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="ragg" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbRaggruppamento"  items="{ path: 'sHelp>/T_DEST/Raggruppamento', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}" />
+                            <fb:FilterGroupItem id="Raggruppamento" visible="true" groupName="__$INTERNAL$" name="Raggruppamento" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Raggruppamento}" items="{ path: 'sHelp>/Raggruppamento', sorter: [{ path: 'Raggruppamento', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="Mail" visible="true" groupName="__$INTERNAL$" name="Mail" label="{i18n>Mail}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Mail}" items="{ path: 'sHelp>/Mail', sorter: [{ path: 'Mail', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Mail}" text="{sHelp>Mail}"/>
+                                </MultiComboBox>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                    <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                       <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
@@ -79,7 +89,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbTabellaDestinatariCdl" items="{path: 'T_DEST>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" selectionChange="onSelectRow">
+                <Table id="tbTabellaDestinatariCdl" items="{ path: 'T_DEST>/', sorter: [{ path: 'Werks', descending: false, group:false }] }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col9" app:property="Werks"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col10" app:property="Arbpl"><Text text="{i18n>CentroDiLavoro}"/></Column>
@@ -111,6 +121,8 @@
         </f:footer>
         <f:dependents>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
     </f:dependents>
     </f:DynamicPage>
     <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
@@ -165,41 +177,33 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Werks}"  required="true" valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                   </ComboBox>
+                  <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>CentroDiLavoro}" >
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Arbpl}" required="true" valueStateText="{i18n>valueState} {i18n>CentroDiLavoro}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: '', sorter: [{ path: '', descending: false, group:false }] }" >
-                   <core:Item key="{}" text="{}"/>
-                   </ComboBox>
+                  <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Arbpl}" items="{ path: 'sHelp>/ARBPL', length:4000 }" selectedKey="{sSelect>/Arbpl}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Arbpl}" text="{sHelp>Arbpl}" />
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Destinatario}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Destinatario}" required="true" valueStateText="{i18n>valueState} {i18n>Destinatario}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_DEST/Destinatario', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Destinatario}" text="{sHelp>Destinatario}"/>
-                   </ComboBox>
+                   <Input type="Email" value="{sSelect>/Destinatario}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneDestinatario}">
-                  <ComboBox  value="{sDetail>/Txt}" valueStateText="{i18n>valueState} {i18n>DescrizioneDestinatario}" change="handleChangeCb" items="{ path: 'sHelp>/T_DEST/Txt', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
-                   </ComboBox>
+                   <Input type="Email" value="{sSelect>/Txt}"/>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Raggruppamento}" valueStateText="{i18n>valueState} {i18n>Raggruppamento}" change="handleChangeCb" items="{ path: 'sHelp>/ZPM4R_H_RAG/RAGGRUPPAMENTO', sorter: [{ path: 'T_DEST', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                   </ComboBox>
+                   <Input type="Email" value="{sSelect>/Raggruppamento}"/>
                   </form:fields>
                 </form:FormElement>
                  <form:FormElement label="{i18n>Email}">
-                   <Input type="Email" value="{sDetail>/Mail}">
-                   <core:Item key="{sHelp>Mail}" text="{sHelp>Mail}"/>
-                   </Input>
+                   <Input type="Email" value="{sSelect>/Mail}"/>
                 </form:FormElement>
               </form:formElements>
             </form:FormContainer>

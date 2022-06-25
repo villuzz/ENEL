@@ -26,33 +26,35 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Divisione" visible="true" groupName="__$INTERNAL$" name="Divisione" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox id="cbDivisione"  value="{sRaggruppamento>/DIVISIONE}" items="{ path: 'sHelp>/f_T_RAGGR/Divisione', sorter: [{ path: 'DIVISIONE', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}" />
+                                <MultiComboBox selectedKeys="{sFilter>/Divisione}" items="{ path: 'sHelp>/Divisione', sorter: [{ path: 'Divisione', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="rag" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                  <MultiComboBox id="cbRaggruppamento" value="{sRaggruppamento>/RAGGRUPPAMENTO}" items="{ path: 'sHelp>/f_T_RAGGR/Raggruppamento', sorter: [{ path: 'RAGGRUPPAMENTO', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
+                            <fb:FilterGroupItem id="Raggruppamento" visible="true" groupName="__$INTERNAL$" name="Raggruppamento" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Raggruppamento}" items="{ path: 'sHelp>/Raggruppamento', sorter: [{ path: 'Raggruppamento', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="descrizioneRaggruppamento" visible="true" groupName="__$INTERNAL$" name="dr" label="{i18n>DescrizioneRaggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                    <MultiComboBox id="cbDescRaggr" selectionChange="onFilterHelp" selectedKeys="{sFilter>/DESC_RAGGR}" value="{sRaggruppamento>/DESC_RAGGR}" items="{ path: 'sHelp>/f_T_RAGGR/DescRaggr', sorter: [{ path: 'DESC_RAGGR', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>DescRaggr}" text="{sHelp>DescRaggr}"/>
+                            <fb:FilterGroupItem id="DescRaggr" visible="true" groupName="__$INTERNAL$" name="DescRaggr" label="{i18n>DescRaggr}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/DescRaggr}" items="{ path: 'sHelp>/DescRaggr', sorter: [{ path: 'DescRaggr', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>DescRaggr}" text="{sHelp>DescRaggr}"/>
                                 </MultiComboBox>
-                                </fb:control>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                       <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                      <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                       <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
@@ -63,7 +65,7 @@
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbRaggruppamento" items="{path: 'table_T_RAGGR>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbRaggruppamento" items="{ path: 'T_RAGGR>/', sorter: [{ path: 'Divisione', descending: false, group:false }] }"   mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col6" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col7" app:property="Raggruppamento"><Text text="{i18n>Raggruppamento}"/></Column>
@@ -72,9 +74,9 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{table_T_RAGGR>Divisione}"/>
-                                <Text text="{table_T_RAGGR>Raggruppamento}"/>
-                                <Text text="{table_T_RAGGR>DescRaggr}"/>
+                                <Text text="{T_RAGGR>Divisione}"/>
+                                <Text text="{T_RAGGR>Raggruppamento}"/>
+                                <Text text="{T_RAGGR>DescRaggr}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -89,7 +91,9 @@
         </f:footer>
          <f:dependents>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
-    </f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+        </f:dependents>
     </f:DynamicPage>
 
 <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
@@ -144,19 +148,19 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox  value="{sDetail>/Divisione}"  valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                   </ComboBox>
+                  <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Divisione}">
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}" >
                   <form:fields>
-                   <Input  value="{sDetail>/Raggruppamento}" required="true" enabled="{oDataModel>/Enabled}" />
+                   <Input  value="{sSelect>/Raggruppamento}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneRaggruppamento}">
                   <form:fields>
-                    <Input value="{sDetail>/DescRaggr}"/>
+                    <Input value="{sSelect>/DescRaggr}"/>
                   </form:fields>
                 </form:FormElement>
               </form:formElements>

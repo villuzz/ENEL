@@ -220,7 +220,6 @@ sap.ui.define([
             }
             MessageBox.success("Excel Caricato con successo");
             sap.ui.core.BusyIndicator.hide(0);
-            this.getView().getModel().refresh();
             this.byId("UploadTable").close();
       }
     }

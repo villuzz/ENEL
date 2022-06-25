@@ -26,34 +26,36 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Divisione" visible="true" groupName="__$INTERNAL$" name="Divisione" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                               <MultiComboBox id="cbDivisione"  items="{ path: 'sHelp>/T_TP_MAN1/Divisione', sorter: [{ path: 'T_TP_MAN1', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}"/>
-                                </MultiComboBox> 
+                                <MultiComboBox selectedKeys="{sFilter>/Divisione}" items="{ path: 'sHelp>/Divisione', sorter: [{ path: 'Divisione', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Divisione}" text="{sHelp>Divisione}"/>
+                                </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="finalita" visible="true" groupName="__$INTERNAL$" name="fin" label="{i18n>Finalita}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbFinalita"  items="{ path: 'sHelp>/T_TP_MAN1/TipoGestione1', sorter: [{ path: 'T_TP_MAN1', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>TipoGestione1}" text="{sHelp>TipoGestione1}"/>
-                                </MultiComboBox> 
-                                    
-                                </fb:control>
+                        <fb:FilterGroupItem id="TipoGestione1" visible="true" groupName="__$INTERNAL$" name="TipoGestione1" label="{i18n>Finalita}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/TipoGestione1}" items="{ path: 'sHelp>/TipoGestione1', sorter: [{ path: 'TipoGestione1', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>TipoGestione1}" text="{sHelp>TipoGestione1}"/>
+                                </MultiComboBox>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="raggruppamento" visible="true" groupName="__$INTERNAL$" name="ragg" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                 <MultiComboBox id="cbRaggruppamento"  items="{ path: 'sHelp>/T_TP_MAN1/Raggruppamento', sorter: [{ path: 'T_TP_MAN1', descending: false, group:false }] }" > 
-                                    <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
-                                </MultiComboBox> 
-                                </fb:control>
+                            <fb:FilterGroupItem id="Raggruppamento" visible="true" groupName="__$INTERNAL$" name="Raggruppamento" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <MultiComboBox selectedKeys="{sFilter>/Raggruppamento}" items="{ path: 'sHelp>/Raggruppamento', sorter: [{ path: 'Raggruppamento', descending: false, group:false }] }" > 
+                                  <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
+                                </MultiComboBox>
+                              </fb:control>
                             </fb:FilterGroupItem>
 
+                          
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                    <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
+                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
                       <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
@@ -66,16 +68,18 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbTabellaFinalita" items="{path: 'T_TP_MAN1>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
+                  <Column width="15em" id="col62" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col61" app:property="TipoGestione1"><Text text="{i18n>Finalita}"/></Column>
-                        <Column width="15em" id="col62" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
+                        
                         <Column width="15em" id="col63" app:property="DesTipoGest1"><Text text="{i18n>DescrizioneFinalita}"/></Column>
                         <Column width="15em" id="col64" app:property="Raggruppamento"><Text text="{i18n>Raggruppamento}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
+                            <Text text="{T_TP_MAN1>Divisione}"/>
                                 <Text text="{T_TP_MAN1>TipoGestione1}"/>
-                                <Text text="{T_TP_MAN1>Divisione}"/>
+                                
                                 <Text text="{T_TP_MAN1>DesTipoGest1}"/>
                                 <Text text="{T_TP_MAN1>Raggruppamento}"/>
                             </cells>
@@ -92,7 +96,9 @@
         </f:footer>
           <f:dependents>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
-    </f:dependents>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
+          <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+        </f:dependents>
     </f:DynamicPage>
 
 
@@ -147,32 +153,30 @@
           <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
+               <form:FormElement label="{i18n>Divisione}" >
+                  <form:fields>
+                   <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Divisione}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
+                  </form:fields>
+                </form:FormElement>
+
                 <form:FormElement label="{i18n>Finalita}">
                   <form:fields>
-                     <ComboBox  value="{sDetail>/TipoGestione1}" required="true" valueStateText="{i18n>valueState} {i18n>Finalita}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T_TP_MAN1/TipoGestione1', sorter: [{ path: 'T_TP_MAN1', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>TipoGestione1}" text="{sHelp>TipoGestione1}"/>
-                  </ComboBox>
+                     <Input value="{sSelect>/TipoGestione1}" maxLength="15" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Divisione}" >
-                  <form:fields>
-                     <ComboBox  value="{sDetail>/Divisione}" required="true" valueStateText="{i18n>valueState} {i18n>Divisione}" change="handleChangeCb" enabled="{oDataModel>/Enabled}" items="{ path: 'sHelp>/T001W/DivisioneNew', sorter: [{ path: 'DIVISIONENew', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                  </ComboBox>
-                  </form:fields>
-                </form:FormElement>
+               
                 <form:FormElement label="{i18n>DescrizioneFinalita}">
                   <form:fields>
-                      <Input  value="{sDetail>/DesTipoGest1}" >
-                   <core:Item key="{}" text="{}"/>
-                  </Input>
+                      <Input value="{sSelect>/DesTipoGest1}" maxLength="40" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}">
                   <form:fields>
-                     <ComboBox  value="{sDetail>/Raggruppamento}"  items="{ path: 'sHelp>/T_RAGGR/Raggruppamento', sorter: [{ path: 'aRAGGRUPPAMENTO', descending: false, group:false }] }" >
-                   <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
-                  </ComboBox>
+                     <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Raggruppamento}" showSecondaryValues= "true" items="{ path: 'sHelp>/T_RAGGR', length:4000 }" selectedKey="{sSelect>/Raggruppamento}">
+                      <core:ListItem key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}" additionalText="{sHelp>DescRaggr}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
               </form:formElements>
