@@ -15,10 +15,13 @@
                 </f:content>
                 <f:actions></f:actions>
                 <f:navigationActions>
-                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" ariaLabelledBy="Nuovo" tooltip="{i18n>NewButton}"/>
-                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" ariaLabelledBy="Modifica" tooltip="{i18n>ModifyButton}"/>
-                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" ariaLabelledBy="Copia" tooltip="{i18n>CopyButton}"/>
-                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" ariaLabelledBy="Cancella" tooltip="{i18n>CancelButton}"/>   
+                    <!-- <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" ariaLabelledBy="invisibleId" tooltip="{i18n>NewButton}"/>
+                    <core:InvisibleText text="test" id="invisibleId" /> -->
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" ariaLabelledBy="invisibleId" tooltip="{i18n>NewButton}"/>
+
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" ariaLabelledBy="{i18n>ModifyButton}" tooltip="{i18n>ModifyButton}"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" ariaLabelledBy="{i18n>CopyButton}" tooltip="{i18n>CopyButton}"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" ariaLabelledBy="{i18n>CancelButton}" tooltip="{i18n>CancelButton}"/>   
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -70,8 +73,8 @@
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
-                    <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
-                    <Button type="Default" tooltip="{i18n>List}" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant" ariaLabelledBy="Lista Varianti"/>
+                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                      <Button type="Default" tooltip="{i18n>List}" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant" ariaLabelledBy="Lista Varianti"/>
                       <Button type="Default" tooltip="{i18n>SaveVar}" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant" ariaLabelledBy="Salva Variante"/>
                       <ToolbarSpacer/>
                       <Button text="Scarica" tooltip="{i18n>Download}" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin" ariaLabelledBy="Scarica"/>
@@ -82,9 +85,10 @@
             </f:DynamicPageHeader>
         </f:header>
         
-        <f:content>
+        <f:content > 
+         <Panel width="100%" height="100%" class="block">
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-            <Panel accessibleRole="Region" headerText="{i18n>TableTitle}" class="sapUiContentPadding">
+           
                 <Table id="tbProgressivoAzioni" ariaLabelledBy="title" growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/', sorter: [{ path: 'Werks', descending: false, group:false }] }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col1"><Text text="{i18n>Divisione}"/></Column>
@@ -105,8 +109,9 @@
                         </ColumnListItem>
                     </items>
                 </Table>
-                </Panel>
+           
              </ScrollContainer>
+          </Panel>
         </f:content>
         <f:footer>
             <OverflowToolbar>
