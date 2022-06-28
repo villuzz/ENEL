@@ -27,68 +27,68 @@
                         <fb:filterGroupItems>
               <fb:FilterGroupItem id="FISEDE_TECNICA" visible="true" groupName="__$INTERNAL$" name="SEDE_TECNICA" label="{i18n>SEDE_TECNICA}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selSEDE_TECNICA" items="{SEDE_TECNICA>/}" value="{sSedeTecnica>/SEDE_TECNICA}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selSEDE_TECNICA" items="{SEDE_TECNICA>/}" value="{sFilter>/SEDE_TECNICA}" change="onSearchFilters" >
                       <core:Item key="{SEDE_TECNICA}" text="{SEDE_TECNICA>SEDE_TECNICA}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FILIVELLO1" visible="true" groupName="__$INTERNAL$" name="LIVELLO1" label="{i18n>LIVELLO1}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selLIVELLO1" items="{LIVELLO1>/}" value="{sSedeTecnica>/LIVELLO1}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selLIVELLO1" items="{LIVELLO1>/}" value="{sFilter>/LIVELLO1}" change="onSearchFilters" >
                       <core:Item key="{LIVELLO1}" text="{LIVELLO1>LIVELLO1}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FILIVELLO2" visible="true" groupName="__$INTERNAL$" name="LIVELLO2" label="{i18n>LIVELLO2}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selLIVELLO2" items="{LIVELLO2>/}" value="{sSedeTecnica>/LIVELLO2}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selLIVELLO2" items="{LIVELLO2>/}" value="{sFilter>/LIVELLO2}" change="onSearchFilters" >
                       <core:Item key="{LIVELLO2}" text="{LIVELLO2>LIVELLO2}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FILIVELLO3" visible="true" groupName="__$INTERNAL$" name="LIVELLO3" label="{i18n>LIVELLO3}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selLIVELLO3" items="{LIVELLO3>/}" value="{sSedeTecnica>/LIVELLO3}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selLIVELLO3" items="{LIVELLO3>/}" value="{sFilter>/LIVELLO3}" change="onSearchFilters" >
                       <core:Item key="{LIVELLO3}" text="{LIVELLO3>LIVELLO3}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FILIVELLO4" visible="true" groupName="__$INTERNAL$" name="LIVELLO4" label="{i18n>LIVELLO4}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selLIVELLO4" items="{LIVELLO4>/}" value="{sSedeTecnica>/LIVELLO4}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selLIVELLO4" items="{LIVELLO4>/}" value="{sFilter>/LIVELLO4}" change="onSearchFilters" >
                       <core:Item key="{LIVELLO4}" text="{LIVELLO4>LIVELLO4}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FILIVELLO5" visible="true" groupName="__$INTERNAL$" name="LIVELLO5" label="{i18n>LIVELLO5}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selLIVELLO5" items="{LIVELLO5>/}" value="{sSedeTecnica>/LIVELLO5}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selLIVELLO5" items="{LIVELLO5>/}" value="{sFilter>/LIVELLO5}" change="onSearchFilters" >
                       <core:Item key="{LIVELLO5}" text="{LIVELLO5>LIVELLO5}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FILIVELLO6" visible="true" groupName="__$INTERNAL$" name="LIVELLO6" label="{i18n>LIVELLO6}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selLIVELLO6" items="{LIVELLO6>/}" value="{sSedeTecnica>/LIVELLO6}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selLIVELLO6" items="{LIVELLO6>/}" value="{sFilter>/LIVELLO6}" change="onSearchFilters" >
                       <core:Item key="{LIVELLO6}" text="{LIVELLO6>LIVELLO6}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FILANGUAGE" visible="true" groupName="__$INTERNAL$" name="LANGUAGE" label="{i18n>LANGUAGE}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="selLANGUAGE" items="{LANGUAGE>/}" value="{sSedeTecnica>/LANGUAGE}" change="onFilterSedeTecnica" >
+                    <ComboBox id="selLANGUAGE" items="{LANGUAGE>/}" value="{sFilter>/LANGUAGE}" change="onSearchFilters" >
                       <core:Item key="{LANGUAGE}" text="{LANGUAGE>LANGUAGE}"/>
                     </ComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FIDESC_SEDE" visible="true" groupName="__$INTERNAL$" name="DESC_SEDE" label="{i18n>DESC_SEDE}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                    <Input value="{sSedeTecnica>/DESC_SEDE}"  change="onFilterSedeTecnica" />
+                    <Input value="{sFilter>/DESC_SEDE}"  change="onSearchFilters" />
                 </fb:control>
               </fb:FilterGroupItem>
               <fb:FilterGroupItem id="FINOTE" visible="true" groupName="__$INTERNAL$" name="NOTE" label="{i18n>NOTE}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                  <Input value="{sSedeTecnica>/NOTE}"  change="onFilterSedeTecnica" />
+                  <Input value="{sFilter>/NOTE}"  change="onSearchFilters" />
                 </fb:control>
               </fb:FilterGroupItem>
                         </fb:filterGroupItems>
@@ -231,7 +231,9 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>LANGUAGE}">
                   <form:fields>
-                    <Input value="{sDetail>/LANGUAGE}" enabled="{sDetail>/MODIFY}" type="Text" maxLength="2"/>
+                    <ComboBox id="cbDivisione" enabled="{sDetail>/MODIFY}" change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>LANGUAGE}" showSecondaryValues= "true" items="{ path: 'sHelp>/SPRAS', length:4000 }" selectedKey="{sDetail>/LANGUAGE}">
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DESC_SEDE}">

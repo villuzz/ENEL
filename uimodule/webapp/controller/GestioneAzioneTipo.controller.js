@@ -330,7 +330,8 @@ sap.ui.define([
         onSave: async function () {
             var ControlValidate = Validator.validateView();
             if (ControlValidate) {
-                var line = this.getView().getModel("sSelect").getData();
+                var line = JSON.stringify(this.getView().getModel("sSelect").getData());
+                line = JSON.parse(line);
                 var msg = await this.ControlIndex(line);
                 if (msg !== "") {
                     MessageBox.error(msg);
@@ -339,10 +340,12 @@ sap.ui.define([
                         var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
                         delete line.stato;
                         delete line.__metadata;
+                        //delete line.Uzeit;
                         await this._updateHana(sURL, line);
                     } else {
                         delete line.stato;
                         delete line.__metadata;
+                        //delete line.Uzeit;
                         await this._saveHana("/T_ACT_TYPE", line);
                     } MessageBox.success("Dati salvati con successo");
                     this.onSearchFilters();

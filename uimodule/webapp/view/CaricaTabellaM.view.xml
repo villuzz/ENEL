@@ -105,7 +105,7 @@
                             <cells>
                                 <Text text="{ parts:[{path:'T_PMO_M>IndexPmo'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{ parts:[{path:'T_PMO_M>Cont'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
-                                <Text text="{T_PMO_M>Matnr}"/>
+                                <Text text="{ parts:[{path:'T_PMO_M>Matnr'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{T_PMO_M>Maktx}"/>
                                 <Text text="{T_PMO_M>Menge}"/>
                                 <Text text="{T_PMO_M>Meins}"/>
@@ -233,15 +233,28 @@
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Magazzino}">
-                    <ComboBox  selectedKey="{sSelect>/Lgort}" valueStateText="{i18n>valueState} {i18n>Magazzino}" items="{ path: 'sHelp>/LGORT' }" change="handleChangeCb" showSecondaryValues= "true" >
+                <form:FormElement label="{i18n>Divisione}">
+                    <ComboBox id="cbDivisione" change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}">
                       <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
                     </ComboBox>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Divisione}">
-                    <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}">
-                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
-                    </ComboBox>
+                <form:FormElement label="{i18n>Magazzino}">
+                    <Input showSuggestion="true" value="{sSelect>/Lgort}" suggestionRows="{sHelp>/LGORT}" suggest=".onSuggestLgort" >
+                      <suggestionColumns>
+                              <Column>
+                                <Label text="{i18n>Magazzino}" />
+                              </Column>
+                              <Column hAlign="End">
+                                <Label text="{i18n>Description}" />
+                              </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                              <ColumnListItem>
+                                <Label text="{sHelp>Code}" />
+                                <Label text="{sHelp>Lgobe}" />
+                              </ColumnListItem>
+                      </suggestionRows>
+                    </Input>
                 </form:FormElement>
                 <form:FormElement label="{i18n>GrupAcq}">
                     <ComboBox  selectedKey="{sSelect>/Ekgrp}" valueStateText="{i18n>valueState} {i18n>GrupAcq}" items="{ path: 'sHelp>/EKGRP' }" change="handleChangeCb" showSecondaryValues= "true" >
@@ -255,7 +268,7 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>Richiedente}">
                     <ComboBox  selectedKey="{sSelect>/Afnam}" valueStateText="{i18n>valueState} {i18n>Richiedente}" items="{ path: 'sHelp>/AFNAM' }" change="handleChangeCb" showSecondaryValues= "true" >
-                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                      <core:ListItem key="{sHelp>Fieldname2}" text="{sHelp>Fieldname2}" additionalText="{sHelp>Fieldname3}"/>
                     </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>GrupMerci}">

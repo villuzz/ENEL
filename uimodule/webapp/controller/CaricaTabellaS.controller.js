@@ -232,7 +232,8 @@ sap.ui.define([
         onSave: async function () {
             var ControlValidate = Validator.validateView();
             if (ControlValidate) {
-                var line = JSON.stringify(this.getView().getModel("sSelect").getData());               line = JSON.parse(line);
+                var line = JSON.stringify(this.getView().getModel("sSelect").getData());
+                line = JSON.parse(line);
                 var msg = await this.ControlIndex(line);
                 if (msg !== "") {
                     MessageBox.error(msg);
@@ -312,18 +313,18 @@ sap.ui.define([
         ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-              IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? undefined : sValue[oResources.getText("IndexPmo")].toString(),
-              Cont: (sValue[oResources.getText("Cont")] === undefined) ? undefined : sValue[oResources.getText("Cont")].toString(),
-              Asnum: (sValue[oResources.getText("Asnum")] === undefined) ? undefined : sValue[oResources.getText("Asnum")].toString(),
-              Asktx: (sValue[oResources.getText("Asktx")] === undefined) ? undefined : sValue[oResources.getText("Asktx")].toString(),
-              Menge: (sValue[oResources.getText("Menge")] === undefined) ? undefined : sValue[oResources.getText("Menge")].toString(),
-              Meins: (sValue[oResources.getText("Meins")] === undefined) ? undefined : sValue[oResources.getText("Meins")].toString(),
-              Tbtwr: (sValue[oResources.getText("Tbtwr")] === undefined) ? undefined : sValue[oResources.getText("Tbtwr")].toString(),
-              Waers: (sValue[oResources.getText("Waers")] === undefined) ? undefined : sValue[oResources.getText("Waers")].toString(),
-              Ekgrp: (sValue[oResources.getText("Ekgrp")] === undefined) ? undefined : sValue[oResources.getText("Ekgrp")].toString(),
-              Ekorg: (sValue[oResources.getText("Ekorg")] === undefined) ? undefined : sValue[oResources.getText("Ekorg")].toString(),
-              Afnam: (sValue[oResources.getText("Afnam")] === undefined) ? undefined : sValue[oResources.getText("Afnam")].toString(),
-              Matkl: (sValue[oResources.getText("Matkl")] === undefined) ? undefined : sValue[oResources.getText("Matkl")].toString()
+                IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? undefined : sValue[oResources.getText("IndexPmo")].toString(),
+                Cont: (sValue[oResources.getText("Cont")] === undefined) ? undefined : sValue[oResources.getText("Cont")].toString(),
+                Asnum: (sValue[oResources.getText("Asnum")] === undefined) ? undefined : sValue[oResources.getText("Asnum")].toString(),
+                Asktx: (sValue[oResources.getText("Asktx")] === undefined) ? undefined : sValue[oResources.getText("Asktx")].toString(),
+                Menge: (sValue[oResources.getText("Menge")] === undefined) ? undefined : sValue[oResources.getText("Menge")].toString(),
+                Meins: (sValue[oResources.getText("Meins")] === undefined) ? undefined : sValue[oResources.getText("Meins")].toString(),
+                Tbtwr: (sValue[oResources.getText("Tbtwr")] === undefined) ? undefined : sValue[oResources.getText("Tbtwr")].toString(),
+                Waers: (sValue[oResources.getText("Waers")] === undefined) ? undefined : sValue[oResources.getText("Waers")].toString(),
+                Ekgrp: (sValue[oResources.getText("Ekgrp")] === undefined) ? undefined : sValue[oResources.getText("Ekgrp")].toString(),
+                Ekorg: (sValue[oResources.getText("Ekorg")] === undefined) ? undefined : sValue[oResources.getText("Ekorg")].toString(),
+                Afnam: (sValue[oResources.getText("Afnam")] === undefined) ? undefined : sValue[oResources.getText("Afnam")].toString(),
+                Matkl: (sValue[oResources.getText("Matkl")] === undefined) ? undefined : sValue[oResources.getText("Matkl")].toString()
             };
             return rValue;
         },
@@ -345,26 +346,27 @@ sap.ui.define([
             return sData;
         },
         handleChangeCb: function (oEvent) {
-          var oValidatedComboBox = oEvent.getSource(),
-              sSelectedKey = oValidatedComboBox.getSelectedKey(),
-              sValue = oValidatedComboBox.getValue();
+            var oValidatedComboBox = oEvent.getSource(),
+                sSelectedKey = oValidatedComboBox.getSelectedKey(),
+                sValue = oValidatedComboBox.getValue();
 
-          if (!sSelectedKey && sValue) {
-              oValidatedComboBox.setValueState(ValueState.Error);
-          } else {
-              oValidatedComboBox.setValueState(ValueState.None);
-          }
-      },
+            if (! sSelectedKey && sValue) {
+                oValidatedComboBox.setValueState(ValueState.Error);
+            } else {
+                oValidatedComboBox.setValueState(ValueState.None);
+            }
+        },
         ControlIndex: function (sData) {
-
-            if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
-                return "Inserire Indice";
-            }
-            if (sData.Cont === "" || sData.Cont === undefined || sData.Cont === null) {
-                return "Inserire Contatore";
-            }
-            if (sData.Asnum === "" || sData.Asnum === undefined || sData.Asnum === null) {
-                return "Inserire N. attività";
+            if (sData.stato !== "M") {
+                if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
+                    return "Inserire Indice";
+                }
+                if (sData.Cont === "" || sData.Cont === undefined || sData.Cont === null) {
+                    return "Inserire Contatore";
+                }
+                /*if (sData.Asnum === "" || sData.Asnum === undefined || sData.Asnum === null) {
+                    return "Inserire N. attività";
+                }*/
             }
             return "";
         },

@@ -18,6 +18,10 @@ sap.ui.define([
 
   return Controller.extend("PM030.APP1.controller.Materiali", {
     onInit: function () {
+      var oModel1 = new sap.ui.model.json.JSONModel();
+            oModel1.setData({});
+            this.getView().setModel(oModel1, "sFilter");
+
       this.getOwnerComponent().getRouter().getRoute("Materiali").attachPatternMatched(this._onObjectMatched, this);
       this._oTPC = new TablePersoController({ table: this.byId("tbMateriali"), persoService: manutenzioneTable }).activate();
     },
@@ -54,27 +58,45 @@ sap.ui.define([
     },
     onDataExport: function () {
       var selectedTab = this.byId("tbMateriali");
+      var selIndex = this.getView().byId("tbMateriali").getSelectedItems();
 
       var aCols,
-        oRowBinding,
-        oSettings,
-        oSheet;
+          oRowBinding,
+          oSettings,
+          oSheet;
 
       aCols = this._createColumnConfig(selectedTab);
       oRowBinding = selectedTab.getBinding("items");
-      oSettings = {
-        workbook: {
-          columns: aCols
-        },
-        dataSource: oRowBinding,
-        fileName: "Materiali.xlsx",
-        worker: false
-      };
-      oSheet = new Spreadsheet(oSettings);
-      oSheet.build().finally(function () {
-        oSheet.destroy();
+
+      if (selIndex.length >= 1) {
+          var aArray = [];
+          for (let i = 0; i < selIndex.length; i++) {
+              var oContext = selIndex[i].getBindingContext().getObject();
+              aArray.push(oContext);
+          }
+          oSettings = {
+              workbook: {
+                  columns: aCols
+              },
+              dataSource: aArray,
+              fileName: "tbMateriali.xlsx",
+              worker: false
+          };
+      } else {
+          var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+          oSettings = {
+              workbook: {
+                  columns: aCols
+              },
+              dataSource: aFilters,
+              fileName: "tbMateriali.xlsx",
+              worker: false
+          };
+      } oSheet = new Spreadsheet(oSettings);
+      oSheet.build(). finally(function () {
+          oSheet.destroy();
       });
-    },
+  },
 
     _createColumnConfig: function () {
       var oCols = [],
@@ -154,6 +176,7 @@ sap.ui.define([
       line.MATNR = line.MATNR.padStart(18, '0');
       var sURL = "/Materiali/" + line.MATNR;
       await this._updateHana(sURL, line);
+      this.onSearchFilters();
       this.byId("navCon").back();
     },
     onCancel: async function () {
@@ -224,14 +247,11 @@ sap.ui.define([
       return rValue;
     },
     onSuggestMatnr: async function (oEvent) {
-      if (this.getView().getModel("sHelp")) {
-        this.getView().getModel("sHelp").setProperty("/Matnr", []);
-      }
-      if (oEvent.getParameter("suggestValue").length >= 3) {
+      if (oEvent.getParameter("suggestValue").length >= 7) {
         var aFilter = [];
         aFilter.push({
           "Shlpname": "ZPM4R_SH_MATNR",
-          "Shlpfield": "Matnr",
+          "Shlpfield": "MATNR",
           "Sign": "I",
           "Option": "CP",
           "Low": oEvent.getParameter("suggestValue") + "*"

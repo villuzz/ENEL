@@ -27,8 +27,8 @@
                         <fb:filterGroupItems>
               <fb:FilterGroupItem id="FIStrategia" visible="true" groupName="__$INTERNAL$" name="Strategia" label="{i18n>Strategia}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                  <MultiComboBox id="cbSTRATEGIA" items="{ path: '/Strategia', filters: [{ path: 'ID', operator: 'NE', value1: 0 }]}" showSecondaryValues="true">
-                    <core:ListItem key="{ID}" text="{STRATEGIA}" additionalText="{STRATEGIA_DESC}"/>
+                  <MultiComboBox id="cbSTRATEGIA" selectedKeys="{sFilter>/STRATEGIA}" items="{ path: '/Strategia' }" showSecondaryValues="true">
+                    <core:ListItem key="{STRATEGIA}" text="{STRATEGIA}" additionalText="{STRATEGIA_DESC}"/>
                   </MultiComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
@@ -48,16 +48,14 @@
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbStrategia" growing="true"
-    growingThreshold="100" growingScrollToLoad="false" items="{ path: '/Strategia', filters: [{ path: 'ID', operator: 'NE', value1: 0 }]}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" >
+    growingThreshold="100" growingScrollToLoad="false" items="{ path: '/Strategia' }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" >
                   <columns>
-                        <Column id="Strategia1" width="7em" hAlign="Center"><Text text="{i18n>ID}"/></Column>
                         <Column id="Strategia2" width="25em"><Text text="{i18n>STRATEGIA}"/></Column>
                         <Column id="Strategia3" ><Text text="{i18n>STRATEGIA_DESC}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{ID}"/>
                                 <Text text="{STRATEGIA}"/>
                                 <Text text="{STRATEGIA_DESC}"/>                         
                             </cells>
@@ -121,14 +119,9 @@
       <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
-              <form:FormElement label="{i18n>ID}">
-                  <form:fields>
-                    <Input value="{sDetail>/ID}" id="IDStrategia" enabled="false"/>
-                  </form:fields>
-                </form:FormElement>
                 <form:FormElement label="{i18n>STRATEGIA}">
                   <form:fields>
-                    <Input value="{sDetail>/STRATEGIA}" type="Text" maxLength="30"/>
+                    <Input value="{sDetail>/STRATEGIA}" type="Text" enabled="{ parts:[{path:'sDetail>/ID'}], formatter: '.LocalFormatter.statoEnabled'}"  maxLength="30"/>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>STRATEGIA_DESC}" >

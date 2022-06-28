@@ -208,7 +208,6 @@ sap.ui.define([
             for (var i =( sel.length - 1); i >= 0; i--) {
                 var line = JSON.stringify(sel[i].getBindingContext("T_RAGGR").getObject());
                 line = JSON.parse(line);
-                line = this.RaggruppamentoModel(line);
                 var sURL = this.componiCancelURL(line);
                 await this._removeHana(sURL);
             }
