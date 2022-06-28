@@ -223,40 +223,20 @@ sap.ui.define([
                 MessageBox.error("il Servizio: " + line.ASNUM + " ha Azioni Prototipo collegate");
             }
         },
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.getView().byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-                var rows = this.getView().getModel("uploadModel").getData();
-
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                } else {
-                    for (i = 0; i < rows.length; i++) {
-                        var sServizi = this.ServiziModel(rows[i]);
-                        sURL = "/Servizi/" + sServizi.ASNUM;
-                        await this._updateHana(sURL, sServizi);
-                    }
-                    MessageBox.success("Excel Caricato con successo");
-                    sap.ui.core.BusyIndicator.hide(0);
-                    this.byId("UploadTable").close();
-                }
-            }
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/Servizi");
         },
-        ServiziModel: function (sValue) {
+        componiURL: function (line) {
+          var sURL = "/Servizi/" + line.ASNUM;
+          return sURL;
+        },
+        ControlloExcelModel: function (sValue) {
             var oResource = this.getResourceBundle();
             var rValue = {
-                ASNUM: (sValue[oResource.getText("ASNUM")] === undefined) ? undefined : sValue[oResource.getText("ASNUM")].toString(),
-                ASKTX: (sValue[oResource.getText("ASKTX")] === undefined) ? undefined : sValue[oResource.getText("ASKTX")].toString(),
-                MENGE: (sValue[oResource.getText("MENGE")] === undefined) ? undefined : sValue[oResource.getText("MENGE")].toString(),
-                MEINS: (sValue[oResource.getText("MEINS")] === undefined) ? undefined : sValue[oResource.getText("MEINS")].toString()
+                ASNUM: (sValue[oResource.getText("ASNUM")] === undefined) ? "" : sValue[oResource.getText("ASNUM")].toString(),
+                ASKTX: (sValue[oResource.getText("ASKTX")] === undefined) ? "" : sValue[oResource.getText("ASKTX")].toString(),
+                MENGE: (sValue[oResource.getText("MENGE")] === undefined) ? "" : sValue[oResource.getText("MENGE")].toString(),
+                MEINS: (sValue[oResource.getText("MEINS")] === undefined) ? "" : sValue[oResource.getText("MEINS")].toString()
             };
             return rValue;
         }

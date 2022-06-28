@@ -222,10 +222,10 @@ sap.ui.define([
         ControlloModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                TipoGestione2: (sValue[oResources.getText("TipoGest2")] === undefined) ? undefined : sValue[oResources.getText("TipoGest2")].toString(),
-                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                DesTipoGest2: (sValue[oResources.getText("DescrGruppoControlli")] === undefined) ? undefined : sValue[oResources.getText("DescrGruppoControlli")].toString(),
-                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+                TipoGestione2: (sValue[oResources.getText("TipoGest2")] === undefined) ? "" : sValue[oResources.getText("TipoGest2")].toString(),
+                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                DesTipoGest2: (sValue[oResources.getText("DescrGruppoControlli")] === undefined) ? "" : sValue[oResources.getText("DescrGruppoControlli")].toString(),
+                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? "" : sValue[oResources.getText("Raggruppamento")].toString()
             };
             return rValue;
         },
@@ -278,34 +278,8 @@ sap.ui.define([
               MessageToast.show("Seleziona una riga");
           } sap.ui.core.BusyIndicator.hide();
         },
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    var sControlEX = this.ControlloExcelModel(rows[i]);
-                    sURL = this.componiURL(sControlEX);
-                    var result = await this._updateHanaNoError(sURL, sControlEX);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_TP_MAN2", sControlEX);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-            }
-            this.byId("UploadTable").close();
-            sap.ui.core.BusyIndicator.hide(0);
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_TP_MAN2");
         },
         componiURL: function (line) {
             var sURL = "/T_TP_MAN2(" + "TipoGestione2=" + "'" + line.TipoGestione2 + "'," + "Divisione=" + "'" + line.Divisione + "'" + ")";
@@ -314,10 +288,10 @@ sap.ui.define([
         ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                TipoGestione2: (sValue[oResources.getText("GruppoControlli")] === undefined) ? undefined : sValue[oResources.getText("GruppoControlli")].toString(),
-                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                DesTipoGest2: (sValue[oResources.getText("DescrizioneGruppoControlli")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneGruppoControlli")].toString(),
-                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+                TipoGestione2: (sValue[oResources.getText("GruppoControlli")] === undefined) ? "" : sValue[oResources.getText("GruppoControlli")].toString(),
+                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                DesTipoGest2: (sValue[oResources.getText("DescrizioneGruppoControlli")] === undefined) ? "" : sValue[oResources.getText("DescrizioneGruppoControlli")].toString(),
+                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? "" : sValue[oResources.getText("Raggruppamento")].toString()
             };
             return rValue;
         },

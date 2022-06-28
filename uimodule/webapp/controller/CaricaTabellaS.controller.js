@@ -30,14 +30,14 @@ sap.ui.define([
             oModel.setData(sData);
             this.getView().setModel(oModel, "sFilter");
 
-            var oinIndex = this.getView().byId("inIndex");
+            //var oinIndex = this.getView().byId("inIndex");
             var oinAzioni = this.getView().byId("IContActEl");
             var fnValidator = function (args) {
                 var text = args.text;
 
                 return new Token({key: text, text: text});
             };
-            oinIndex.addValidator(fnValidator);
+            //oinIndex.addValidator(fnValidator);
             oinAzioni.addValidator(fnValidator);
 
         },
@@ -88,7 +88,7 @@ sap.ui.define([
             var aSelIndici = "",
                 aSelInd = [];
 
-            if (this.getView().byId("inIndex").getTokens().length > 0) {
+            /*if (this.getView().byId("inIndex").getTokens().length > 0) {
                 aSelIndici = this.getView().byId("inIndex").getTokens();
                 aSelInd = [];
                 for (var i = 0; i < aSelIndici.length; i++) {
@@ -97,7 +97,7 @@ sap.ui.define([
                 tempFilter = this.multiFilterText(aSelInd, "IndexPmo");
                 aFilters = aFilters.concat(tempFilter);
 
-            }
+            }*/
             if (this.getView().byId("IContActEl").getTokens().length > 0) {
                 aSelIndici = this.getView().byId("IContActEl").getTokens();
                 aSelInd = [];
@@ -186,14 +186,10 @@ sap.ui.define([
             this._oTPC.openDialog();
         },
         handleUploadPiani: function () {
-            this._oValueHelpDialog = sap.ui.xmlfragment("PM030.APP1.view.fragment.UploadTable", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-            this.getView().setModel(this.oEmployeeModel);
-            this._oValueHelpDialog.open();
-
+          this.byId("UploadTable").open();
         },
         onCloseFileUpload: function () { // this.onSearch();
-            this._oValueHelpDialog.destroy();
+          this.byId("UploadTable").close();
 
         },
         onBackDetail: function () {
@@ -244,6 +240,11 @@ sap.ui.define([
                         delete line.__metadata;
                         await this._updateHana(sURL, line);
                     } else {
+                      var aFilter = [];
+                      aFilter.push(new Filter("Cont", FilterOperator.EQ, line.Cont)); // fisso IT - todo
+                      var result = await this._getLine("/T_ACT_EL", aFilter);
+                      line.IndexPmo = result.IndexPmo;
+
                         delete line.stato;
                         delete line.__metadata;
                         await this._saveHana("/T_PMO_S", line);
@@ -287,44 +288,25 @@ sap.ui.define([
             var sURL = "/T_PMO_S(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Asnum=" + "'" + line.Asnum + "'" + "'," + "Asktx=" + "'" + line.Asktx + "'" + ")";
             return sURL;
         },
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL;
-                var rows = this.getView().getModel("uploadModel").getData();
-                for (var i = 0; i < rows.length; i++) {
-                    var sControlEX = this.ControlloExcelModel(rows[i]);
-                    sURL = this.componiURL(sControlEX);
-                    var result = await this._updateHanaNoError(sURL, sControlEX);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_PMO_S", sControlEX);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-                sap.ui.getCore().byId("UploadTable").close();
-                sap.ui.core.BusyIndicator.hide();
-            }
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_PMO_S");
         },
+       
         ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? undefined : sValue[oResources.getText("IndexPmo")].toString(),
-                Cont: (sValue[oResources.getText("Cont")] === undefined) ? undefined : sValue[oResources.getText("Cont")].toString(),
-                Asnum: (sValue[oResources.getText("Asnum")] === undefined) ? undefined : sValue[oResources.getText("Asnum")].toString(),
-                Asktx: (sValue[oResources.getText("Asktx")] === undefined) ? undefined : sValue[oResources.getText("Asktx")].toString(),
-                Menge: (sValue[oResources.getText("Menge")] === undefined) ? undefined : sValue[oResources.getText("Menge")].toString(),
-                Meins: (sValue[oResources.getText("Meins")] === undefined) ? undefined : sValue[oResources.getText("Meins")].toString(),
-                Tbtwr: (sValue[oResources.getText("Tbtwr")] === undefined) ? undefined : sValue[oResources.getText("Tbtwr")].toString(),
-                Waers: (sValue[oResources.getText("Waers")] === undefined) ? undefined : sValue[oResources.getText("Waers")].toString(),
-                Ekgrp: (sValue[oResources.getText("Ekgrp")] === undefined) ? undefined : sValue[oResources.getText("Ekgrp")].toString(),
-                Ekorg: (sValue[oResources.getText("Ekorg")] === undefined) ? undefined : sValue[oResources.getText("Ekorg")].toString(),
-                Afnam: (sValue[oResources.getText("Afnam")] === undefined) ? undefined : sValue[oResources.getText("Afnam")].toString(),
-                Matkl: (sValue[oResources.getText("Matkl")] === undefined) ? undefined : sValue[oResources.getText("Matkl")].toString()
+                //IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? "" : sValue[oResources.getText("IndexPmo")].toString(),
+                Cont: (sValue[oResources.getText("Cont")] === undefined) ? "" : sValue[oResources.getText("Cont")].toString(),
+                Asnum: (sValue[oResources.getText("Asnum")] === undefined) ? "" : sValue[oResources.getText("Asnum")].toString(),
+                Asktx: (sValue[oResources.getText("Asktx")] === undefined) ? "" : sValue[oResources.getText("Asktx")].toString(),
+                Menge: (sValue[oResources.getText("Menge")] === undefined) ? "" : sValue[oResources.getText("Menge")].toString(),
+                Meins: (sValue[oResources.getText("Meins")] === undefined) ? "" : sValue[oResources.getText("Meins")].toString(),
+                Tbtwr: (sValue[oResources.getText("Tbtwr")] === undefined) ? "" : sValue[oResources.getText("Tbtwr")].toString(),
+                Waers: (sValue[oResources.getText("Waers")] === undefined) ? "" : sValue[oResources.getText("Waers")].toString(),
+                Ekgrp: (sValue[oResources.getText("Ekgrp")] === undefined) ? "" : sValue[oResources.getText("Ekgrp")].toString(),
+                Ekorg: (sValue[oResources.getText("Ekorg")] === undefined) ? "" : sValue[oResources.getText("Ekorg")].toString(),
+                Afnam: (sValue[oResources.getText("Afnam")] === undefined) ? "" : sValue[oResources.getText("Afnam")].toString(),
+                Matkl: (sValue[oResources.getText("Matkl")] === undefined) ? "" : sValue[oResources.getText("Matkl")].toString()
             };
             return rValue;
         },
@@ -358,9 +340,9 @@ sap.ui.define([
         },
         ControlIndex: function (sData) {
             if (sData.stato !== "M") {
-                if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
+                /*if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
                     return "Inserire Indice";
-                }
+                }*/
                 if (sData.Cont === "" || sData.Cont === undefined || sData.Cont === null) {
                     return "Inserire Contatore";
                 }
@@ -371,9 +353,6 @@ sap.ui.define([
             return "";
         },
         onSuggestAsnum: async function (oEvent) {
-            if (this.getView().getModel("sHelp")) {
-                this.getView().getModel("sHelp").setProperty("/Asnum", []);
-            }
             if (oEvent.getParameter("suggestValue").length >= 5) {
                 var aFilter = [];
                 aFilter.push({

@@ -6,18 +6,26 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/Sorter",
     "PM030/APP1/util/xlsx",
-    'sap/ui/model/Filter',
-    'sap/ui/model/FilterOperator',
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
     "PM030/APP1/util/underscore-min",
     "PM030/APP1/util/LocalFormatter",
-    'sap/m/MessageToast'
+    "sap/m/MessageToast",
+    "sap/ui/core/IconPool",
+    "sap/m/MessageItem",
+    "sap/m/MessageView",
+    "sap/m/Button",
+    "sap/m/Dialog",
+    "sap/m/Bar",
+    "sap/m/Title",
+    "sap/ui/model/json/JSONModel"
 ],
 /**
        * @param {typeof sap.ui.core.mvc.Controller} Controller
        * @param {typeof sap.ui.core.routing.History} History
        * @param {typeof sap.ui.core.UIComponent} UIComponent
        */
-    function (Controller, History, UIComponent, formatter, MessageBox, Sorter, xlsx, Filter, FilterOperator, underscore, LocalFormatter, MessageToast) {
+    function (Controller, History, UIComponent, formatter, MessageBox, Sorter, xlsx, Filter, FilterOperator, underscore, LocalFormatter, MessageToast, IconPool, MessageItem, MessageView, Button, Dialog, Bar, Title, JSONModel) {
     "use strict";
 
     return Controller.extend("PM030.APP1.controller.BaseController", {
@@ -31,7 +39,106 @@ sap.ui.define([
            * @returns {sap.ui.model.Model} the model instance
            */
 
+          handleUploadGenerico: async function (Table) {
+            if (this.byId("fileUploader").getValue() === "") {
+                MessageBox.warning("Inserire un File da caricare");
+            } else {
+                sap.ui.core.BusyIndicator.show();
+                var aReturn = [];
+                var sURL,
+                    msg = "";
+                var rows = this.getView().getModel("uploadModel").getData();
+                if (msg !== "") {
+                    sap.ui.core.BusyIndicator.hide(0);
+                    MessageBox.error(msg);
+                }
+                for (var i = 0; i < rows.length; i++) {
+                    var sAzioni = this.ControlloExcelModel(rows[i]);
+                    sURL = this.componiURL(sAzioni);
+                    var result = await this._saveHanaShowError(Table, sAzioni);
+                    if (result !== "") {
+                        result = await this._updateHanaShowError(sURL, sAzioni);
+                    }
+                    if (result !== "") {
+                        aReturn.push({ type: "Error", title: "Riga " + ( i + 2 ) + " Excel andata in errore", description: result });
+                    }
+                }
+                if (aReturn.length === 0) {
+                    aReturn.push({ type: "Success", title: "Excel Caricato con successo", description: "tutte le " + rows.length + " Righe caricate con successo" });
+                }
+                this.handleOpenDialogMsg(aReturn);
+                this.onSearchFilters();
+                this.byId("UploadTable").close();
+                sap.ui.core.BusyIndicator.hide(0);
+            }
+        },
+        handleSetDialog: function (oEvent) {
+            var that = this;
 
+            var oMessageTemplate = new MessageItem({
+                type: "{type}",
+                title: "{title}",
+                description: "{description}",
+                subtitle: "{subtitle}",
+                //counter: "{counter}",
+                markupDescription: "{markupDescription}"
+            });
+
+            this.oMessageView = new MessageView({
+                showDetailsPageHeader: false,
+                itemSelect: function () {
+                    oBackButton.setVisible(true);
+                },
+                items: {
+                    path: "/",
+                    template: oMessageTemplate
+                }
+            });
+            var oBackButton = new Button({
+                icon: IconPool.getIconURI("nav-back"),
+                visible: false,
+                press: function () {
+                    that.oMessageView.navigateBack();
+                    this.setVisible(false);
+                }
+            });
+
+            this.oDialog = new Dialog({
+                resizable: true,
+                content: this.oMessageView,
+                state: "Information",
+                beginButton: new Button(
+                    {
+                        press: function () {
+                            this.getParent().close();
+                        },
+                        text: "Close"
+                    }
+                ),
+                customHeader: new Bar(
+                    {
+                        contentLeft: [oBackButton],
+                        contentMiddle: [new Title(
+                                {text: "Upload"}
+                            )]
+                    }
+                ),
+                contentHeight: "50%",
+                contentWidth: "50%",
+                verticalScrolling: false
+            });
+        },
+        handleOpenDialogMsg: async function (aData) {
+            if (this.oMessageView === undefined) {
+                await this.handleSetDialog();
+            }
+            var oModel = new JSONModel();
+            oModel.setData(aData);
+            this.oMessageView.setModel(oModel);
+
+            this.oMessageView.navigateBack();
+            this.oDialog.open();
+        },
         onListVariant: function () {
             var aFilters = [];
             aFilters.push(new Filter("APP", FilterOperator.EQ, "1"));
@@ -45,7 +152,6 @@ sap.ui.define([
             this.byId("DialogVariant").open();
         },
         onSaveVariant: async function () {
-            debugger
             if (this.getView().byId("VariantName").getValue() === "") {
                 MessageToast.show("Inserire un Nome");
             } else {
@@ -58,13 +164,11 @@ sap.ui.define([
                         vColumn.push(aSel[i].visible);
                     }
                 } else {
-                  aSel = this.getView().byId(this._oTPC.getTable().split("-").pop()).getColumns();
-                  for (var i = 0; i < aSel.length; i++) {
-                    vColumn.push(aSel[i].getVisible());
-                  }
-                } 
-                
-                vColumn = JSON.stringify(vColumn);
+                    aSel = this.getView().byId(this._oTPC.getTable().split("-").pop()).getColumns();
+                    for (var i = 0; i < aSel.length; i++) {
+                        vColumn.push(aSel[i].getVisible());
+                    }
+                } vColumn = JSON.stringify(vColumn);
                 vFilter = JSON.stringify(this.getView().getModel("sFilter").getData());
                 var sVariant = {
                     APP: "1",
@@ -96,11 +200,11 @@ sap.ui.define([
             var table = this.getView().byId(this._oTPC.getTable().split("-").pop()).getColumns();
             var aSel = JSON.parse(line.COLUMN);
             for (var i = 0; i < aSel.length; i++) {
-              if (_oTPC.length > 0){
-                _oTPC[i].visible = aSel[i];
-              } else {
-                table[i].setVisible(aSel[i]);
-              }
+                if (_oTPC.length > 0) {
+                    _oTPC[i].visible = aSel[i];
+                } else {
+                    table[i].setVisible(aSel[i]);
+                }
             }
             this.getView().getModel("sFilter").setData(JSON.parse(line.FILTER));
             this._oTPC.refresh();
@@ -488,15 +592,44 @@ sap.ui.define([
                 });
             });
         },
+        _updateHanaShowError: function (sURL, oEntry) {
+          var xsoDataModelReport = this.getOwnerComponent().getModel();
+          return new Promise(function (resolve, reject) {
+              xsoDataModelReport.update(sURL, oEntry, {
+                  success: function (oDataIn) {
+                      resolve("");
+                  },
+                  error: function (err) {
+                      var responseObject = JSON.parse(err.responseText);
+                      resolve(responseObject.error.message.value);
+                  }
+              });
+            });
+        },
+        _saveHanaShowError: function (URL, sData) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve, reject) {
+              xsoDataModelReport.create(URL, sData, {
+                  success: function (oDataIn) {
+                      resolve("");
+                  },
+                  error: function (err) {
+                    var responseObject = JSON.parse(err.responseText);
+                    resolve(responseObject.error.message.value);
+                  }
+              });
+          });
+      },
         _removeHana: function (URL) {
             var xsoDataModelReport = this.getView().getModel();
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 xsoDataModelReport.remove(URL, {
                     success: function () {
                         resolve();
                     },
-                    error: function () {
-                        resolve();
+                    error: function (err) {
+                      var responseObject = JSON.parse(err.responseText);
+                      reject(MessageBox.error(responseObject.error.message.value));
                     }
                 });
             });
@@ -519,6 +652,7 @@ sap.ui.define([
                 });
             });
         },
+       
         _saveHanaNoError: function (URL, sData) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {

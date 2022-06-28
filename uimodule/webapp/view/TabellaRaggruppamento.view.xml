@@ -148,14 +148,14 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Divisione}">
+                  <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Divisione}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
                       <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}" >
                   <form:fields>
-                   <Input  value="{sSelect>/Raggruppamento}" />
+                   <Input  value="{sSelect>/Raggruppamento}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneRaggruppamento}">

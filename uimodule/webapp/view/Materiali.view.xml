@@ -125,20 +125,11 @@
               <form:formElements>
                 <form:FormElement label="{i18n>MATNR}">
                   <form:fields>
-                    <!-- <Input value="{sDetail>/MATNR}" type="Number" maxLength="18"/> -->
-                  <Input showSuggestion="true" value="{sDetail>/MATNR}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" maxLength="18" >
-                                        <suggestionColumns>
-                                          <Column>
-                                            <Label text="{i18n>Materiale}" />
-                                          </Column>
-                                          
-                                        </suggestionColumns>
-                                        <suggestionRows>
-                                          <ColumnListItem>
-                                            <Label text="{sHelp>Fieldname1}" />
-                                          </ColumnListItem>
-                                        </suggestionRows>
-                  </Input>
+                  <Input showSuggestion="true"  value="{sDetail>/MATNR}" suggestionItems="{sHelp>/Matnr}" maxLength="18" suggest=".onSuggestMatnr" suggestionItemSelected="onSuggestMatnrSelect" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <suggestionItems>
+                        <core:ListItem text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname4}" />
+                      </suggestionItems>
+                    </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>MAKTX}" >
@@ -146,16 +137,7 @@
                     <Input value="{sDetail>/MAKTX}" type="Text" maxLength="40"/>
                   </form:fields>
                 </form:FormElement>
-           <!--     <form:FormElement label="{i18n>MENGE}" >
-                  <form:fields>
-                    <Input value="{sDetail>/MENGE}" type="Number" maxLength="16"/>
-                  </form:fields>
-                </form:FormElement>
-                <form:FormElement label="{i18n>MEINS}" >
-                  <form:fields>
-                    <Input value="{sDetail>/MEINS}" type="Text" maxLength="3"/>
-                  </form:fields>
-                </form:FormElement>-->
+       
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>

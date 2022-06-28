@@ -30,14 +30,14 @@ sap.ui.define([
             oModel.setData(sData);
             this.getView().setModel(oModel, "sFilter");
 
-            var oinIndex = this.getView().byId("inIndex");
+            //var oinIndex = this.getView().byId("inIndex");
             var oinAzioni = this.getView().byId("IContActEl");
             var fnValidator = function (args) {
                 var text = args.text;
 
                 return new Token({key: text, text: text});
             };
-            oinIndex.addValidator(fnValidator);
+            //oinIndex.addValidator(fnValidator);
             oinAzioni.addValidator(fnValidator);
 
         },
@@ -82,7 +82,7 @@ sap.ui.define([
 
             if (sFilter.Divisione !== undefined) {
                 if (sFilter.Divisione.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Divisione, "Divisione");
+                    tempFilter = this.multiFilterText(sFilter.Divisione, "Werks");
                     aFilters = aFilters.concat(tempFilter);
                 }
             }
@@ -90,7 +90,7 @@ sap.ui.define([
             var aSelIndici = "",
                 aSelInd = [];
 
-            if (this.getView().byId("inIndex").getTokens().length > 0) {
+           /* if (this.getView().byId("inIndex").getTokens().length > 0) {
                 aSelIndici = this.getView().byId("inIndex").getTokens();
                 aSelInd = [];
                 for (var i = 0; i < aSelIndici.length; i++) {
@@ -99,7 +99,7 @@ sap.ui.define([
                 tempFilter = this.multiFilterText(aSelInd, "IndexPmo");
                 aFilters = aFilters.concat(tempFilter);
 
-            }
+            }*/
             if (this.getView().byId("IContActEl").getTokens().length > 0) {
                 aSelIndici = this.getView().byId("IContActEl").getTokens();
                 aSelInd = [];
@@ -188,15 +188,10 @@ sap.ui.define([
             this._oTPC.openDialog();
         },
         handleUploadPiani: function () {
-            this._oValueHelpDialog = sap.ui.xmlfragment("PM030.APP1.view.fragment.UploadTable", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-            this.getView().setModel(this.oEmployeeModel);
-            this._oValueHelpDialog.open();
-
+            this.byId("UploadTable").open();
         },
         onCloseFileUpload: function () { // this.onSearch();
-            this._oValueHelpDialog.destroy();
-
+          this.byId("UploadTable").close();
         },
         onBackDetail: function () {
             this.byId("navCon").back();
@@ -246,6 +241,11 @@ sap.ui.define([
                         delete line.__metadata;
                         await this._updateHana(sURL, line);
                     } else {
+                      var aFilter = [];
+                      aFilter.push(new Filter("Cont", FilterOperator.EQ, line.Cont)); // fisso IT - todo
+                      var result = await this._getLine("/T_ACT_EL", aFilter);
+                      line.IndexPmo = result.IndexPmo;
+
                         delete line.stato;
                         delete line.__metadata;
                         await this._saveHana("/T_PMO_M", line);
@@ -289,48 +289,28 @@ sap.ui.define([
             var sURL = "/T_PMO_M(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Matnr=" + "'" + line.Matnr + "'" + "'," + "Maktx=" + "'" + line.Maktx + "'" + ")";
             return sURL;
         },
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL;
-                var rows = this.getView().getModel("uploadModel").getData();
-
-                for (let i = 0; i < rows.length; i++) {
-                    var sControlEX = this.ControlloExcelModel(rows[i]);
-                    sURL = this.componiURL(sControlEX);
-                    var result = await this._updateHanaNoError(sURL, sControlEX);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_PMO_M", sControlEX);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-                sap.ui.getCore().byId("UploadTable").close();
-                sap.ui.core.BusyIndicator.hide();
-            }
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_PMO_M");
         },
+       
         ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? undefined : sValue[oResources.getText("IndexPmo")].toString(),
-                Cont: (sValue[oResources.getText("Cont")] === undefined) ? undefined : sValue[oResources.getText("Cont")].toString(),
-                Matnr: (sValue[oResources.getText("Materiale")] === undefined) ? undefined : sValue[oResources.getText("Materiale")].toString(),
-                Maktx: (sValue[oResources.getText("TestoBreveMat")] === undefined) ? undefined : sValue[oResources.getText("TestoBreveMat")].toString(),
-                Menge: (sValue[oResources.getText("QuantFabbisogno")] === undefined) ? undefined : sValue[oResources.getText("QuantFabbisogno")].toString(),
-                Meins: (sValue[oResources.getText("Unita")] === undefined) ? undefined : sValue[oResources.getText("Unita")].toString(),
-                Lgort: (sValue[oResources.getText("Magazzino")] === undefined) ? undefined : sValue[oResources.getText("Magazzino")].toString(),
-                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                Charg: (sValue[oResources.getText("Partita")] === undefined) ? undefined : sValue[oResources.getText("Partita")].toString(),
-                Tbtwr: (sValue[oResources.getText("PrezzoLordo")] === undefined) ? undefined : sValue[oResources.getText("PrezzoLordo")].toString(),
-                Waers: (sValue[oResources.getText("Divisa")] === undefined) ? undefined : sValue[oResources.getText("Divisa")].toString(),
-                Ekgrp: (sValue[oResources.getText("GrupAcq")] === undefined) ? undefined : sValue[oResources.getText("GrupAcq")].toString(),
-                Ekorg: (sValue[oResources.getText("OrgAcq")] === undefined) ? undefined : sValue[oResources.getText("OrgAcq")].toString(),
-                Afnam: (sValue[oResources.getText("Richiedente")] === undefined) ? undefined : sValue[oResources.getText("Richiedente")].toString(),
-                Matkl: (sValue[oResources.getText("GrupMerci")] === undefined) ? undefined : sValue[oResources.getText("GrupMerci")].toString()
+                IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? "" : sValue[oResources.getText("IndexPmo")].toString(),
+                Cont: (sValue[oResources.getText("Cont")] === undefined) ? "" : sValue[oResources.getText("Cont")].toString(),
+                Matnr: (sValue[oResources.getText("Materiale")] === undefined) ? "" : sValue[oResources.getText("Materiale")].toString(),
+                Maktx: (sValue[oResources.getText("TestoBreveMat")] === undefined) ? "" : sValue[oResources.getText("TestoBreveMat")].toString(),
+                Menge: (sValue[oResources.getText("QuantFabbisogno")] === undefined) ? "" : sValue[oResources.getText("QuantFabbisogno")].toString(),
+                Meins: (sValue[oResources.getText("Unita")] === undefined) ? "" : sValue[oResources.getText("Unita")].toString(),
+                Lgort: (sValue[oResources.getText("Magazzino")] === undefined) ? "" : sValue[oResources.getText("Magazzino")].toString(),
+                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Charg: (sValue[oResources.getText("Partita")] === undefined) ? "" : sValue[oResources.getText("Partita")].toString(),
+                Tbtwr: (sValue[oResources.getText("PrezzoLordo")] === undefined) ? "" : sValue[oResources.getText("PrezzoLordo")].toString(),
+                Waers: (sValue[oResources.getText("Divisa")] === undefined) ? "" : sValue[oResources.getText("Divisa")].toString(),
+                Ekgrp: (sValue[oResources.getText("GrupAcq")] === undefined) ? "" : sValue[oResources.getText("GrupAcq")].toString(),
+                Ekorg: (sValue[oResources.getText("OrgAcq")] === undefined) ? "" : sValue[oResources.getText("OrgAcq")].toString(),
+                Afnam: (sValue[oResources.getText("Richiedente")] === undefined) ? "" : sValue[oResources.getText("Richiedente")].toString(),
+                Matkl: (sValue[oResources.getText("GrupMerci")] === undefined) ? "" : sValue[oResources.getText("GrupMerci")].toString()
             };
             return rValue;
         },
@@ -378,6 +358,12 @@ sap.ui.define([
                 }*/
             }
             return "";
+        },
+        onSuggestMatnrSelect: function (oEvent) {
+          var sel = this.getView().getModel("sHelp").getData().Matnr[oEvent.getSource().getSelectedItem().split("-").pop()];
+          var sSelect = this.getView().getModel("sSelect").getData();
+          sSelect.Maktx = sel.Fieldname4;
+          this.getView().getModel("sSelect").refresh();
         },
         onSuggestMatnr: async function (oEvent) {
             if (oEvent.getParameter("suggestValue").length >= 7) {

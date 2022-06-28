@@ -178,36 +178,18 @@ sap.ui.define([
             this.getView().getModel().refresh();
             this.getView().byId("tbStrategia").removeSelections();
         },
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL;
-                var rows = this.getView().getModel("uploadModel").getData();
-
-                for (let i = 0; i < rows.length; i++) {
-                    var sControlEX = this.StrategiaModel(rows[i]);
-                    sURL = "/Strategia/" + sControlEX.STRATEGIA;
-                    var result = await this._updateHanaNoError(sURL, sControlEX);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/Strategia", sControlEX);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-                this.byId("UploadTable").close();
-                this.onSearchFilters();
-                sap.ui.core.BusyIndicator.hide();
-            }
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/Servizi");
         },
-        StrategiaModel: function (sValue) {
+        componiURL: function (line) {
+          var sURL = "/Strategia/" + line.STRATEGIA;
+          return sURL;
+        },
+        ControlloExcelModel: function (sValue) {
             var oResource = this.getResourceBundle();
             var rValue = {
-                STRATEGIA: (sValue[oResource.getText("STRATEGIA")] === undefined) ? undefined : sValue[oResource.getText("STRATEGIA")].toString(),
-                STRATEGIA_DESC: (sValue[oResource.getText("STRATEGIA_DESC")] === undefined) ? undefined : sValue[oResource.getText("STRATEGIA_DESC")].toString()
+                STRATEGIA: (sValue[oResource.getText("STRATEGIA")] === undefined) ? "" : sValue[oResource.getText("STRATEGIA")].toString(),
+                STRATEGIA_DESC: (sValue[oResource.getText("STRATEGIA_DESC")] === undefined) ? "" : sValue[oResource.getText("STRATEGIA_DESC")].toString()
             };
             return rValue;
         }

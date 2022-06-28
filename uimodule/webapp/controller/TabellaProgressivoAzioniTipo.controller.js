@@ -32,7 +32,6 @@ sap.ui.define([
         _onObjectMatched: async function () {
 
             Validator.clearValidation();
-
             var oModel = new sap.ui.model.json.JSONModel();
             oModel.setData({});
             this.getView().setModel(oModel, "T_ACT_PROG");
@@ -249,40 +248,17 @@ sap.ui.define([
         onCloseFileUpload: function () {
             this.byId("UploadTable").close();
         },
-        handleUploadPress: async function () {
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var sURL,
-                    msg = "";
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (var i = 0; i < rows.length; i++) {
-                    var sAzioni = this.ProgModel(rows[i]);
-                    sURL = this.componiURL(sAzioni);
-                    var result = this._updateHanaNoError(sURL, sAzioni);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_ACT_PROG", sAzioni);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-                this.byId("UploadTable").close();
-                sap.ui.core.BusyIndicator.hide(0);
-            }
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_ACT_PROG");
         },
-
-        ProgModel: function (sValue) {
+        ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
-                Progres: (sValue[oResources.getText("Progressivo")] === undefined) ? undefined : sValue[oResources.getText("Progressivo")].toString(),
-                Txt: (sValue[oResources.getText("DescrizioneProgressivo")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneProgressivo")].toString(),
-                ComponentTipo: (sValue[oResources.getText("ComponenteTipo")] === undefined) ? undefined : sValue[oResources.getText("ComponenteTipo")].toString()
+                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? "" : sValue[oResources.getText("Sistema")].toString(),
+                Progres: (sValue[oResources.getText("Progressivo")] === undefined) ? "" : sValue[oResources.getText("Progressivo")].toString(),
+                Txt: (sValue[oResources.getText("DescrizioneProgressivo")] === undefined) ? "" : sValue[oResources.getText("DescrizioneProgressivo")].toString(),
+                ComponentTipo: (sValue[oResources.getText("ComponenteTipo")] === undefined) ? "" : sValue[oResources.getText("ComponenteTipo")].toString()
             };
             return rValue;
         },
@@ -299,7 +275,8 @@ sap.ui.define([
         onSave: async function () {
             var ControlValidate = Validator.validateView();
             if (ControlValidate) {
-                var line = JSON.stringify(this.getView().getModel("sSelect").getData());               line = JSON.parse(line);
+                var line = JSON.stringify(this.getView().getModel("sSelect").getData());
+                line = JSON.parse(line);
                 var msg = await this.ControlIndex(line);
                 if (msg !== "") {
                     MessageBox.error(msg);
@@ -313,8 +290,7 @@ sap.ui.define([
                         delete line.stato;
                         delete line.__metadata;
                         await this._saveHana("/T_ACT_PROG", line);
-                    }
-                    MessageBox.success("Dati salvati con successo");
+                    } MessageBox.success("Dati salvati con successo");
                     this.onSearchFilters();
                     this.byId("navCon").back();
                 }
@@ -351,5 +327,7 @@ sap.ui.define([
             };
             return sData;
         }
+
+
     });
 });

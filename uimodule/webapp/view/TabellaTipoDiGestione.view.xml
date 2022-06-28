@@ -104,6 +104,7 @@
         <f:dependents>
           <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
           <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+      <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
         </f:dependents>
     </f:DynamicPage>
 

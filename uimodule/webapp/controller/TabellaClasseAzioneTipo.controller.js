@@ -177,13 +177,10 @@ sap.ui.define([
             this._oTPC.openDialog();
         },
         handleUploadPiani: function () {
-            this._oValueHelpDialog = sap.ui.xmlfragment("PM030.APP1.view.fragment.UploadTable", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-            this.getView().setModel(this.oEmployeeModel);
-            this._oValueHelpDialog.open();
+          this.byId("UploadTable").open();
         },
         onCloseFileUpload: function () { // this.onSearch();
-            this._oValueHelpDialog.destroy();
+          this.byId("UploadTable").close();
         },
         onBackDetail: function () {
             this.byId("navCon").back();
@@ -278,48 +275,20 @@ sap.ui.define([
             }
             this.onSearchFilters();
         },
-
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    var sAzione = this.AzioneModel(rows[i]);
-                    sURL = this.componiURLExcel(sAzione);
-                    var result = await this._updateHanaNoError(sURL, sAzione);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_ACT_CL", sAzione);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-            }
-
-            sap.ui.getCore().byId("UploadTable").close();
-            sap.ui.core.BusyIndicator.hide(0);
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_ACT_CL");
         },
-        AzioneModel: function (sValue) {
+        ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                Classe: (sValue[oResources.getText("Classe")] === undefined) ? undefined : sValue[oResources.getText("Classe")].toString(),
-                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
-                Txt: (sValue[oResources.getText("Testo")] === undefined) ? undefined : sValue[oResources.getText("Testo")].toString()
+                Classe: (sValue[oResources.getText("Classe")] === undefined) ? "" : sValue[oResources.getText("Classe")].toString(),
+                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? "" : sValue[oResources.getText("Sistema")].toString(),
+                Txt: (sValue[oResources.getText("Testo")] === undefined) ? "" : sValue[oResources.getText("Testo")].toString()
             };
             return rValue;
         },
-        componiURLExcel: function (line) {
+        componiURL: function (line) {
             var sURL = `/T_ACT_CL(Werks='${
                 line.Werks
             }',Sistema='${
