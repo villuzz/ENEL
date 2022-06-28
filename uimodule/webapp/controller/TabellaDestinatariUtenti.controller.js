@@ -344,6 +344,16 @@ sap.ui.define([
                 MessageToast.show("Seleziona una riga");
             } sap.ui.core.BusyIndicator.hide();
         },
+        onCancel: async function () {
+          var sel = this.getView().byId("tbTabellaDestinatariUtenti").getSelectedItems();
+          for (var i =( sel.length - 1); i >= 0; i--) {
+              var line = JSON.stringify(sel[i].getBindingContext("T_DEST_USR").getObject());
+              line = JSON.parse(line);
+              var sURL = this.componiURLExcel(line);
+              await this._removeHana(sURL);
+          }
+          this.onSearchFilters();
+      },
         handleChangeCb: function (oEvent) {
             var oValidatedComboBox = oEvent.getSource(),
                 sSelectedKey = oValidatedComboBox.getSelectedKey(),

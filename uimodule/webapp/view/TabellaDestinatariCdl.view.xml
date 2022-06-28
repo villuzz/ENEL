@@ -28,8 +28,8 @@
 
                             <fb:FilterGroupItem id="Werks" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
+                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'Werks', length:4000 }] }" > 
+                                  <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>

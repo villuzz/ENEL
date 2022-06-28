@@ -14,8 +14,8 @@
                 <f:actions></f:actions>
                 <f:navigationActions>
                     <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
-                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
-                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <!--<Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>-->
                     <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>
                 </f:navigationActions>
             </f:DynamicPageTitle>
@@ -27,7 +27,7 @@
                         <fb:filterGroupItems>
               <fb:FilterGroupItem id="FIServizi" visible="true" groupName="__$INTERNAL$" name="Servizi" label="{i18n>ASNUM}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                  <MultiComboBox id="cbServizi" items="{ path: '/Servizi'}" showSecondaryValues="true">
+                  <MultiComboBox id="cbServizi" items="{ path: '/Servizi'}" showSecondaryValues="true" selectedKeys="{sFilter>/ASNUM}">
                     <core:ListItem key="{ASNUM}" text="{ASNUM}" additionalText="{ASKTX}"/>
                   </MultiComboBox>
                 </fb:control>
@@ -125,7 +125,18 @@
               <form:formElements>
                 <form:FormElement label="{i18n>ASNUM}">
                   <form:fields>
-                    <Input value="{sDetail>/ASNUM}" type="Text" maxLength="18"/>
+                    <Input showSuggestion="true" value="{sDetail>/ASNUM}" maxLength="18" suggestionRows="{sHelp>/Asnum}" suggest=".onSuggestAsnum" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}"  >
+                      <suggestionColumns>
+                        <Column>
+                          <Label text="{i18n>Asnum}" />
+                        </Column>
+                      </suggestionColumns>
+                      <suggestionRows>
+                        <ColumnListItem>
+                          <Label text="{sHelp>Fieldname1}" />
+                        </ColumnListItem>
+                      </suggestionRows>
+                    </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>ASKTX}" >

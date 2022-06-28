@@ -59,7 +59,7 @@ sap.ui.define([
 
             sData.DIVISIONE = await this.Shpl("H_T001W", "SH");
             sData.MEINS = await this.Shpl("H_T006", "SH");
-            sData.LGORT = await this.Shpl("H_T001L", "SH");
+            // sData.LGORT = await this._getTableNoError("/StorageList");
             sData.EKGRP = await this.Shpl("H_T024", "SH");
             sData.EKORG = await this.Shpl("H_T024E", "SH");
             sData.AFNAM = await this.Shpl("ZSKSE_MMREQUNITS", "SH");
@@ -359,22 +359,23 @@ sap.ui.define([
                 sSelectedKey = oValidatedComboBox.getSelectedKey(),
                 sValue = oValidatedComboBox.getValue();
 
-            if (!sSelectedKey && sValue) {
+            if (! sSelectedKey && sValue) {
                 oValidatedComboBox.setValueState(ValueState.Error);
             } else {
                 oValidatedComboBox.setValueState(ValueState.None);
             }
         },
         ControlIndex: function (sData) {
-
-            if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
-                return "Inserire Indice";
-            }
-            if (sData.Cont === "" || sData.Cont === undefined || sData.Cont === null) {
-                return "Inserire Contatore";
-            }
-            if (sData.Matnr === "" || sData.Matnr === undefined || sData.Matnr === null) {
-                return "Inserire Materiale";
+            if (sData.stato !== "M") {
+                if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
+                    return "Inserire Indice";
+                }
+                if (sData.Cont === "" || sData.Cont === undefined || sData.Cont === null) {
+                    return "Inserire Contatore";
+                }
+                /*if (sData.Matnr === "" || sData.Matnr === undefined || sData.Matnr === null) {
+                    return "Inserire Materiale";
+                }*/
             }
             return "";
         },
@@ -409,6 +410,23 @@ sap.ui.define([
                 });
                 var sHelp = this.getView().getModel("sHelp").getData();
                 sHelp.Matnr = await this.Shpl("ZPM4R_SH_MATNR", "SH", aFilter);
+                this.getView().getModel("sHelp").refresh();
+            }
+        },
+        onSuggestLgort: async function (oEvent) {
+            var sSelect = this.getModel("sSelect").getData();
+            if (oEvent.getParameter("suggestValue").length >= 0 || (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null)) {
+
+                var aFilter = [];
+                if (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null) {
+                    aFilter.push(new Filter("Werks", FilterOperator.EQ, sSelect.Werks));
+                }
+                if (oEvent.getParameter("suggestValue").length >= 0) {
+                    aFilter.push(new Filter("Code", FilterOperator.EQ, sSelect.Lgort));
+                }
+
+                var sHelp = this.getView().getModel("sHelp").getData();
+                sHelp.LGORT = await this._getTableNoError("/StorageList", aFilter);
                 this.getView().getModel("sHelp").refresh();
             }
         }

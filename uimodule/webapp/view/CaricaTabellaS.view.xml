@@ -181,17 +181,17 @@
                 <form:FormElement label="{i18n>Asnum}" >
                   <form:fields>
                   <Input showSuggestion="true" value="{sSelect>/Asnum}" suggestionRows="{sHelp>/Asnum}" suggest=".onSuggestAsnum" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}"  >
-                                        <suggestionColumns>
-                                          <Column>
-                                            <Label text="{i18n>Asnum}" />
-                                          </Column>
-                                        </suggestionColumns>
-                                        <suggestionRows>
-                                          <ColumnListItem>
-                                            <Label text="{sHelp>Fieldname1}" />
-                                          </ColumnListItem>
-                                        </suggestionRows>
-                                      </Input>
+                      <suggestionColumns>
+                        <Column>
+                          <Label text="{i18n>Asnum}" />
+                        </Column>
+                      </suggestionColumns>
+                      <suggestionRows>
+                        <ColumnListItem>
+                          <Label text="{sHelp>Fieldname1}" />
+                        </ColumnListItem>
+                      </suggestionRows>
+                    </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Asktx}">
@@ -223,7 +223,7 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>Afnam}">
                     <ComboBox  selectedKey="{sSelect>/Afnam}" valueStateText="{i18n>valueState} {i18n>Richiedente}" items="{ path: 'sHelp>/AFNAM' }" change="handleChangeCb" showSecondaryValues= "true" >
-                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                      <core:ListItem key="{sHelp>Fieldname2}" text="{sHelp>Fieldname2}" additionalText="{sHelp>Fieldname3}"/>
                     </ComboBox>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Matkl}">

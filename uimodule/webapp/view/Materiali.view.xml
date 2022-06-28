@@ -14,8 +14,8 @@
                 <f:actions></f:actions>
                 <f:navigationActions>
                     <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
-                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
-                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
+                    <!--<Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>-->
                     <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>
                 </f:navigationActions>
             </f:DynamicPageTitle>
@@ -27,8 +27,8 @@
                         <fb:filterGroupItems>
               <fb:FilterGroupItem id="FIMateriali" visible="true" groupName="__$INTERNAL$" name="Materiali" label="{i18n>MATNR}" partOfCurrentVariant="true" visibleInFilterBar="true">
                 <fb:control>
-                  <MultiComboBox id="cbMateriali" items="{ path: '/Materiali'}" showSecondaryValues="true">
-                    <core:ListItem key="{MATNR}" text="{MATNR}" additionalText="{MAKTX}"/>
+                  <MultiComboBox id="cbMateriali" items="{ path: '/Materiali'}" showSecondaryValues="true" selectedKeys="{sFilter>/MATNR}">
+                    <core:ListItem key="{MATNR}" text="{ parts:[{path:'MATNR'}], formatter: '.LocalFormatter.alphaOutput'}" additionalText="{MAKTX}"/>
                   </MultiComboBox>
                 </fb:control>
               </fb:FilterGroupItem>
@@ -58,7 +58,7 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{MATNR}"/>
+                                <Text text="{ parts:[{path:'MATNR'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{MAKTX}"/>
                           <!--        <Text text="{MENGE}"/> 
                                 <Text text="{MEINS}"/>       -->                   
@@ -126,7 +126,7 @@
                 <form:FormElement label="{i18n>MATNR}">
                   <form:fields>
                     <!-- <Input value="{sDetail>/MATNR}" type="Number" maxLength="18"/> -->
-                  <Input showSuggestion="true" value="{sDetail>/Matnr}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" >
+                  <Input showSuggestion="true" value="{sDetail>/MATNR}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" maxLength="18" >
                                         <suggestionColumns>
                                           <Column>
                                             <Label text="{i18n>Materiale}" />

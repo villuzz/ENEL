@@ -316,7 +316,7 @@ class="navContainerControl sapUiSmallMarginBottom">
                 </form:FormElement>
                 <form:FormElement label="{i18n>Frequenza}">
                   <form:fields>
-                     <Select xmlns="sap.m" id="onlyActive" selectedKey="{sSelect>/Frequenza}">
+                     <Select xmlns="sap.m" selectedKey="{sSelect>/Frequenza}">
                         <items>
                           <core:ListItem xmlns:core="sap.ui.core" key="" text="" />
                           <core:ListItem xmlns:core="sap.ui.core" key="C" text="C" />
@@ -327,7 +327,7 @@ class="navContainerControl sapUiSmallMarginBottom">
                 </form:FormElement>
                 <form:FormElement label="{i18n>FlagAttivo}">
                   <form:fields>
-                     <Select xmlns="sap.m" id="onlyActive" selectedKey="{sSelect>/FlagAttivo}">
+                     <Select xmlns="sap.m" selectedKey="{sSelect>/FlagAttivo}">
                         <items>
                           <core:ListItem xmlns:core="sap.ui.core" key="X" icon="sap-icon://accept" text="Attivo" />
                           <core:ListItem xmlns:core="sap.ui.core" key="" icon="sap-icon://decline" text="Disattivo"/>
@@ -368,7 +368,6 @@ class="navContainerControl sapUiSmallMarginBottom">
                 </form:FormElement>
                 <form:FormElement label="{i18n>ProgAggr}">
                   <form:fields>
-                    <Input value="{sSelect>/ProgAggr}" maxLength="5"/>
                     <ComboBox selectedKey="{sSelect>/ProgAggr}"  valueStateText="{i18n>valueState} {i18n>ProgAggr}" items="{ path: 'sHelp>/PROG_AGGR', sorter: [{ path: 'ProgAggr', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" >
                       <core:ListItem key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}" additionalText="{sHelp>AggrActTitle}"/>
                     </ComboBox>

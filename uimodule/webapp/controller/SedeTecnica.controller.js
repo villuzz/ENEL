@@ -10,64 +10,96 @@ sap.ui.define([
     'sap/m/MessageToast',
     'sap/ui/model/Filter',
     'sap/ui/model/FilterOperator',
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, MessageToast, Filter, FilterOperator) {
+    'sap/ui/core/library',
+    "PM030/APP1/util/Validator",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, MessageToast, Filter, FilterOperator, coreLibrary, Validator) {
     "use strict";
     var oResource;
     oResource = new sap.ui.model.resource.ResourceModel({bundleName: "PM030.APP1.i18n.i18n"}).getResourceBundle();
     var EdmType = exportLibrary.EdmType;
-
+    var ValueState = coreLibrary.ValueState;
     return Controller.extend("PM030.APP1.controller.SedeTecnica", {
+        Validator: Validator,
+    
         onInit: function () {
             var oModel = new sap.ui.model.json.JSONModel();
             oModel.setData({});
-            this.getView().setModel(oModel, "sSedeTecnica");
+            this.getView().setModel(oModel, "sFilter");
 
             this.getOwnerComponent().getRouter().getRoute("SedeTecnica").attachPatternMatched(this._onObjectMatched, this);
             this._oTPC = new TablePersoController({table: this.byId("tbSede"), persoService: manutenzioneTable}).activate();
         },
+        onResetSedeTecnica: function () {
+          this.getView().getModel("sFilter").setData({});
+          this.onSearchFilters();
+        },
         _onObjectMatched: function () {
             this.byId("navCon").back();
             this.onSearchResult();
+            this.getValueHelp();
         },
+        getValueHelp: async function () {
+          sap.ui.core.BusyIndicator.show();
+          var sData = {};
+          var oModelHelp = new sap.ui.model.json.JSONModel();
+          oModelHelp.setSizeLimit(2000);
+
+          sData.SPRAS = await this.Shpl("H_T002", "SH");
+
+          oModelHelp.setData(sData);
+          this.getView().setModel(oModelHelp, "sHelp");
+          sap.ui.core.BusyIndicator.hide();
+      },
+      handleChangeCb: function (oEvent) {
+        var oValidatedComboBox = oEvent.getSource(),
+            sSelectedKey = oValidatedComboBox.getSelectedKey(),
+            sValue = oValidatedComboBox.getValue();
+
+        if (! sSelectedKey && sValue) {
+            oValidatedComboBox.setValueState(ValueState.Error);
+        } else {
+            oValidatedComboBox.setValueState(ValueState.None);
+        }
+    },
         onSearchResult: function () {
-            this.onFilterSedeTecnica();
+            this.onSearchFilters();
         },
-        onFilterSedeTecnica: async function () {
-            var sSedeTecnica = this.getView().getModel("sSedeTecnica").getData();
+        onSearchFilters: async function () {
+            var sFilter = this.getView().getModel("sFilter").getData();
 
             var aFilter = [],
                 oFilter = {},
                 sData = [];
 
-            if (sSedeTecnica.LANGUAGE != "" && sSedeTecnica.LANGUAGE != null) {
-                aFilter.push(new Filter("LANGUAGE", FilterOperator.EQ, sSedeTecnica.LANGUAGE));
+            if (sFilter.LANGUAGE != "" && sFilter.LANGUAGE != null) {
+                aFilter.push(new Filter("LANGUAGE", FilterOperator.EQ, sFilter.LANGUAGE));
             }
-            if (sSedeTecnica.SEDE_TECNICA != "" && sSedeTecnica.SEDE_TECNICA != null) {
-                aFilter.push(new Filter("SEDE_TECNICA", FilterOperator.EQ, sSedeTecnica.SEDE_TECNICA));
+            if (sFilter.SEDE_TECNICA != "" && sFilter.SEDE_TECNICA != null) {
+                aFilter.push(new Filter("SEDE_TECNICA", FilterOperator.EQ, sFilter.SEDE_TECNICA));
             }
-            if (sSedeTecnica.LIVELLO1 != "" && sSedeTecnica.LIVELLO1 != null) {
-                aFilter.push(new Filter("LIVELLO1", FilterOperator.EQ, sSedeTecnica.LIVELLO1));
+            if (sFilter.LIVELLO1 != "" && sFilter.LIVELLO1 != null) {
+                aFilter.push(new Filter("LIVELLO1", FilterOperator.EQ, sFilter.LIVELLO1));
             }
-            if (sSedeTecnica.LIVELLO2 != "" && sSedeTecnica.LIVELLO2 != null) {
-                aFilter.push(new Filter("LIVELLO2", FilterOperator.EQ, sSedeTecnica.LIVELLO2));
+            if (sFilter.LIVELLO2 != "" && sFilter.LIVELLO2 != null) {
+                aFilter.push(new Filter("LIVELLO2", FilterOperator.EQ, sFilter.LIVELLO2));
             }
-            if (sSedeTecnica.LIVELLO3 != "" && sSedeTecnica.LIVELLO3 != null) {
-                aFilter.push(this.filterLivello3(sSedeTecnica.LIVELLO3));
+            if (sFilter.LIVELLO3 != "" && sFilter.LIVELLO3 != null) {
+                aFilter.push(this.filterLivello3(sFilter.LIVELLO3));
             }
-            if (sSedeTecnica.LIVELLO4 != "" && sSedeTecnica.LIVELLO4 != null) {
-                aFilter.push(this.filterLivello4(sSedeTecnica.LIVELLO4));
+            if (sFilter.LIVELLO4 != "" && sFilter.LIVELLO4 != null) {
+                aFilter.push(this.filterLivello4(sFilter.LIVELLO4));
             }
-            if (sSedeTecnica.LIVELLO5 != "" && sSedeTecnica.LIVELLO5 != null) {
-                aFilter.push(this.filterLivello5(sSedeTecnica.LIVELLO5));
+            if (sFilter.LIVELLO5 != "" && sFilter.LIVELLO5 != null) {
+                aFilter.push(this.filterLivello5(sFilter.LIVELLO5));
             }
-            if (sSedeTecnica.LIVELLO6 != "" && sSedeTecnica.LIVELLO6 != null) {
-                aFilter.push(this.filterLivello6(sSedeTecnica.LIVELLO6));
+            if (sFilter.LIVELLO6 != "" && sFilter.LIVELLO6 != null) {
+                aFilter.push(this.filterLivello6(sFilter.LIVELLO6));
             }
-            if (sSedeTecnica.DESC_SEDE != "" && sSedeTecnica.DESC_SEDE != null) {
-                aFilter.push(new Filter("DESC_SEDE", FilterOperator.Contains, sSedeTecnica.DESC_SEDE));
+            if (sFilter.DESC_SEDE != "" && sFilter.DESC_SEDE != null) {
+                aFilter.push(new Filter("DESC_SEDE", FilterOperator.Contains, sFilter.DESC_SEDE));
             }
-            if (sSedeTecnica.NOTE != "" && sSedeTecnica.NOTE != null) {
-                aFilter.push(new Filter("NOTE", FilterOperator.Contains, sSedeTecnica.NOTE));
+            if (sFilter.NOTE != "" && sFilter.NOTE != null) {
+                aFilter.push(new Filter("NOTE", FilterOperator.Contains, sFilter.NOTE));
             }
 
             var oModel = new sap.ui.model.json.JSONModel();
@@ -136,30 +168,48 @@ sap.ui.define([
                 return aFilter;
             }
         },
-        onDataExport: function () {
-            var selectedTab = this.byId("tbSede");
-
-            var aCols,
-                oRowBinding,
-                oSettings,
-                oSheet;
-
-            aCols = this._createColumnConfig(selectedTab);
-            oRowBinding = selectedTab.getBinding("items");
-            oSettings = {
-                workbook: {
-                    columns: aCols
-                },
-                dataSource: oRowBinding,
-                fileName: "Sede.xlsx",
-                worker: false
-            };
-            oSheet = new Spreadsheet(oSettings);
-            oSheet.build(). finally(function () {
-                oSheet.destroy();
-            });
-        },
-
+            onDataExport: function () {
+              var selectedTab = this.byId("tbSede");
+              var selIndex = this.getView().byId("tbSede").getSelectedItems();
+        
+              var aCols,
+                  oRowBinding,
+                  oSettings,
+                  oSheet;
+        
+              aCols = this._createColumnConfig(selectedTab);
+              oRowBinding = selectedTab.getBinding("items");
+        
+              if (selIndex.length >= 1) {
+                  var aArray = [];
+                  for (let i = 0; i < selIndex.length; i++) {
+                      var oContext = selIndex[i].getBindingContext().getObject();
+                      aArray.push(oContext);
+                  }
+                  oSettings = {
+                      workbook: {
+                          columns: aCols
+                      },
+                      dataSource: aArray,
+                      fileName: "tbSede.xlsx",
+                      worker: false
+                  };
+              } else {
+                  var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+                  oSettings = {
+                      workbook: {
+                          columns: aCols
+                      },
+                      dataSource: aFilters,
+                      fileName: "tbSede.xlsx",
+                      worker: false
+                  };
+              } oSheet = new Spreadsheet(oSettings);
+              oSheet.build(). finally(function () {
+                  oSheet.destroy();
+              });
+          },
+        
         _createColumnConfig: function () {
             var oCols = [],
                 sCols = {};
@@ -182,6 +232,7 @@ sap.ui.define([
         },
         onNuovo: function () {
             sap.ui.core.BusyIndicator.show();
+            Validator.clearValidation();
             var oModel = new sap.ui.model.json.JSONModel();
             oModel.setData({ID: "New"});
             this.getView().setModel(oModel, "sDetail");
@@ -190,6 +241,7 @@ sap.ui.define([
         },
         onCopy: function () {
             sap.ui.core.BusyIndicator.show();
+            Validator.clearValidation();
             var items = this.getView().byId("tbSede").getSelectedItems();
             if (items.length === 1) {
                 var oModel = new sap.ui.model.json.JSONModel();
@@ -203,6 +255,7 @@ sap.ui.define([
         },
         onModify: function () {
             sap.ui.core.BusyIndicator.show();
+            Validator.clearValidation();
             var items = this.getView().byId("tbSede").getSelectedItems();
             if (items.length === 1) {
                 this.byId("Detail").bindElement({path: items[0].getBindingContext().getPath()});
@@ -229,13 +282,13 @@ sap.ui.define([
             this.byId("navCon").back();
         },
         onSave: async function () {
+          var ControlValidate = Validator.validateView();
+            if (ControlValidate) {
             var line = JSON.stringify(this.getView().getModel("sDetail").getData());
             line = JSON.parse(line);
             delete line["__metadata"]
             if (line.ID === "New") {
-                // get Last Index
-                // line.ID = await this._getLastItemData("/Sede", "", "ID");
-                delete line.ID;
+                line = this.SedeModelSave(line);
                 await this._saveHana("/Sede", line);
             } else {
               line = this.SedeModelSave(line);
@@ -244,6 +297,7 @@ sap.ui.define([
               await this._updateHana(sURL, line);
             }
             this.byId("navCon").back();
+          }
         },
         onCancel: async function () {
             var sel = this.getView().byId("tbSede").getSelectedItems();
@@ -318,16 +372,16 @@ sap.ui.define([
         },
         SedeModelSave: function (sValue) {
             var rValue = {
-                SEDE_TECNICA: (sValue.SEDE_TECNICA === "") ? "" : sValue.SEDE_TECNICA,
-                LIVELLO1: (sValue.LIVELLO1 === "") ? "" : sValue.LIVELLO1,
-                LIVELLO2: (sValue.LIVELLO2 === "") ? "" : sValue.LIVELLO2,
-                LIVELLO3: (sValue.LIVELLO3 === "") ? "" : sValue.LIVELLO3,
-                LIVELLO4: (sValue.LIVELLO4 === "") ? "" : sValue.LIVELLO4,
-                LIVELLO5: (sValue.LIVELLO5 === "") ? "" : sValue.LIVELLO5,
-                LIVELLO6: (sValue.LIVELLO6 === "") ? "" : sValue.LIVELLO6,
-                LANGUAGE: (sValue.LANGUAGE === "") ? "" : sValue.LANGUAGE,
-                DESC_SEDE: sValue.DESC_SEDE,
-                NOTE: sValue.NOTE
+                SEDE_TECNICA: (sValue.SEDE_TECNICA === "" || sValue.SEDE_TECNICA === undefined) ? "" : sValue.SEDE_TECNICA,
+                LIVELLO1: (sValue.LIVELLO1 === "" || sValue.LIVELLO1 === undefined) ? "" : sValue.LIVELLO1,
+                LIVELLO2: (sValue.LIVELLO2 === "" || sValue.LIVELLO2 === undefined) ? "" : sValue.LIVELLO2,
+                LIVELLO3: (sValue.LIVELLO3 === "" || sValue.LIVELLO3 === undefined) ? "" : sValue.LIVELLO3,
+                LIVELLO4: (sValue.LIVELLO4 === "" || sValue.LIVELLO4 === undefined) ? "" : sValue.LIVELLO4,
+                LIVELLO5: (sValue.LIVELLO5 === "" || sValue.LIVELLO5 === undefined) ? "" : sValue.LIVELLO5,
+                LIVELLO6: (sValue.LIVELLO6 === "" || sValue.LIVELLO6 === undefined) ? "" : sValue.LIVELLO6,
+                LANGUAGE: (sValue.LANGUAGE === "" || sValue.LANGUAGE === undefined) ? "" : sValue.LANGUAGE,
+                DESC_SEDE: (sValue.DESC_SEDE === "" || sValue.DESC_SEDE === undefined) ? "" : sValue.DESC_SEDE,
+                NOTE: (sValue.NOTE === "" || sValue.NOTE === undefined) ? "" : sValue.NOTE,
             };
             return rValue;
         }
