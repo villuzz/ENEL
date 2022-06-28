@@ -3,20 +3,22 @@
 			id="navCon"
 			class="navContainerControl sapUiSmallMarginBottom">
     <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+      
         <f:title>
             <f:DynamicPageTitle>
                 <f:content>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
-                         <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd"/>
+                    <Label text="Home" visible="false" labelFor="idHomeButton"/>
+                         <Button id="idHomeButton" type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd" ariaLabelledBy="Home" tooltip="{i18n>HomeButton}" />
                         <Title text="{i18n>TitoloTPAT}" class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
                 <f:navigationActions>
-                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin"/>
-                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin"/>
-                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin"/>
-                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin"/>   
+                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" ariaLabelledBy="Nuovo" tooltip="{i18n>NewButton}"/>
+                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" ariaLabelledBy="Modifica" tooltip="{i18n>ModifyButton}"/>
+                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" ariaLabelledBy="Copia" tooltip="{i18n>CopyButton}"/>
+                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" ariaLabelledBy="Cancella" tooltip="{i18n>CancelButton}"/>   
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -26,41 +28,41 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="Werks" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Werks" visible="true" name="Werks" label="{i18n>Divisione}" groupName="McbDivisione" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
+                                <MultiComboBox id="McbDivisione" selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="Sistema" visible="true" groupName="__$INTERNAL$" name="Sistema" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Sistema" visible="true" groupName="McbSistema" name="Sistema" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Sistema}" items="{ path: 'sHelp>/Sistema', sorter: [{ path: 'Sistema', descending: false, group:false }] }" > 
+                                <MultiComboBox id="McbSistema" selectedKeys="{sFilter>/Sistema}" items="{ path: 'sHelp>/Sistema', sorter: [{ path: 'Sistema', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="Progres" visible="true" groupName="__$INTERNAL$" name="Progres" label="{i18n>Progressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Progres" visible="true" groupName="McbProgres" name="Progres" label="{i18n>Progressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Progres}" items="{ path: 'sHelp>/Progres', sorter: [{ path: 'Progres', descending: false, group:false }] }" > 
+                                <MultiComboBox id="McbProgres" selectedKeys="{sFilter>/Progres}" items="{ path: 'sHelp>/Progres', sorter: [{ path: 'Progres', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Progres}" text="{sHelp>Progres}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="Txt" visible="true" groupName="__$INTERNAL$" name="Txt" label="{i18n>DescrizioneProgressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Txt" visible="true" groupName="McbTxt" name="Txt" label="{i18n>DescrizioneProgressivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Txt}" items="{ path: 'sHelp>/Txt', sorter: [{ path: 'Txt', descending: false, group:false }] }" > 
+                                <MultiComboBox id="McbTxt" selectedKeys="{sFilter>/Txt}" items="{ path: 'sHelp>/Txt', sorter: [{ path: 'Txt', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="ComponentTipo" visible="true" groupName="__$INTERNAL$" name="ComponentTipo" label="{i18n>ComponenteTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="ComponentTipo" visible="true" groupName="McbComponentTipo" name="ComponentTipo" label="{i18n>ComponenteTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/ComponentTipo}" items="{ path: 'sHelp>/ComponentTipo', sorter: [{ path: 'ComponentTipo', descending: false, group:false }] }" > 
+                                <MultiComboBox id="McbComponentTipo" selectedKeys="{sFilter>/ComponentTipo}" items="{ path: 'sHelp>/ComponentTipo', sorter: [{ path: 'ComponentTipo', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>ComponentTipo}" text="{sHelp>ComponentTipo}"/>
                                 </MultiComboBox>
                               </fb:control>
@@ -69,19 +71,21 @@
                         </fb:filterGroupItems>
                     </fb:FilterBar>
                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
-                    <Button type="Default" tooltip="List" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant"/>
-                      <Button type="Default" tooltip="Save" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant"/>
+                    <Button type="Default" tooltip="{i18n>List}" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant" ariaLabelledBy="Lista Varianti"/>
+                      <Button type="Default" tooltip="{i18n>SaveVar}" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant" ariaLabelledBy="Salva Variante"/>
                       <ToolbarSpacer/>
-                      <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin"/>
-                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin"/>
-                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin"/>
+                      <Button text="Scarica" tooltip="{i18n>Download}" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin" ariaLabelledBy="Scarica"/>
+                      <Button text="Carica" tooltip="{i18n>Load}" icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin" ariaLabelledBy="Carica"/>
+                      <Button text="Colonne" tooltip="{i18n>Columns}" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin" ariaLabelledBy="Colonne"/>
                     </OverflowToolbar>
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
+        
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbProgressivoAzioni"  growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/', sorter: [{ path: 'Werks', descending: false, group:false }] }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+            <Panel accessibleRole="Region" headerText="{i18n>TableTitle}" class="sapUiContentPadding">
+                <Table id="tbProgressivoAzioni" ariaLabelledBy="title" growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/', sorter: [{ path: 'Werks', descending: false, group:false }] }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col1"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col2"><Text text="{i18n>Sistema}"/></Column>
@@ -92,15 +96,16 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{T_ACT_PROG>Werks}"/>
-                                <Text text="{T_ACT_PROG>Sistema}"/>
-                                <Text text="{T_ACT_PROG>Progres}"/>
-                                <Text text="{T_ACT_PROG>Txt}"/>
-                                <Text text="{T_ACT_PROG>ComponentTipo}"/>
+                                <Text text="{T_ACT_PROG>Werks}" wrapping="true"/>
+                                <Text text="{T_ACT_PROG>Sistema}" wrapping="true"/>
+                                <Text text="{T_ACT_PROG>Progres}" wrapping="true"/>
+                                <Text text="{T_ACT_PROG>Txt}" wrapping="true"/>
+                                <Text text="{T_ACT_PROG>ComponentTipo}" wrapping="true"/>
                             </cells>
                         </ColumnListItem>
                     </items>
                 </Table>
+                </Panel>
              </ScrollContainer>
         </f:content>
         <f:footer>
@@ -115,18 +120,18 @@
           <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
         </f:dependents>
    </f:DynamicPage>
-    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding">
         <f:title>
             <f:DynamicPageTitle>
                 <f:content>
                  <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
-                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd"></Button>
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd" tooltip="{i18n>NavBack}" ariaLabelledBy="Indietro"/>
                         <Title title="{i18n>editPage}"  id="TitleDetail"  class="sapUiTinyMarginTop"/>
                     </HBox>
                 </f:content>
                 <f:actions></f:actions>
                 <f:navigationActions>
-                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}"/>
+                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}" tooltip="{i18n>SaveButton}" ariaLabelledBy="Salva"/>
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -139,7 +144,7 @@
         </f:header>
         <f:content>
         <form:Form editable="true">
-                               <form:layout>
+           <form:layout>
 				<form:ResponsiveGridLayout
 					labelSpanXL="3"
 					labelSpanL="3"
