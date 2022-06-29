@@ -42,47 +42,42 @@ sap.ui.define([
             this.byId("tbStrategia").getBinding("items").filter(aFilters);
         },
         onDataExport: function () {
-            var selectedTab = this.byId("tbStrategia");
-            var selIndex = this.getView().byId("tbStrategia").getSelectedItems();
+          var selectedTab = this.byId("tbStrategia");
+          var selIndex = this.getView().byId("tbStrategia").getSelectedItems();
 
-            var aCols,
-                oRowBinding,
-                oSettings,
-                oSheet;
+          var aCols,
+              oSettings,
+              oSheet;
 
-            aCols = this._createColumnConfig(selectedTab);
-            oRowBinding = selectedTab.getBinding("items");
+          aCols = this._createColumnConfig(selectedTab);
+          var aArray = [],
+              oContext = {},
+              i = 0;
 
-            if (selIndex.length >= 1) {
-                var aArray = [];
-                for (let i = 0; i < selIndex.length; i++) {
-                    var oContext = selIndex[i].getBindingContext().getObject();
-                    aArray.push(oContext);
-                }
-                oSettings = {
-                    workbook: {
-                        columns: aCols
-                    },
-                    dataSource: aArray,
-                    fileName: "tbStrategia.xlsx",
-                    worker: false
-                };
-            } else {
-                var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
-                oSettings = {
-                    workbook: {
-                        columns: aCols
-                    },
-                    dataSource: aFilters,
-                    fileName: "tbStrategia.xlsx",
-                    worker: false
-                };
-            } oSheet = new Spreadsheet(oSettings);
-            oSheet.build(). finally(function () {
-                oSheet.destroy();
-            });
-        },
+          if (selIndex.length >= 1) {
 
+              for (i = 0; i < selIndex.length; i++) {
+                  oContext = selIndex[i].getBindingContext().getObject();
+                  aArray.push(oContext);
+              }
+          } else {
+              for (i = 0; i < selectedTab.getItems().length; i++) {
+                  oContext = selectedTab.getItems()[i].getBindingContext().getObject();
+                  aArray.push(oContext);
+              }
+          } oSettings = {
+              workbook: {
+                  columns: aCols
+              },
+              dataSource: aArray,
+              fileName: "tbStrategia.xlsx",
+              worker: false
+          };
+          oSheet = new Spreadsheet(oSettings);
+          oSheet.build(). finally(function () {
+              oSheet.destroy();
+          });
+      },
 
         _createColumnConfig: function () {
             var oCols = [],

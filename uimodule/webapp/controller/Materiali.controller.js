@@ -61,43 +61,38 @@ sap.ui.define([
       var selIndex = this.getView().byId("tbMateriali").getSelectedItems();
 
       var aCols,
-          oRowBinding,
           oSettings,
           oSheet;
 
       aCols = this._createColumnConfig(selectedTab);
-      oRowBinding = selectedTab.getBinding("items");
+      var aArray = [],
+          oContext = {},
+          i = 0;
 
       if (selIndex.length >= 1) {
-          var aArray = [];
-          for (let i = 0; i < selIndex.length; i++) {
-              var oContext = selIndex[i].getBindingContext().getObject();
+
+          for (i = 0; i < selIndex.length; i++) {
+              oContext = selIndex[i].getBindingContext().getObject();
               aArray.push(oContext);
           }
-          oSettings = {
-              workbook: {
-                  columns: aCols
-              },
-              dataSource: aArray,
-              fileName: "tbMateriali.xlsx",
-              worker: false
-          };
       } else {
-          var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
-          oSettings = {
-              workbook: {
-                  columns: aCols
-              },
-              dataSource: aFilters,
-              fileName: "tbMateriali.xlsx",
-              worker: false
-          };
-      } oSheet = new Spreadsheet(oSettings);
+          for (i = 0; i < selectedTab.getItems().length; i++) {
+              oContext = selectedTab.getItems()[i].getBindingContext().getObject();
+              aArray.push(oContext);
+          }
+      } oSettings = {
+          workbook: {
+              columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "tbMateriali.xlsx",
+          worker: false
+      };
+      oSheet = new Spreadsheet(oSettings);
       oSheet.build(). finally(function () {
           oSheet.destroy();
       });
   },
-
     _createColumnConfig: function () {
       var oCols = [],
         sCols = {};
@@ -173,7 +168,7 @@ sap.ui.define([
       delete line.createdBy;
       delete line.createdAt;
 
-      line.MATNR = line.MATNR.padStart(18, '0');
+      line.MATNR = line.MATNR.padStart(18, "0");
       var sURL = "/Materiali/" + line.MATNR;
       await this._updateHana(sURL, line);
       this.onSearchFilters();

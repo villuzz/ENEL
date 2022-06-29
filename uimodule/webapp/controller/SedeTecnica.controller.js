@@ -168,48 +168,44 @@ sap.ui.define([
                 return aFilter;
             }
         },
-            onDataExport: function () {
-              var selectedTab = this.byId("tbSede");
-              var selIndex = this.getView().byId("tbSede").getSelectedItems();
-        
-              var aCols,
-                  oRowBinding,
-                  oSettings,
-                  oSheet;
-        
-              aCols = this._createColumnConfig(selectedTab);
-              oRowBinding = selectedTab.getBinding("items");
-        
-              if (selIndex.length >= 1) {
-                  var aArray = [];
-                  for (let i = 0; i < selIndex.length; i++) {
-                      var oContext = selIndex[i].getBindingContext().getObject();
-                      aArray.push(oContext);
-                  }
-                  oSettings = {
-                      workbook: {
-                          columns: aCols
-                      },
-                      dataSource: aArray,
-                      fileName: "tbSede.xlsx",
-                      worker: false
-                  };
-              } else {
-                  var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
-                  oSettings = {
-                      workbook: {
-                          columns: aCols
-                      },
-                      dataSource: aFilters,
-                      fileName: "tbSede.xlsx",
-                      worker: false
-                  };
-              } oSheet = new Spreadsheet(oSettings);
-              oSheet.build(). finally(function () {
-                  oSheet.destroy();
-              });
-          },
-        
+        onDataExport: function () {
+          var selectedTab = this.byId("tbSede");
+          var selIndex = this.getView().byId("tbSede").getSelectedItems();
+    
+          var aCols,
+              oSettings,
+              oSheet;
+    
+          aCols = this._createColumnConfig(selectedTab);
+          var aArray = [],
+              oContext = {},
+              i = 0;
+    
+          if (selIndex.length >= 1) {
+    
+              for (i = 0; i < selIndex.length; i++) {
+                  oContext = selIndex[i].getBindingContext().getObject();
+                  aArray.push(oContext);
+              }
+          } else {
+              for (i = 0; i < selectedTab.getItems().length; i++) {
+                  oContext = selectedTab.getItems()[i].getBindingContext().getObject();
+                  aArray.push(oContext);
+              }
+          } oSettings = {
+              workbook: {
+                  columns: aCols
+              },
+              dataSource: aArray,
+              fileName: "tbSede.xlsx",
+              worker: false
+          };
+          oSheet = new Spreadsheet(oSettings);
+          oSheet.build(). finally(function () {
+              oSheet.destroy();
+          });
+      },
+
         _createColumnConfig: function () {
             var oCols = [],
                 sCols = {};

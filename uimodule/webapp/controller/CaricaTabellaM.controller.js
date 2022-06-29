@@ -231,6 +231,7 @@ sap.ui.define([
             if (ControlValidate) {
                 var line = JSON.stringify(this.getView().getModel("sSelect").getData());
                 line = JSON.parse(line);
+                line.Matnr = line.Matnr.padStart(18, "0");
                 var msg = await this.ControlIndex(line);
                 if (msg !== "") {
                     MessageBox.error(msg);
@@ -277,28 +278,24 @@ sap.ui.define([
                 line = JSON.parse(line);
 
                 var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+                sURL = sURL.replace(line.Matnr, line.Matnr.padStart(18, "0"));
                 await this._removeHana(sURL);
             }
             this.onSearchFilters();
         },
-        componiCancelURL: function (line) {
-            var sURL = "/T_PMO_M(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Matnr=" + "'" + line.Matnr + "'" + "'," + "Maktx=" + "'" + line.Maktx + "'" + ")";
-            return sURL;
-        },
         componiURL: function (line) {
-            var sURL = "/T_PMO_M(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Matnr=" + "'" + line.Matnr + "'" + "'," + "Maktx=" + "'" + line.Maktx + "'" + ")";
+            var sURL = "/T_PMO_M(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Matnr=" + "'" + line.Matnr.padStart(18, "0") + "'" + "'," + "Maktx=" + "'" + line.Maktx + "'" + ")";
             return sURL;
         },
         handleUploadPress: function () {
           this.handleUploadGenerico("/T_PMO_M");
         },
-       
         ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
                 IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? "" : sValue[oResources.getText("IndexPmo")].toString(),
                 Cont: (sValue[oResources.getText("Cont")] === undefined) ? "" : sValue[oResources.getText("Cont")].toString(),
-                Matnr: (sValue[oResources.getText("Materiale")] === undefined) ? "" : sValue[oResources.getText("Materiale")].toString(),
+                Matnr: (sValue[oResources.getText("Materiale")] === undefined) ? "" : sValue[oResources.getText("Materiale")].toString().padStart(18, "0"),
                 Maktx: (sValue[oResources.getText("TestoBreveMat")] === undefined) ? "" : sValue[oResources.getText("TestoBreveMat")].toString(),
                 Menge: (sValue[oResources.getText("QuantFabbisogno")] === undefined) ? "" : sValue[oResources.getText("QuantFabbisogno")].toString(),
                 Meins: (sValue[oResources.getText("Unita")] === undefined) ? "" : sValue[oResources.getText("Unita")].toString(),

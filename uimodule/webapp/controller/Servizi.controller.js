@@ -18,10 +18,10 @@ sap.ui.define([
 
     return Controller.extend("PM030.APP1.controller.Servizi", {
         onInit: function () {
-          var oModelHelp = new sap.ui.model.json.JSONModel({});
-          this.getView().setModel(oModelHelp, "sHelp");
+            var oModelHelp = new sap.ui.model.json.JSONModel({});
+            this.getView().setModel(oModelHelp, "sHelp");
 
-          var oModel1 = new sap.ui.model.json.JSONModel();
+            var oModel1 = new sap.ui.model.json.JSONModel();
             oModel1.setData({});
             this.getView().setModel(oModel1, "sFilter");
 
@@ -56,49 +56,43 @@ sap.ui.define([
                 return aFilter;
             }
         },
-       
         onDataExport: function () {
-          var selectedTab = this.byId("tbServizi");
-          var selIndex = this.getView().byId("tbServizi").getSelectedItems();
+            var selectedTab = this.byId("tbServizi");
+            var selIndex = this.getView().byId("tbServizi").getSelectedItems();
 
-          var aCols,
-              oRowBinding,
-              oSettings,
-              oSheet;
+            var aCols,
+                oSettings,
+                oSheet;
 
-          aCols = this._createColumnConfig(selectedTab);
-          oRowBinding = selectedTab.getBinding("items");
+            aCols = this._createColumnConfig(selectedTab);
+            var aArray = [],
+                oContext = {},
+                i = 0;
 
-          if (selIndex.length >= 1) {
-              var aArray = [];
-              for (let i = 0; i < selIndex.length; i++) {
-                  var oContext = selIndex[i].getBindingContext().getObject();
-                  aArray.push(oContext);
-              }
-              oSettings = {
-                  workbook: {
-                      columns: aCols
-                  },
-                  dataSource: aArray,
-                  fileName: "tbServizi.xlsx",
-                  worker: false
-              };
-          } else {
-              var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
-              oSettings = {
-                  workbook: {
-                      columns: aCols
-                  },
-                  dataSource: aFilters,
-                  fileName: "tbServizi.xlsx",
-                  worker: false
-              };
-          } oSheet = new Spreadsheet(oSettings);
-          oSheet.build(). finally(function () {
-              oSheet.destroy();
-          });
-      },
+            if (selIndex.length >= 1) {
 
+                for (i = 0; i < selIndex.length; i++) {
+                    oContext = selIndex[i].getBindingContext().getObject();
+                    aArray.push(oContext);
+                }
+            } else {
+                for (i = 0; i < selectedTab.getItems().length; i++) {
+                    oContext = selectedTab.getItems()[i].getBindingContext().getObject();
+                    aArray.push(oContext);
+                }
+            } oSettings = {
+                workbook: {
+                    columns: aCols
+                },
+                dataSource: aArray,
+                fileName: "tbServizi.xlsx",
+                worker: false
+            };
+            oSheet = new Spreadsheet(oSettings);
+            oSheet.build(). finally(function () {
+                oSheet.destroy();
+            });
+        },
         _createColumnConfig: function () {
             var oCols = [],
                 sCols = {};
@@ -180,20 +174,20 @@ sap.ui.define([
             this.byId("navCon").back();
         },
         onSuggestAsnum: async function (oEvent) {
-          if (oEvent.getParameter("suggestValue").length >= 5) {
-              var aFilter = [];
-              aFilter.push({
-                  "Shlpname": "ZPM4R_SH_ASNUM",
-                  "Shlpfield": "ASNUM",
-                  "Sign": "I",
-                  "Option": "CP",
-                  "Low": oEvent.getParameter("suggestValue") + "*"
-              });
-              var sHelp = this.getView().getModel("sHelp").getData();
-              sHelp.Asnum = await this.Shpl("ZPM4R_SH_ASNUM", "SH", aFilter);
-              this.getView().getModel("sHelp").refresh(true);
-          }
-      },
+            if (oEvent.getParameter("suggestValue").length >= 5) {
+                var aFilter = [];
+                aFilter.push({
+                    "Shlpname": "ZPM4R_SH_ASNUM",
+                    "Shlpfield": "ASNUM",
+                    "Sign": "I",
+                    "Option": "CP",
+                    "Low": oEvent.getParameter("suggestValue") + "*"
+                });
+                var sHelp = this.getView().getModel("sHelp").getData();
+                sHelp.Asnum = await this.Shpl("ZPM4R_SH_ASNUM", "SH", aFilter);
+                this.getView().getModel("sHelp").refresh(true);
+            }
+        },
         onCancel: async function () {
 
             var sel = this.getView().byId("tbServizi").getSelectedItems(),
@@ -224,19 +218,17 @@ sap.ui.define([
             }
         },
         handleUploadPress: function () {
-          this.handleUploadGenerico("/Servizi");
+            this.handleUploadGenerico("/Servizi");
         },
         componiURL: function (line) {
-          var sURL = "/Servizi/" + line.ASNUM;
-          return sURL;
+            var sURL = "/Servizi/" + line.ASNUM;
+            return sURL;
         },
         ControlloExcelModel: function (sValue) {
             var oResource = this.getResourceBundle();
             var rValue = {
                 ASNUM: (sValue[oResource.getText("ASNUM")] === undefined) ? "" : sValue[oResource.getText("ASNUM")].toString(),
-                ASKTX: (sValue[oResource.getText("ASKTX")] === undefined) ? "" : sValue[oResource.getText("ASKTX")].toString(),
-                MENGE: (sValue[oResource.getText("MENGE")] === undefined) ? "" : sValue[oResource.getText("MENGE")].toString(),
-                MEINS: (sValue[oResource.getText("MEINS")] === undefined) ? "" : sValue[oResource.getText("MEINS")].toString()
+                ASKTX: (sValue[oResource.getText("ASKTX")] === undefined) ? "" : sValue[oResource.getText("ASKTX")].toString()
             };
             return rValue;
         }
