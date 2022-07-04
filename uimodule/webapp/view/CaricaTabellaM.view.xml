@@ -48,11 +48,11 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                           <!-- <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <MultiInput id="inIndex" type="Number" showValueHelp="false" />
                                 </fb:control>
-                            </fb:FilterGroupItem>
+                            </fb:FilterGroupItem>-->
 
                             <fb:FilterGroupItem id="FIIContActEl" visible="true" groupName="__$INTERNAL$" name="FYIContActEl" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
@@ -83,7 +83,7 @@
 
                             <fb:FilterGroupItem id="divisione" visible="true" groupName="__$INTERNAL$" name="div" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKeys="{sSelect>/Werks}">
+                                <MultiComboBox valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKeys="{sFilter>/Divisione}">
                                   <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
                                 </MultiComboBox>
                               </fb:control>
@@ -106,7 +106,6 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbCaricaTabellaM" items="{path: 'T_PMO_M>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col190" app:property="IndexPmo"><Text text="{i18n>IndexPmo}"/></Column>
                         <Column width="15em" id="col91" app:property="Cont"><Text text="{i18n>Cont}"/></Column>
                         <Column width="15em" id="col92" app:property="Matnr"><Text text="{i18n>Materiale}"/></Column>
                         <Column width="15em" id="col93" app:property="Maktx"><Text text="{i18n>TestoBreveMat}"/></Column>
@@ -125,7 +124,6 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{ parts:[{path:'T_PMO_M>IndexPmo'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{ parts:[{path:'T_PMO_M>Cont'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{ parts:[{path:'T_PMO_M>Matnr'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{T_PMO_M>Maktx}"/>
@@ -155,6 +153,7 @@
         <f:dependents>
           <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
           <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
+      <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
         </f:dependents>
     </f:DynamicPage>
   
@@ -202,11 +201,11 @@
           <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
-                <form:FormElement label="{i18n>IndexPmo}">
+                <!--<form:FormElement label="{i18n>IndexPmo}">
                   <form:fields>
                     <Input value="{sSelect>/IndexPmo}" type="Text" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
                   </form:fields>
-                </form:FormElement>
+                </form:FormElement>-->
                  <form:FormElement label="{i18n>Cont}">
                   <form:fields>
                     <Input value="{sSelect>/Cont}" type="Text" maxLength="10" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
@@ -214,21 +213,10 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>Materiale}" >
                   <form:fields>
-                    <Input showSuggestion="true" value="{sSelect>/Matnr}" suggestionRows="{sHelp>/Matnr}" suggest=".onSuggestMatnr" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
-                      <suggestionColumns>
-                              <Column>
-                                <Label text="{i18n>Materiale}" />
-                              </Column>
-                              <Column hAlign="End">
-                                <Label text="{i18n>Description}" />
-                              </Column>
-                            </suggestionColumns>
-                            <suggestionRows>
-                              <ColumnListItem>
-                                <Label text="{sHelp>Fieldname1}" />
-                                <Label text="{sHelp>Fieldname4}" />
-                              </ColumnListItem>
-                      </suggestionRows>
+                    <Input showSuggestion="true" value="{sSelect>/Matnr}" suggestionItemSelected="onSuggestMatnrSelect" suggestionItems="{sHelp>/Matnr}" suggest=".onSuggestMatnr" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <suggestionItems>
+                        <core:ListItem text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname4}" />
+                      </suggestionItems>
                     </Input>
                   </form:fields>
                 </form:FormElement>

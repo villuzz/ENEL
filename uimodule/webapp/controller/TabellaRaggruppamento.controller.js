@@ -142,47 +142,18 @@ sap.ui.define([
                 oSheet.destroy();
             });
         },
-
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    var sRaggruppamentoMod = this.RaggruppamentoModel(rows[i]);
-                    sURL = this.componiURL(sRaggruppamentoMod);
-                    var result = await this._updateHanaNoError(sURL, sRaggruppamentoMod);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_RAGGR", sRaggruppamentoMod);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-            }
-
-            this.byId("UploadTable").close();
-            sap.ui.core.BusyIndicator.hide(0);
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_RAGGR");
         },
-        RaggruppamentoModel: function (sValue) {
+        ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString(),
-                DescRaggr: (sValue[oResources.getText("DescrizioneRaggruppamento")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneRaggruppamento")].toString()
+                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? "" : sValue[oResources.getText("Raggruppamento")].toString(),
+                DescRaggr: (sValue[oResources.getText("DescrizioneRaggruppamento")] === undefined) ? "" : sValue[oResources.getText("DescrizioneRaggruppamento")].toString()
             };
             return rValue;
         },
-
         _createColumnConfig: function () {
             var oCols = this.byId("tbRaggruppamento").getColumns().map((c) => {
                 var templ = "";

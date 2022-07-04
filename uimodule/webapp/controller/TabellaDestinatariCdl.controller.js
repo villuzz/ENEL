@@ -274,39 +274,10 @@ sap.ui.define([
         onBackDetail: function () {
             this.byId("navCon").back();
         },
-
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    var sDestinatariMod = this.DestinatariModel(rows[i]);
-                    sURL = this.componiURLExcel(sDestinatariMod);
-                    var result = await this._updateHanaNoError(sURL, sDestinatariMod);
-                    if (result.length === 0) {
-                        var sDestinatariCre = this.DestinatariModel(rows[i]);
-                        await this._saveHanaNoError("/T_DEST", sDestinatariCre);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-            }
-
-            this.byId("UploadTable").close();
-            sap.ui.core.BusyIndicator.hide(0);
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_DEST");
         },
-        componiURLExcel: function (line) {
+        componiURL: function (line) {
             var sURL = `/T_DEST(Werks='${
                 line.Werks
             }',Arbpl='${
@@ -318,15 +289,15 @@ sap.ui.define([
             // return encodeURIComponent(sURL);
             return sURL;
         },
-        DestinatariModel: function (sValue) {
+        ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                Arbpl: (sValue[oResources.getText("CentroDiLavoro")] === undefined) ? undefined : sValue[oResources.getText("CentroDiLavoro")].toString(),
-                Destinatario: (sValue[oResources.getText("Destinatario")] === undefined) ? undefined : sValue[oResources.getText("Destinatario")].toString(),
-                Txt: (sValue[oResources.getText("DescrizioneDestinatario")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneDestinatario")].toString(),
-                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString(),
-                Mail: (sValue[oResources.getText("Email")] === undefined) ? undefined : sValue[oResources.getText("Email")].toString()
+                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Arbpl: (sValue[oResources.getText("CentroDiLavoro")] === undefined) ? "" : sValue[oResources.getText("CentroDiLavoro")].toString(),
+                Destinatario: (sValue[oResources.getText("Destinatario")] === undefined) ? "" : sValue[oResources.getText("Destinatario")].toString(),
+                Txt: (sValue[oResources.getText("DescrizioneDestinatario")] === undefined) ? "" : sValue[oResources.getText("DescrizioneDestinatario")].toString(),
+                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? "" : sValue[oResources.getText("Raggruppamento")].toString(),
+                Mail: (sValue[oResources.getText("Email")] === undefined) ? "" : sValue[oResources.getText("Email")].toString()
             };
             return rValue;
         },

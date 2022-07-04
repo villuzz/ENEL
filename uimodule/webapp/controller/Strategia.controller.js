@@ -42,47 +42,42 @@ sap.ui.define([
             this.byId("tbStrategia").getBinding("items").filter(aFilters);
         },
         onDataExport: function () {
-            var selectedTab = this.byId("tbStrategia");
-            var selIndex = this.getView().byId("tbStrategia").getSelectedItems();
+          var selectedTab = this.byId("tbStrategia");
+          var selIndex = this.getView().byId("tbStrategia").getSelectedItems();
 
-            var aCols,
-                oRowBinding,
-                oSettings,
-                oSheet;
+          var aCols,
+              oSettings,
+              oSheet;
 
-            aCols = this._createColumnConfig(selectedTab);
-            oRowBinding = selectedTab.getBinding("items");
+          aCols = this._createColumnConfig(selectedTab);
+          var aArray = [],
+              oContext = {},
+              i = 0;
 
-            if (selIndex.length >= 1) {
-                var aArray = [];
-                for (let i = 0; i < selIndex.length; i++) {
-                    var oContext = selIndex[i].getBindingContext().getObject();
-                    aArray.push(oContext);
-                }
-                oSettings = {
-                    workbook: {
-                        columns: aCols
-                    },
-                    dataSource: aArray,
-                    fileName: "tbStrategia.xlsx",
-                    worker: false
-                };
-            } else {
-                var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
-                oSettings = {
-                    workbook: {
-                        columns: aCols
-                    },
-                    dataSource: aFilters,
-                    fileName: "tbStrategia.xlsx",
-                    worker: false
-                };
-            } oSheet = new Spreadsheet(oSettings);
-            oSheet.build(). finally(function () {
-                oSheet.destroy();
-            });
-        },
+          if (selIndex.length >= 1) {
 
+              for (i = 0; i < selIndex.length; i++) {
+                  oContext = selIndex[i].getBindingContext().getObject();
+                  aArray.push(oContext);
+              }
+          } else {
+              for (i = 0; i < selectedTab.getItems().length; i++) {
+                  oContext = selectedTab.getItems()[i].getBindingContext().getObject();
+                  aArray.push(oContext);
+              }
+          } oSettings = {
+              workbook: {
+                  columns: aCols
+              },
+              dataSource: aArray,
+              fileName: "tbStrategia.xlsx",
+              worker: false
+          };
+          oSheet = new Spreadsheet(oSettings);
+          oSheet.build(). finally(function () {
+              oSheet.destroy();
+          });
+      },
 
         _createColumnConfig: function () {
             var oCols = [],
@@ -178,36 +173,18 @@ sap.ui.define([
             this.getView().getModel().refresh();
             this.getView().byId("tbStrategia").removeSelections();
         },
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL;
-                var rows = this.getView().getModel("uploadModel").getData();
-
-                for (let i = 0; i < rows.length; i++) {
-                    var sControlEX = this.StrategiaModel(rows[i]);
-                    sURL = "/Strategia/" + sControlEX.STRATEGIA;
-                    var result = await this._updateHanaNoError(sURL, sControlEX);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/Strategia", sControlEX);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-                this.byId("UploadTable").close();
-                this.onSearchFilters();
-                sap.ui.core.BusyIndicator.hide();
-            }
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/Servizi");
         },
-        StrategiaModel: function (sValue) {
+        componiURL: function (line) {
+          var sURL = "/Strategia/" + line.STRATEGIA;
+          return sURL;
+        },
+        ControlloExcelModel: function (sValue) {
             var oResource = this.getResourceBundle();
             var rValue = {
-                STRATEGIA: (sValue[oResource.getText("STRATEGIA")] === undefined) ? undefined : sValue[oResource.getText("STRATEGIA")].toString(),
-                STRATEGIA_DESC: (sValue[oResource.getText("STRATEGIA_DESC")] === undefined) ? undefined : sValue[oResource.getText("STRATEGIA_DESC")].toString()
+                STRATEGIA: (sValue[oResource.getText("STRATEGIA")] === undefined) ? "" : sValue[oResource.getText("STRATEGIA")].toString(),
+                STRATEGIA_DESC: (sValue[oResource.getText("STRATEGIA_DESC")] === undefined) ? "" : sValue[oResource.getText("STRATEGIA_DESC")].toString()
             };
             return rValue;
         }

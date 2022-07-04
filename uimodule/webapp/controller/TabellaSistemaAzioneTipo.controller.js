@@ -168,11 +168,7 @@ sap.ui.define([
       this._oTPC.openDialog();
     },
     handleUploadPiani: function () {
-      this._oValueHelpDialog = sap.ui.xmlfragment("PM030.APP1.view.fragment.UploadTable", this);
-      this.getView().addDependent(this._oValueHelpDialog);
-      this.getView().setModel(this.oEmployeeModel);
-      this._oValueHelpDialog.open();
-
+      this.byId("UploadTable").open();
     },
 
     onNuovo: function () {
@@ -258,51 +254,24 @@ sap.ui.define([
     onCloseFileUpload: function () {
       this.byId("UploadTable").close();
     },
-    handleUploadPress: async function () {
-      var oResource = this.getResourceBundle();
-
-      if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-        MessageBox.warning("Inserire un File da caricare");
-      } else {
-        sap.ui.core.BusyIndicator.show();
-        var i = 0,
-          sURL,
-          msg = "";
-
-        var rows = this.getView().getModel("uploadModel").getData();
-        if (msg !== "") {
-          sap.ui.core.BusyIndicator.hide(0);
-          MessageBox.error(msg);
-        }
-        for (let i = 0; i < rows.length; i++) {
-          var sRaggruppamento = this.SistemaModel(rows[i]);
-          sURL = this.componiURLExcel(sRaggruppamento)
-          var result = await this._updateHanaNoError(sURL, sRaggruppamento);
-          if (result.length === 0) {
-            await this._saveHanaNoError("/T_ACT_SYST", sRaggruppamento);
-          }
-        }
-        MessageBox.success("Excel Caricato con successo");
-      }
-      sap.ui.getCore().byId("UploadTable").close();
-      sap.ui.core.BusyIndicator.hide(0);
+    handleUploadPress: function () {
+      this.handleUploadGenerico("/T_ACT_SYST");
     },
     onCloseFileUpload: function () {
-      // this.onSearch();
-      this._oValueHelpDialog.destroy();
+      this.byId("UploadTable").close();
     },
-    componiURLExcel: function (line) {
+    componiURL: function (line) {
       var sURL = `/T_ACT_SYST(Werks='${line.Werks}',Sistema='${line.Sistema}')`;
 
       // return encodeURIComponent(sURL);
       return sURL;
     },
-    SistemaModel: function (sValue) {
+    ControlloExcelModel: function (sValue) {
       var oResources = this.getResourceBundle();
       var rValue = {
-        Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-        Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
-        Txt: (sValue[oResources.getText("Testo")] === undefined) ? undefined : sValue[oResources.getText("Testo")].toString()
+        Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+        Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? "" : sValue[oResources.getText("Sistema")].toString(),
+        Txt: (sValue[oResources.getText("Testo")] === undefined) ? "" : sValue[oResources.getText("Testo")].toString()
       };
       return rValue;
     },

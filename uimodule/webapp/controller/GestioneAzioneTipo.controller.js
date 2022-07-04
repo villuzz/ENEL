@@ -182,63 +182,35 @@ sap.ui.define([
                 oSheet.destroy();
             });
         },
-
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    var sRaggruppamentoMod = this.RaggruppamentoModel(rows[i]);
-                    sURL = this.componiURL(sRaggruppamentoMod);
-                    var result = await this._updateHanaNoError(sURL, sRaggruppamentoMod);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_ACT_TYPE", sRaggruppamentoMod);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-            }
-
-            this.byId("UploadTable").close();
-            sap.ui.core.BusyIndicator.hide(0);
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_ACT_TYPE");
         },
-        RaggruppamentoModel: function (sValue) {
+        ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                InizioVal: (sValue[oResources.getText("InizioVal")] === undefined) ? undefined : sValue[oResources.getText("InizioVal")].toString(),
-                FineVal: (sValue[oResources.getText("FineVal")] === undefined) ? undefined : sValue[oResources.getText("FineVal")].toString(),
-                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? undefined : sValue[oResources.getText("Sistema")].toString(),
-                Progres: (sValue[oResources.getText("Progres")] === undefined) ? undefined : sValue[oResources.getText("Progres")].toString(),
-                Classe: (sValue[oResources.getText("Classe")] === undefined) ? undefined : sValue[oResources.getText("Classe")].toString(),
-                Uzeit: (sValue[oResources.getText("Uzeit")] === undefined) ? undefined : sValue[oResources.getText("Uzeit")].toString(),
-                CodAzione: (sValue[oResources.getText("CodAzione")] === undefined) ? undefined : sValue[oResources.getText("CodAzione")].toString(),
-                ComponentTipo: (sValue[oResources.getText("ComponentTipo")] === undefined) ? undefined : sValue[oResources.getText("ComponentTipo")].toString(),
-                DesBreve: (sValue[oResources.getText("DesBreve")] === undefined) ? undefined : sValue[oResources.getText("DesBreve")].toString(),
-                DesEstesa: (sValue[oResources.getText("DesEstesa")] === undefined) ? undefined : sValue[oResources.getText("DesEstesa")].toString(),
-                DurataCiclo: (sValue[oResources.getText("DurataCiclo")] === undefined) ? undefined : sValue[oResources.getText("DurataCiclo")].toString(),
-                Frequenza: (sValue[oResources.getText("Frequenza")] === undefined) ? undefined : sValue[oResources.getText("Frequenza")].toString(),
-                FlagAttivo: (sValue[oResources.getText("FlagAttivo")] === undefined) ? undefined : sValue[oResources.getText("FlagAttivo")].toString(),
-                TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione")].toString(),
-                TipoGestione1: (sValue[oResources.getText("TipoGestione1")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione1")].toString(),
-                TipoGestione2: (sValue[oResources.getText("TipoGestione2")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione2")].toString(),
-                Datum: (sValue[oResources.getText("Datum")] === undefined) ? undefined : sValue[oResources.getText("Datum")].toString(),
-                Uname: (sValue[oResources.getText("Uname")] === undefined) ? undefined : sValue[oResources.getText("Uname")].toString(),
-                ProgAggr: (sValue[oResources.getText("ProgAggr")] === undefined) ? undefined : sValue[oResources.getText("ProgAggr")].toString(),
-                AggrActTitle: (sValue[oResources.getText("AggrActTitle")] === undefined) ? undefined : sValue[oResources.getText("AggrActTitle")].toString(),
-                AggrActComponent: (sValue[oResources.getText("AggrActComponent")] === undefined) ? undefined : sValue[oResources.getText("AggrActComponent")].toString(),
-                ClassActType: (sValue[oResources.getText("ClassActType")] === undefined) ? undefined : sValue[oResources.getText("ClassActType")].toString()
+                InizioVal: (sValue[oResources.getText("InizioVal")] === undefined) ? "" : sValue[oResources.getText("InizioVal")].toString(),
+                FineVal: (sValue[oResources.getText("FineVal")] === undefined) ? "" : sValue[oResources.getText("FineVal")].toString(),
+                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? "" : sValue[oResources.getText("Sistema")].toString(),
+                Progres: (sValue[oResources.getText("Progres")] === undefined) ? "" : sValue[oResources.getText("Progres")].toString(),
+                Classe: (sValue[oResources.getText("Classe")] === undefined) ? "" : sValue[oResources.getText("Classe")].toString(),
+                Uzeit: (sValue[oResources.getText("Uzeit")] === undefined) ? "" : sValue[oResources.getText("Uzeit")].toString(),
+                CodAzione: (sValue[oResources.getText("CodAzione")] === undefined) ? "" : sValue[oResources.getText("CodAzione")].toString(),
+                ComponentTipo: (sValue[oResources.getText("ComponentTipo")] === undefined) ? "" : sValue[oResources.getText("ComponentTipo")].toString(),
+                DesBreve: (sValue[oResources.getText("DesBreve")] === undefined) ? "" : sValue[oResources.getText("DesBreve")].toString(),
+                DesEstesa: (sValue[oResources.getText("DesEstesa")] === undefined) ? "" : sValue[oResources.getText("DesEstesa")].toString(),
+                DurataCiclo: (sValue[oResources.getText("DurataCiclo")] === undefined) ? "" : sValue[oResources.getText("DurataCiclo")].toString(),
+                Frequenza: (sValue[oResources.getText("Frequenza")] === undefined) ? "" : sValue[oResources.getText("Frequenza")].toString(),
+                FlagAttivo: (sValue[oResources.getText("FlagAttivo")] === undefined) ? "" : sValue[oResources.getText("FlagAttivo")].toString(),
+                TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? "" : sValue[oResources.getText("TipoGestione")].toString(),
+                TipoGestione1: (sValue[oResources.getText("TipoGestione1")] === undefined) ? "" : sValue[oResources.getText("TipoGestione1")].toString(),
+                TipoGestione2: (sValue[oResources.getText("TipoGestione2")] === undefined) ? "" : sValue[oResources.getText("TipoGestione2")].toString(),
+                Datum: (sValue[oResources.getText("Datum")] === undefined) ? "" : sValue[oResources.getText("Datum")].toString(),
+                Uname: (sValue[oResources.getText("Uname")] === undefined) ? "" : sValue[oResources.getText("Uname")].toString(),
+                ProgAggr: (sValue[oResources.getText("ProgAggr")] === undefined) ? "" : sValue[oResources.getText("ProgAggr")].toString(),
+                AggrActTitle: (sValue[oResources.getText("AggrActTitle")] === undefined) ? "" : sValue[oResources.getText("AggrActTitle")].toString(),
+                AggrActComponent: (sValue[oResources.getText("AggrActComponent")] === undefined) ? "" : sValue[oResources.getText("AggrActComponent")].toString(),
+                ClassActType: (sValue[oResources.getText("ClassActType")] === undefined) ? "" : sValue[oResources.getText("ClassActType")].toString()
             };
             return rValue;
         },
@@ -277,7 +249,6 @@ sap.ui.define([
             this._oTPC.openDialog();
         },
         handleUploadPiani: function () {
-            this.getView().byId("fileUploader").setValue("");
             this.byId("UploadTable").open();
         },
         onCloseFileUpload: function () {

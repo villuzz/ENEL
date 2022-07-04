@@ -179,14 +179,10 @@ sap.ui.define([
             this.getView().getModel("tabCheckModel").setProperty("/editEnabled", true);
         },
         handleUploadPiani: function () {
-            this._oValueHelpDialog = sap.ui.xmlfragment("PM030.APP1.view.fragment.UploadTable", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-            this.getView().setModel(this.oEmployeeModel);
-            this._oValueHelpDialog.open();
-
+          this.byId("UploadTable").open();
         },
         onCloseFileUpload: function () {
-            this.byId("UploadTable").close();
+          this.byId("UploadTable").close();
         },
         onCancel: async function () {
           var sel = this.getView().byId("tbTabellaTipoDiGestione").getSelectedItems();
@@ -281,43 +277,16 @@ sap.ui.define([
         onBackDetail: function () {
             this.byId("navCon").back();
         },
-
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (sap.ui.getCore().byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    var sGestione = this.GestioneModelSave(rows[i]);
-                    sURL = this.componiURL(sGestione)
-                    var result = await this._updateHanaNoError(sURL, sGestione);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_TP_MAN", sGestione);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-            }
-            sap.ui.getCore().byId("UploadTable").close();
-            sap.ui.core.BusyIndicator.hide(0);
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_TP_MAN");
         },
-        GestioneModelSave: function (sValue) {
+        ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? undefined : sValue[oResources.getText("TipoGestione")].toString(),
-                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                DesTipoGest: (sValue[oResources.getText("DescrizioneTipoGestione")] === undefined) ? undefined : sValue[oResources.getText("DescrizioneTipoGestione")].toString(),
-                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+                TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? "" : sValue[oResources.getText("TipoGestione")].toString(),
+                Divisione: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                DesTipoGest: (sValue[oResources.getText("DescrizioneTipoGestione")] === undefined) ? "" : sValue[oResources.getText("DescrizioneTipoGestione")].toString(),
+                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? "" : sValue[oResources.getText("Raggruppamento")].toString()
             };
             return rValue
         },

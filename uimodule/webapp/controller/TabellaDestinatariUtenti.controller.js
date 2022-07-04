@@ -194,50 +194,24 @@ sap.ui.define([
             return oCols;
         },
 
-        handleUploadPress: async function () {
-            var oResource = this.getResourceBundle();
-
-            if (this.byId("fileUploader").getValue() === "") {
-                MessageBox.warning("Inserire un File da caricare");
-            } else {
-                sap.ui.core.BusyIndicator.show();
-                var i = 0,
-                    sURL,
-                    msg = "";
-
-                var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
-                for (let i = 0; i < rows.length; i++) {
-                    var sControlEX = this.DESTUSERModel(rows[i]);
-                    sURL = this.componiURLExcel(sControlEX);
-                    var result = await this._updateHanaNoError(sURL, sControlEX);
-                    if (result.length === 0) {
-                        await this._saveHanaNoError("/T_DEST_USR", sControlEX);
-                    }
-                }
-                MessageBox.success("Excel Caricato con successo");
-            }
-            this.byId("UploadTable").close();
-            sap.ui.core.BusyIndicator.hide(0);
+        handleUploadPress: function () {
+          this.handleUploadGenerico("/T_DEST_USR");
         },
-        DESTUSERModel: function (sValue) {
+        ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? undefined : sValue[oResources.getText("Divisione")].toString(),
-                Arbpl: (sValue[oResources.getText("CentroDiLavoro")] === undefined) ? undefined : sValue[oResources.getText("CentroDiLavoro")].toString(),
-                Destinatario: (sValue[oResources.getText("Destinatario")] === undefined) ? undefined : sValue[oResources.getText("Destinatario")].toString(),
-                Uname: (sValue[oResources.getText("Utente")] === undefined) ? undefined : sValue[oResources.getText("Utente")].toString(),
-                Object: (sValue[oResources.getText("AOP")] === undefined) ? undefined : sValue[oResources.getText("AOP")].toString(),
-                Id: (sValue[oResources.getText("AF")] === undefined) ? undefined : sValue[oResources.getText("AF")].toString(),
-                Auto: (sValue[oResources.getText("ZAP")] === undefined) ? undefined : sValue[oResources.getText("ZAP")].toString(),
-                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? undefined : sValue[oResources.getText("Raggruppamento")].toString()
+                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Arbpl: (sValue[oResources.getText("CentroDiLavoro")] === undefined) ? "" : sValue[oResources.getText("CentroDiLavoro")].toString(),
+                Destinatario: (sValue[oResources.getText("Destinatario")] === undefined) ? "" : sValue[oResources.getText("Destinatario")].toString(),
+                Uname: (sValue[oResources.getText("Utente")] === undefined) ? "" : sValue[oResources.getText("Utente")].toString(),
+                Object: (sValue[oResources.getText("AOP")] === undefined) ? "" : sValue[oResources.getText("AOP")].toString(),
+                Id: (sValue[oResources.getText("AF")] === undefined) ? "" : sValue[oResources.getText("AF")].toString(),
+                Auto: (sValue[oResources.getText("ZAP")] === undefined) ? "" : sValue[oResources.getText("ZAP")].toString(),
+                Raggruppamento: (sValue[oResources.getText("Raggruppamento")] === undefined) ? "" : sValue[oResources.getText("Raggruppamento")].toString()
             };
             return rValue;
         },
-        componiURLExcel: function (line) {
+        componiURL: function (line) {
             var sURL = `/T_DEST_USR(Werks='${
                 line.Werks
             }',Arbpl='${
@@ -349,7 +323,7 @@ sap.ui.define([
           for (var i =( sel.length - 1); i >= 0; i--) {
               var line = JSON.stringify(sel[i].getBindingContext("T_DEST_USR").getObject());
               line = JSON.parse(line);
-              var sURL = this.componiURLExcel(line);
+              var sURL = this.componiURL(line);
               await this._removeHana(sURL);
           }
           this.onSearchFilters();

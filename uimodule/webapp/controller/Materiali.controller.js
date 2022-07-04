@@ -61,43 +61,38 @@ sap.ui.define([
       var selIndex = this.getView().byId("tbMateriali").getSelectedItems();
 
       var aCols,
-          oRowBinding,
           oSettings,
           oSheet;
 
       aCols = this._createColumnConfig(selectedTab);
-      oRowBinding = selectedTab.getBinding("items");
+      var aArray = [],
+          oContext = {},
+          i = 0;
 
       if (selIndex.length >= 1) {
-          var aArray = [];
-          for (let i = 0; i < selIndex.length; i++) {
-              var oContext = selIndex[i].getBindingContext().getObject();
+
+          for (i = 0; i < selIndex.length; i++) {
+              oContext = selIndex[i].getBindingContext().getObject();
               aArray.push(oContext);
           }
-          oSettings = {
-              workbook: {
-                  columns: aCols
-              },
-              dataSource: aArray,
-              fileName: "tbMateriali.xlsx",
-              worker: false
-          };
       } else {
-          var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
-          oSettings = {
-              workbook: {
-                  columns: aCols
-              },
-              dataSource: aFilters,
-              fileName: "tbMateriali.xlsx",
-              worker: false
-          };
-      } oSheet = new Spreadsheet(oSettings);
+          for (i = 0; i < selectedTab.getItems().length; i++) {
+              oContext = selectedTab.getItems()[i].getBindingContext().getObject();
+              aArray.push(oContext);
+          }
+      } oSettings = {
+          workbook: {
+              columns: aCols
+          },
+          dataSource: aArray,
+          fileName: "tbMateriali.xlsx",
+          worker: false
+      };
+      oSheet = new Spreadsheet(oSettings);
       oSheet.build(). finally(function () {
           oSheet.destroy();
       });
   },
-
     _createColumnConfig: function () {
       var oCols = [],
         sCols = {};
@@ -173,7 +168,7 @@ sap.ui.define([
       delete line.createdBy;
       delete line.createdAt;
 
-      line.MATNR = line.MATNR.padStart(18, '0');
+      line.MATNR = line.MATNR.padStart(18, "0");
       var sURL = "/Materiali/" + line.MATNR;
       await this._updateHana(sURL, line);
       this.onSearchFilters();
@@ -208,43 +203,26 @@ sap.ui.define([
         MessageBox.error("il Materiale: " + line.MATNR + " ha Azioni Prototipo collegate");
       }
     },
-    handleUploadPress: async function () {
-      var oResource = this.getResourceBundle();
-
-      if (this.getView().byId("fileUploader").getValue() === "") {
-        MessageBox.warning("Inserire un File da caricare");
-      } else {
-        sap.ui.core.BusyIndicator.show();
-        var i = 0,
-          sURL,
-          msg = "";
-        var rows = this.getView().getModel("uploadModel").getData();
-
-        if (msg !== "") {
-          sap.ui.core.BusyIndicator.hide(0);
-          MessageBox.error(msg);
-        } else {
-          for (i = 0; i < rows.length; i++) {
-            var sMateriali = this.MaterialiModel(rows[i]);
-            sURL = "/Materiali/" + sMateriali.MATNR;
-            await this._updateHana(sURL, sMateriali);
-          }
-          MessageBox.success("Excel Caricato con successo");
-          sap.ui.core.BusyIndicator.hide(0);
-          this.getView().getModel().refresh();
-          this.byId("UploadTable").close();
-        }
-      }
+    handleUploadPress: function () {
+      this.handleUploadGenerico("/Materiali");
     },
-    MaterialiModel: function (sValue) {
+    componiURL: function (line) {
+      var sURL = "/Materiali/" + line.MATNR;
+      return sURL;
+    },
+    ControlloExcelModel: function (sValue) {
       var oResource = this.getResourceBundle();
       var rValue = {
-        MATNR: (sValue[oResource.getText("MATNR")] === undefined) ? undefined : sValue[oResource.getText("MATNR")].toString().padStart(18, "0"),
-        MAKTX: (sValue[oResource.getText("MAKTX")] === undefined) ? undefined : sValue[oResource.getText("MAKTX")].toString(),
-        MENGE: (sValue[oResource.getText("MENGE")] === undefined) ? undefined : sValue[oResource.getText("MENGE")].toString(),
-        MEINS: (sValue[oResource.getText("MEINS")] === undefined) ? undefined : sValue[oResource.getText("MEINS")].toString()
+        MATNR: (sValue[oResource.getText("MATNR")] === undefined) ? "" : sValue[oResource.getText("MATNR")].toString().padStart(18, "0"),
+        MAKTX: (sValue[oResource.getText("MAKTX")] === undefined) ? "" : sValue[oResource.getText("MAKTX")].toString(),
       };
       return rValue;
+    },
+    onSuggestMatnrSelect: function (oEvent) {
+      var sel = this.getView().getModel("sHelp").getData().Matnr[oEvent.getSource().getSelectedItem().split("-").pop()];
+      var sSelect = this.getView().getModel("sDetail").getData();
+      sSelect.MAKTX = sel.Fieldname4;
+      this.getView().getModel("sDetail").refresh();
     },
     onSuggestMatnr: async function (oEvent) {
       if (oEvent.getParameter("suggestValue").length >= 7) {

@@ -41,12 +41,6 @@
                     <fb:FilterBar useToolbar="true" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
-                            <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                                <fb:control>
-                                    <MultiInput id="inIndex" type="Number" showValueHelp="false"/>
-                                </fb:control>
-                            </fb:FilterGroupItem>
-
                             <fb:FilterGroupItem id="FIIContActEl" visible="true" groupName="__$INTERNAL$" name="FYIContActEl" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <MultiInput id="IContActEl" type="Number" showValueHelp="false"/>
@@ -55,17 +49,13 @@
 
                             <fb:FilterGroupItem id="Appuntam" visible="true" groupName="__$INTERNAL$" name="Appuntam" label="{i18n>Appuntamenti}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Appuntam}" items="{ path: 'sHelp>/Appuntam', sorter: [{ path: 'Appuntam', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Appuntam}" text="{sHelp>Appuntam}"/>
-                                </MultiComboBox>
+                              <Input value="{sFilter>/Appuntam}" maxLength="16" type="Number" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
-                            <fb:FilterGroupItem id="Aufpl" visible="true" groupName="__$INTERNAL$" name="Aufpl" label="{i18n>Odm}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:FilterGroupItem id="Aufnr" visible="true" groupName="__$INTERNAL$" name="Aufnr" label="{i18n>Odm}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Aufpl}" items="{ path: 'sHelp>/Aufpl', sorter: [{ path: 'Aufpl', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Aufpl}" text="{sHelp>Aufpl}"/>
-                                </MultiComboBox>
+                              <Input value="{sFilter>/Aufnr}" maxLength="12" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -79,9 +69,7 @@
 
                           <fb:FilterGroupItem id="DettConf" visible="true" groupName="__$INTERNAL$" name="DettConf" label="{i18n>DettaglioConferma}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/DettConf}" items="{ path: 'sHelp>/DettConf', sorter: [{ path: 'DettConf', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>DettConf}" text="{sHelp>DettConf}"/>
-                                </MultiComboBox>
+                              <Input value="{sFilter>/DettConf}" maxLength="40" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -101,33 +89,32 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbVisualizzazioneAttribuzioneOdmApp" items="{path: 'T_APP_WO>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col70" app:property="Index"><Text text="{i18n>Index}"/></Column>
                         <Column width="15em" id="col69" app:property="Zcount"><Text text="{i18n>Cont}"/></Column>
-                        <Column width="15em" id="col71" app:property="Appuntamenti"><Text text="{i18n>Appuntamenti}"/></Column>
-                        <Column width="15em" id="col72" app:property="Odm"><Text text="{i18n>Odm}"/></Column>
-                        <Column width="15em" id="col73" app:property="Odm"><Text text="{i18n>CicloOperaz}"/></Column>
-                        <Column width="15em" id="col74" app:property="NOper"><Text text="{i18n>NOper}"/></Column>
-                        <Column width="15em" id="col75" app:property="NOper1"><Text text="{i18n>NOper1}"/></Column>
-                        <Column width="15em" id="col76" app:property="NOper2"><Text text="{i18n>NOper2}"/></Column>
-                        <Column width="15em" id="col77" app:property="NOper3"><Text text="{i18n>NOper3}"/></Column>
-                        <Column width="15em" id="col78" app:property="NOper4"><Text text="{i18n>NOper4}"/></Column>
-                        <Column width="15em" id="col79" app:property="NOper5"><Text text="{i18n>NOper5}"/></Column>
-                        <Column width="15em" id="col80" app:property="Adm"><Text text="{i18n>Adm}"/></Column>
-                        <Column width="15em" id="col81" app:property="StatoODM"><Text text="{i18n>StatoODM}"/></Column>
-                        <Column width="15em" id="col82" app:property="DettaglioConferma"><Text text="{i18n>DettaglioConferma}"/></Column>
-                        <Column width="15em" id="col83" app:property="DataPianificazione"><Text text="{i18n>DataPianificazione}"/></Column>
-                        <Column width="15em" id="col84" app:property="FineCardine"><Text text="{i18n>FineCardine}"/></Column>
-                        <Column width="15em" id="col85" app:property="ScadNaturale"><Text text="{i18n>ScadNaturale}"/></Column>
+                        <Column width="15em" id="col71" app:property="Appuntam"><Text text="{i18n>Appuntamenti}"/></Column>
+                        <Column width="15em" id="col72" app:property="Aufnr"><Text text="{i18n>Odm}"/></Column>
+                        <Column width="15em" id="col73" app:property="Aufpl"><Text text="{i18n>CicloOperaz}"/></Column>
+                        <Column width="15em" id="col74" app:property="Aplzl"><Text text="{i18n>NOper}"/></Column>
+                        <Column width="15em" id="col75" app:property="Aplzl1"><Text text="{i18n>NOper1}"/></Column>
+                        <Column width="15em" id="col76" app:property="Aplzl2"><Text text="{i18n>NOper2}"/></Column>
+                        <Column width="15em" id="col77" app:property="Aplzl3"><Text text="{i18n>NOper3}"/></Column>
+                        <Column width="15em" id="col78" app:property="Aplzl4"><Text text="{i18n>NOper4}"/></Column>
+                        <Column width="15em" id="col79" app:property="Aplzl5"><Text text="{i18n>NOper5}"/></Column>
+                        <Column width="15em" id="col80" app:property="Qmnum"><Text text="{i18n>Adm}"/></Column>
+                        <Column width="15em" id="col81" app:property="StatoOdm"><Text text="{i18n>StatoODM}"/></Column>
+                        <Column width="15em" id="col82" app:property="DettConf"><Text text="{i18n>DettaglioConferma}"/></Column>
+                        <Column width="15em" id="col83" app:property="DataPian"><Text text="{i18n>DataPianificazione}"/></Column>
+                        <Column width="15em" id="col84" app:property="DataFineCard"><Text text="{i18n>FineCardine}"/></Column>
+                        <Column width="15em" id="col85" app:property="DataPianNatur"><Text text="{i18n>ScadNaturale}"/></Column>
                         <Column width="15em" id="col86" app:property="Aggregatore"><Text text="{i18n>Aggregatore}"/></Column>
-                        <Column width="15em" id="col87" app:property="DescrizioneAggregatore"><Text text="{i18n>DescrizioneAggregatore}"/></Column>
+                        <Column width="15em" id="col87" app:property="DescAggregatore"><Text text="{i18n>DescrizioneAggregatore}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
-                                <Text text="{ parts:[{path:'T_APP_WO>IndexOdm'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{ parts:[{path:'T_APP_WO>Zcount'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{T_APP_WO>Appuntam}"/>
                                 <Text text="{T_APP_WO>Aufnr}"/>
+                                <Text text="{T_APP_WO>Aufpl}"/>
                                 <Text text="{ parts:[{path:'T_APP_WO>Aplzl'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{ parts:[{path:'T_APP_WO>Aplzl1'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{ parts:[{path:'T_APP_WO>Aplzl2'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
@@ -219,11 +206,7 @@
           <form:formContainers>
             <form:FormContainer ariaLabelledBy="Title2">
               <form:formElements>
-                <form:FormElement label="{i18n>Index}" >
-                  <form:fields>
-                   <Input value="{sSelect>/IndexOdm}" type="Number" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
-                  </form:fields>
-                </form:FormElement>
+
                 <form:FormElement label="{i18n>Cont}">
                   <form:fields>
                    <Input value="{sSelect>/Zcount}" type="Number" maxLength="10" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
