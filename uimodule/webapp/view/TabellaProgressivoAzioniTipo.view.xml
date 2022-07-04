@@ -2,29 +2,48 @@
 <NavContainer
 			id="navCon"
 			class="navContainerControl sapUiSmallMarginBottom">
+     
     <f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
-      
-        <f:title>
-            <f:DynamicPageTitle>
-                <f:content>
-                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
-                    <Label text="Home" visible="false" labelFor="idHomeButton"/>
-                         <Button id="idHomeButton" type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd" ariaLabelledBy="Home" tooltip="{i18n>HomeButton}" />
-                        <Title text="{i18n>TitoloTPAT}" class="sapUiTinyMarginTop"/>
-                    </HBox>
+       <!-- <f:title >
+            <f:DynamicPageTitle >
+                <f:content >
+                  <Panel backgroundDesign="Translucent" accessibleRole="Region"  headerText="{i18n>TableTitle}" expanded="true" class="sapUiContentPadding" height="100%" width="100%">
+                    <OverflowToolbar >
+                      <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd" tooltip="Home" ariaLabelledBy="ActionHome"/>
+                        <Title text="{i18n>TitoloTR}" class="sapUiTinyMarginTop"/>
+                      </HBox>
+				              <ToolbarSpacer/>
+                      <Button  text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" tooltip="{i18n>NewButton}" ariaLabelledBy="ActionNew" ariaDescribedBy="ButtonNew"/>
+                      <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" tooltip="{i18n>ModifyButton}" ariaLabelledBy="ActionModify" ariaDescribedBy="ButtonModify"/>
+                      <Button text="Copia" icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" tooltip="{i18n>CopyButton}" ariaLabelledBy="ActionCopy" ariaDescribedBy="ButtonCopy"/>
+                      <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" tooltip="{i18n>CancelButton}" ariaLabelledBy="ActionCancel" ariaDescribedBy="ButtonCancel"/>   
+                    </OverflowToolbar>
+                  </Panel>
                 </f:content>
-                <f:actions></f:actions>
-                <f:navigationActions>
-                    <!-- <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" ariaLabelledBy="invisibleId" tooltip="{i18n>NewButton}"/>
-                    <core:InvisibleText text="test" id="invisibleId" /> -->
-                    <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" ariaLabelledBy="invisibleId" tooltip="{i18n>NewButton}"/>
-
-                    <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" ariaLabelledBy="{i18n>ModifyButton}" tooltip="{i18n>ModifyButton}"/>
-                    <Button text="Copia"  icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" ariaLabelledBy="{i18n>CopyButton}" tooltip="{i18n>CopyButton}"/>
-                    <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" ariaLabelledBy="{i18n>CancelButton}" tooltip="{i18n>CancelButton}"/>   
-                </f:navigationActions>
             </f:DynamicPageTitle>
-        </f:title>
+        </f:title>  -->
+        <f:landmarkInfo>
+            <f:DynamicPageAccessibleLandmarkInfo rootRole="Region" contentRole="Main" headerRole="Banner" rootLabel="{i18n>Overview_rootLabel}" contentLabel="{i18n>Overview_contentLabel}" headerLabel="{i18n>Overview_headerLabel}"/>
+          </f:landmarkInfo>
+          <f:title >
+            <f:DynamicPageTitle >
+                <f:content >
+                  <OverflowToolbar  >
+                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                      <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd" tooltip="Home" ariaLabelledBy="ActionHome"/>
+                      <Title text="{i18n>TitoloAZT}" class="sapUiTinyMarginTop"/>
+                    </HBox>
+                    <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                      <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" tooltip="{i18n>NewButton}" ariaLabelledBy="ActionNew" ariaDescribedBy="ButtonNew"/>
+                      <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" tooltip="{i18n>ModifyButton}" ariaLabelledBy="ActionModify" ariaDescribedBy="ButtonModify"/>
+                      <Button text="Copia" icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" tooltip="{i18n>CopyButton}" ariaLabelledBy="ActionCopy" ariaDescribedBy="ButtonCopy"/>
+                      <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" tooltip="{i18n>CancelButton}" ariaLabelledBy="ActionCancel" ariaDescribedBy="ButtonCancel"/>   
+                    </HBox>
+                  </OverflowToolbar>
+                </f:content>
+            </f:DynamicPageTitle>
+          </f:title> 
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <f:content>
@@ -73,23 +92,20 @@
 
                         </fb:filterGroupItems>
                     </fb:FilterBar>
-                     <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
-                      <Button type="Default" tooltip="{i18n>List}" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant" ariaLabelledBy="Lista Varianti"/>
-                      <Button type="Default" tooltip="{i18n>SaveVar}" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant" ariaLabelledBy="Salva Variante"/>
+                    <OverflowToolbar class="sapUiSmallMarginTop" style="Clear">
+                      <Button type="Default" text="{i18n>ListVar}" icon="sap-icon://activity-items" press="onListVariant" tooltip="{i18n>List}" ariaLabelledBy="ActionListVariant" ariaDescribedBy="ButtonVariant"/>
+                      <Button type="Default" text="{i18n>SalvaVar}" icon="sap-icon://save" press="onPressVariant" tooltip="{i18n>SaveVar}" ariaLabelledBy="ActionSaveVariant" ariaDescribedBy="ButtonSave"/>
                       <ToolbarSpacer/>
-                      <Button text="Scarica" tooltip="{i18n>Download}" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin" ariaLabelledBy="Scarica"/>
-                      <Button text="Carica" tooltip="{i18n>Load}" icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin" ariaLabelledBy="Carica"/>
-                      <Button text="Colonne" tooltip="{i18n>Columns}" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin" ariaLabelledBy="Colonne"/>
+                      <Button text="Scarica" icon="sap-icon://download" press="onDataExport" class="sapUiTinyMarginBegin" tooltip="{i18n>Download}" ariaLabelledBy="ActionDownload" ariaDescribedBy="ButtonDownload"/>
+                      <Button text="Carica"  icon="sap-icon://upload" press="handleUploadPiani" class="sapUiTinyMarginBegin" tooltip="{i18n>Upload}" ariaLabelledBy="ActionUpload" ariaDescribedBy="ButtonUpload"/>
+                      <Button text="Colonne" icon="sap-icon://action-settings" press="onPersoButtonPressed" class="sapUiTinyMarginBegin" tooltip="{i18n>Columns}" ariaLabelledBy="ActionColumns" ariaDescribedBy="ButtonColumns"/>
                     </OverflowToolbar>
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
-        
         <f:content > 
-         <Panel width="100%" height="100%" class="block">
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-           
-                <Table id="tbProgressivoAzioni" ariaLabelledBy="title" growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/', sorter: [{ path: 'Werks', descending: false, group:false }] }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbProgressivoAzioni" ariaLabelledBy="title" growing="true" growingThreshold="100" growingScrollToLoad="false" items="{path: 'T_ACT_PROG>/', sorter: [{ path: 'Werks', descending: false, group:false }] }" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
                         <Column width="15em" id="col1"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col2"><Text text="{i18n>Sistema}"/></Column>
@@ -109,9 +125,7 @@
                         </ColumnListItem>
                     </items>
                 </Table>
-           
              </ScrollContainer>
-          </Panel>
         </f:content>
         <f:footer>
             <OverflowToolbar>
@@ -124,32 +138,26 @@
           <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
           <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
         </f:dependents>
-   </f:DynamicPage>
-    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding">
-        <f:title>
-            <f:DynamicPageTitle>
-                <f:content>
-                 <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
-                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd" tooltip="{i18n>NavBack}" ariaLabelledBy="Indietro"/>
-                        <Title title="{i18n>editPage}"  id="TitleDetail"  class="sapUiTinyMarginTop"/>
-                    </HBox>
+    </f:DynamicPage>
+    <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
+         <f:landmarkInfo>
+          <f:DynamicPageAccessibleLandmarkInfo rootRole="Region" contentRole="Main" headerRole="Banner" rootLabel="{i18n>Overview_rootLabel}" contentLabel="{i18n>Overview_contentLabel}" headerLabel="{i18n>Overview_headerLabel}"/>
+        </f:landmarkInfo>
+          <f:title >
+            <f:DynamicPageTitle >
+                <f:content >
+                    <OverflowToolbar >
+                      <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                        <Button type="Transparent" icon="sap-icon://nav-back"  press="onBackDetail" class="sapUiSmallMarginEnd" tooltip="{i18n>NavBack}" ariaLabelledBy="ActionNavBack" ariaDescribedBy="ButtonNavBack"/>
+                      </HBox>
+				              <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}" tooltip="{i18n>SaveButton}" ariaLabelledBy="ActionSave" ariaDescribedBy="ButtonSave"/>
+                    </OverflowToolbar>
                 </f:content>
-                <f:actions></f:actions>
-                <f:navigationActions>
-                    <Button icon="sap-icon://save" press="onSave" text="{i18n>Salva}" tooltip="{i18n>SaveButton}" ariaLabelledBy="Salva"/>
-                </f:navigationActions>
             </f:DynamicPageTitle>
-        </f:title>
-        <f:header>
-            <f:DynamicPageHeader pinnable="true">
-                <f:content>
-                 
-                </f:content>
-            </f:DynamicPageHeader>
-        </f:header>
+         </f:title> 
         <f:content>
-        <form:Form editable="true">
-           <form:layout>
+        <form:Form editable="true" ariaLabelledBy="ItemSelected">
+         <form:layout>
 				<form:ResponsiveGridLayout
 					labelSpanXL="3"
 					labelSpanL="3"

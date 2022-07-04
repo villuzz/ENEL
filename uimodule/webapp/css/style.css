@@ -67,3 +67,16 @@
 .block{
   display: block;
 }
+
+.sapMDialogScroll{
+height: 100% !important;
+}
+
+.sapFDynamicPageTitleMain>.sapFDynamicPageTitleMainInner .sapFDynamicPageTitleMainContent{
+  width: 100% !important;
+}
+
+/* Header */
+.sapFDynamicPageTitle .sapFDynamicPageTitleMain>.sapFDynamicPageTitleMainInner .sapFDynamicPageTitleMainContent .sapMTB {
+  justify-content: space-between !important;
+}
