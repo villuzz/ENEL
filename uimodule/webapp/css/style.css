@@ -1,8 +1,5 @@
 /* Enter your custom styles here */
 
-
-/* Enter your custom styles here */
-
 /* Intestazioni colonne */
 .sapMLabel, .sapMLabelTextWrapper {
   text-overflow: inherit !important;
@@ -65,4 +62,21 @@
 }
 .showTitle > .sapMPanelHdr {
   height: 2.75rem !important;
+}
+
+.block{
+  display: block;
+}
+
+.sapMDialogScroll{
+height: 100% !important;
+}
+
+.sapFDynamicPageTitleMain>.sapFDynamicPageTitleMainInner .sapFDynamicPageTitleMainContent{
+  width: 100% !important;
+}
+
+/* Header */
+.sapFDynamicPageTitle .sapFDynamicPageTitleMain>.sapFDynamicPageTitleMainInner .sapFDynamicPageTitleMainContent .sapMTB {
+  justify-content: space-between !important;
 }
