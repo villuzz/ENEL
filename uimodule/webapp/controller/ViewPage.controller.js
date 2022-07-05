@@ -173,16 +173,16 @@ sap.ui.define([
         case "ZPM4R_CAR_PMO_S":
           this.navTo("CaricaTabellaS");
           break;
-        case "Materiali":
+        case "MATERIALI":
           this.navTo("Materiali");
           break;
-        case "Servizi":
+        case "SERVIZI":
           this.navTo("Servizi");
           break;
-        case "Strategia":
+        case "STRATEGIA":
           this.navTo("Strategia");
           break;
-        case "SedeTecnica":
+        case "SEDE TECNICA TIPO":
           this.navTo("SedeTecnica");
           break;
         default:
