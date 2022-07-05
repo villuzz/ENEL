@@ -77,8 +77,6 @@
                         <Column width="15em" id="col93" app:property="Asktx"><Text text="{i18n>Asktx}"/></Column>
                         <Column width="15em" id="col94" app:property="Menge"><Text text="{i18n>Menge}"/></Column>
                         <Column width="15em" id="col95" app:property="Meins" ><Text text="{i18n>Meins}"/></Column>
-                        <Column width="15em" id="col99" app:property="Tbtwr"><Text text="{i18n>Tbtwr}"/></Column>
-                        <Column width="15em" id="col100" app:property="Waers"><Text text="{i18n>Divisa}"/></Column>
                         <Column width="15em" id="col101" app:property="Ekgrp"><Text text="{i18n>GrupAcq}"/></Column>
                         <Column width="15em" id="col102" app:property="Ekorg"><Text text="{i18n>OrgAcq}"/></Column>
                         <Column width="15em" id="col103" app:property="Afnam"><Text text="{i18n>Richiedente}"/></Column>
@@ -92,8 +90,6 @@
                                 <Text text="{T_PMO_S>Asktx}"/>
                                 <Text text="{T_PMO_S>Menge}"/>
                                 <Text text="{T_PMO_S>Meins}"/>
-                                <Text text="{T_PMO_S>Tbtwr}"/>
-                                <Text text="{T_PMO_S>Waers}"/>
                                 <Text text="{T_PMO_S>Ekgrp}"/>
                                 <Text text="{T_PMO_S>Ekorg}"/>
                                 <Text text="{T_PMO_S>Afnam}"/>

@@ -280,19 +280,15 @@ sap.ui.define([
             }
             this.onSearchFilters();
         },
-        componiCancelURL: function (line) {
-            var sURL = "/T_PMO_S(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Asnum=" + "'" + line.Asnum + "'" + "'," + "Asktx=" + "'" + line.Asktx + "'" + ")";
-            return sURL;
-        },
         componiURL: function (line) {
-            var sURL = "/T_PMO_S(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Asnum=" + "'" + line.Asnum + "'" + "'," + "Asktx=" + "'" + line.Asktx + "'" + ")";
+            var sURL = "/T_PMO_S(IndexPmo='" + line.IndexPmo + "',Cont='" + line.Cont + "',Asnum='" + line.Asnum + "',Asktx='" + line.Asktx + "')";
             return sURL;
         },
         handleUploadPress: function () {
           this.handleUploadGenerico("/T_PMO_S");
         },
        
-        ControlloExcelModel: function (sValue) {
+        ControlloExcelModel: async function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
                 //IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? "" : sValue[oResources.getText("IndexPmo")].toString(),
@@ -301,13 +297,17 @@ sap.ui.define([
                 Asktx: (sValue[oResources.getText("Asktx")] === undefined) ? "" : sValue[oResources.getText("Asktx")].toString(),
                 Menge: (sValue[oResources.getText("Menge")] === undefined) ? "" : sValue[oResources.getText("Menge")].toString(),
                 Meins: (sValue[oResources.getText("Meins")] === undefined) ? "" : sValue[oResources.getText("Meins")].toString(),
-                Tbtwr: (sValue[oResources.getText("Tbtwr")] === undefined) ? "" : sValue[oResources.getText("Tbtwr")].toString(),
-                Waers: (sValue[oResources.getText("Waers")] === undefined) ? "" : sValue[oResources.getText("Waers")].toString(),
                 Ekgrp: (sValue[oResources.getText("Ekgrp")] === undefined) ? "" : sValue[oResources.getText("Ekgrp")].toString(),
                 Ekorg: (sValue[oResources.getText("Ekorg")] === undefined) ? "" : sValue[oResources.getText("Ekorg")].toString(),
                 Afnam: (sValue[oResources.getText("Afnam")] === undefined) ? "" : sValue[oResources.getText("Afnam")].toString(),
                 Matkl: (sValue[oResources.getText("Matkl")] === undefined) ? "" : sValue[oResources.getText("Matkl")].toString()
             };
+
+            var aFilter = [];
+            aFilter.push(new Filter("Cont", FilterOperator.EQ, rValue.Cont)); // fisso IT - todo
+            var result = await this._getLine("/T_ACT_EL", aFilter);
+            rValue.IndexPmo = result.IndexPmo;
+
             return rValue;
         },
         initModel: function () {
@@ -346,9 +346,9 @@ sap.ui.define([
                 if (sData.Cont === "" || sData.Cont === undefined || sData.Cont === null) {
                     return "Inserire Contatore";
                 }
-                /*if (sData.Asnum === "" || sData.Asnum === undefined || sData.Asnum === null) {
+                if (sData.Asnum === "" || sData.Asnum === undefined || sData.Asnum === null) {
                     return "Inserire N. attività";
-                }*/
+                }
             }
             return "";
         },

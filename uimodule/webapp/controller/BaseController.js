@@ -39,7 +39,21 @@ sap.ui.define([
            * @returns {sap.ui.model.Model} the model instance
            */
 
-          handleUploadGenerico: async function (Table) {
+          formatDate: function (sValue) {
+
+            if (sValue === "" || sValue === undefined || sValue === null) {
+              return "";
+            } else {
+              jQuery.sap.require("sap.ui.core.format.DateFormat");
+              var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
+                pattern: "yyyyMMdd"
+              });
+    
+              return oDateFormat.format(new Date(sValue), true);
+            }
+          },
+
+        handleUploadGenerico: async function (Table) {
             if (this.byId("fileUploader").getValue() === "") {
                 MessageBox.warning("Inserire un File da caricare");
             } else {
@@ -53,18 +67,28 @@ sap.ui.define([
                     MessageBox.error(msg);
                 }
                 for (var i = 0; i < rows.length; i++) {
-                    var sAzioni = this.ControlloExcelModel(rows[i]);
-                    sURL = this.componiURL(sAzioni);
+                    var sAzioni = await this.ControlloExcelModel(rows[i]);
+                    sURL = await this.componiURL(sAzioni);
                     var result = await this._saveHanaShowError(Table, sAzioni);
                     if (result !== "") {
                         result = await this._updateHanaShowError(sURL, sAzioni);
                     }
                     if (result !== "") {
-                        aReturn.push({ type: "Error", title: "Riga " + ( i + 2 ) + " Excel andata in errore", description: result });
+                        aReturn.push({
+                            type: "Error",
+                            title: "Riga " + (
+                                i + 2
+                            ) + " Excel andata in errore",
+                            description: result
+                        });
                     }
                 }
                 if (aReturn.length === 0) {
-                    aReturn.push({ type: "Success", title: "Excel Caricato con successo", description: "tutte le " + rows.length + " Righe caricate con successo" });
+                    aReturn.push({
+                        type: "Success",
+                        title: "Excel Caricato con successo",
+                        description: "tutte le " + rows.length + " Righe caricate con successo"
+                    });
                 }
                 this.handleOpenDialogMsg(aReturn);
                 this.onSearchFilters();
@@ -80,7 +104,7 @@ sap.ui.define([
                 title: "{title}",
                 description: "{description}",
                 subtitle: "{subtitle}",
-                //counter: "{counter}",
+                // counter: "{counter}",
                 markupDescription: "{markupDescription}"
             });
 
@@ -127,6 +151,21 @@ sap.ui.define([
                 contentWidth: "50%",
                 verticalScrolling: false
             });
+        },
+        formatUzeit: function (duration) {
+            if (duration === undefined){
+              return "00:00:00";
+            } else {
+            var seconds = Math.floor((duration / 1000) % 60),
+                minutes = Math.floor((duration / (1000 * 60)) % 60),
+                hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+            hours = (hours < 10) ? "0" + hours : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+            return hours + ":" + minutes + ":" + seconds;
+            }
         },
         handleOpenDialogMsg: async function (aData) {
             if (this.oMessageView === undefined) {
@@ -593,33 +632,33 @@ sap.ui.define([
             });
         },
         _updateHanaShowError: function (sURL, oEntry) {
-          var xsoDataModelReport = this.getOwnerComponent().getModel();
-          return new Promise(function (resolve, reject) {
-              xsoDataModelReport.update(sURL, oEntry, {
-                  success: function (oDataIn) {
-                      resolve("");
-                  },
-                  error: function (err) {
-                      var responseObject = JSON.parse(err.responseText);
-                      resolve(responseObject.error.message.value);
-                  }
-              });
+            var xsoDataModelReport = this.getOwnerComponent().getModel();
+            return new Promise(function (resolve, reject) {
+                xsoDataModelReport.update(sURL, oEntry, {
+                    success: function (oDataIn) {
+                        resolve("");
+                    },
+                    error: function (err) {
+                        var responseObject = JSON.parse(err.responseText);
+                        resolve(responseObject.error.message.value);
+                    }
+                });
             });
         },
         _saveHanaShowError: function (URL, sData) {
-          var xsoDataModelReport = this.getView().getModel();
-          return new Promise(function (resolve, reject) {
-              xsoDataModelReport.create(URL, sData, {
-                  success: function (oDataIn) {
-                      resolve("");
-                  },
-                  error: function (err) {
-                    var responseObject = JSON.parse(err.responseText);
-                    resolve(responseObject.error.message.value);
-                  }
-              });
-          });
-      },
+            var xsoDataModelReport = this.getView().getModel();
+            return new Promise(function (resolve, reject) {
+                xsoDataModelReport.create(URL, sData, {
+                    success: function (oDataIn) {
+                        resolve("");
+                    },
+                    error: function (err) {
+                        var responseObject = JSON.parse(err.responseText);
+                        resolve(responseObject.error.message.value);
+                    }
+                });
+            });
+        },
         _removeHana: function (URL) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {
@@ -628,8 +667,8 @@ sap.ui.define([
                         resolve();
                     },
                     error: function (err) {
-                      var responseObject = JSON.parse(err.responseText);
-                      reject(MessageBox.error(responseObject.error.message.value));
+                        var responseObject = JSON.parse(err.responseText);
+                        reject(MessageBox.error(responseObject.error.message.value));
                     }
                 });
             });
@@ -652,7 +691,7 @@ sap.ui.define([
                 });
             });
         },
-       
+
         _saveHanaNoError: function (URL, sData) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {
