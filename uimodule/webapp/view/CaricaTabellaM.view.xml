@@ -47,7 +47,7 @@
                 <f:content>
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
-
+                        
                            <!-- <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <MultiInput id="inIndex" type="Number" showValueHelp="false" />
@@ -199,7 +199,7 @@
             singleContainerFullSize="false" />
           </form:layout>
           <form:formContainers>
-            <form:FormContainer ariaLabelledBy="Title2">
+            <form:FormContainer >
               <form:formElements>
                 <!--<form:FormElement label="{i18n>IndexPmo}">
                   <form:fields>

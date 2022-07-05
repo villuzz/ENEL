@@ -39,6 +39,7 @@
                       <Title text="{i18n>TitoloTR}" class="sapUiTinyMarginTop"/>
                     </HBox>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                      <Link href="file/elabeling-inventory-report.html" target="_blank" text="{i18n>accessibility}" class="sapUiMediumMarginEnd"/>
                       <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" tooltip="{i18n>NewButton}" ariaLabelledBy="ActionNew" ariaDescribedBy="ButtonNew"/>
                       <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" tooltip="{i18n>ModifyButton}" ariaLabelledBy="ActionModify" ariaDescribedBy="ButtonModify"/>
                       <Button text="Copia" icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" tooltip="{i18n>CopyButton}" ariaLabelledBy="ActionCopy" ariaDescribedBy="ButtonCopy"/>
@@ -166,7 +167,7 @@
             singleContainerFullSize="false" />
           </form:layout>
           <form:formContainers>
-            <form:FormContainer ariaLabelledBy="Title2">
+            <form:FormContainer >
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>

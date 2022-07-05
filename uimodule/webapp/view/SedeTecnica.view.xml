@@ -214,7 +214,7 @@
 					singleContainerFullSize="false" />
 			</form:layout>
       <form:formContainers>
-            <form:FormContainer ariaLabelledBy="Title2">
+            <form:FormContainer>
               <form:formElements>
                 <form:FormElement label="{i18n>SEDE_TECNICA}">
                   <form:fields>

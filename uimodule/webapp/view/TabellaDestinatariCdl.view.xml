@@ -189,7 +189,7 @@
             singleContainerFullSize="false" />
           </form:layout>
           <form:formContainers>
-            <form:FormContainer ariaLabelledBy="Title2">
+            <form:FormContainer>
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>

@@ -26,15 +26,18 @@
         <f:landmarkInfo>
             <f:DynamicPageAccessibleLandmarkInfo rootRole="Region" contentRole="Main" headerRole="Banner" rootLabel="{i18n>Overview_rootLabel}" contentLabel="{i18n>Overview_contentLabel}" headerLabel="{i18n>Overview_headerLabel}"/>
           </f:landmarkInfo>
+     
           <f:title >
             <f:DynamicPageTitle >
                 <f:content >
                   <OverflowToolbar  >
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
                       <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd" tooltip="Home" ariaLabelledBy="ActionHome"/>
-                      <Title text="{i18n>TitoloAZT}" class="sapUiTinyMarginTop"/>
+                      <Title text="{i18n>TitoloAZT}" />
                     </HBox>
+                    
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
+                      <Link href="file/elabeling-inventory-report.html" target="_blank" text="{i18n>accessibility}" class="sapUiMediumMarginEnd"/>
                       <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" class="sapUiTinyMarginBegin" tooltip="{i18n>NewButton}" ariaLabelledBy="ActionNew" ariaDescribedBy="ButtonNew"/>
                       <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" tooltip="{i18n>ModifyButton}" ariaLabelledBy="ActionModify" ariaDescribedBy="ButtonModify"/>
                       <Button text="Copia" icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" tooltip="{i18n>CopyButton}" ariaLabelledBy="ActionCopy" ariaDescribedBy="ButtonCopy"/>
@@ -49,7 +52,6 @@
                 <f:content>
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
-
                             <fb:FilterGroupItem id="Werks" visible="true" name="Werks" label="{i18n>Divisione}" groupName="McbDivisione" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
                                 <MultiComboBox id="McbDivisione" selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
@@ -141,7 +143,7 @@
     </f:DynamicPage>
     <f:DynamicPage id="Detail" preserveHeaderStateOnScroll="true" showFooter="false" fitContent="true" class="sapUiContentPadding" >
          <f:landmarkInfo>
-          <f:DynamicPageAccessibleLandmarkInfo rootRole="Region" contentRole="Main" headerRole="Banner" rootLabel="{i18n>Overview_rootLabel}" contentLabel="{i18n>Overview_contentLabel}" headerLabel="{i18n>Overview_headerLabel}"/>
+          <f:DynamicPageAccessibleLandmarkInfo rootRole="Region" headerRole="Banner" rootLabel="{i18n>Overview_rootLabel}" contentLabel="{i18n>Overview_contentLabel}" headerLabel="{i18n>Overview_headerLabel}"/>
         </f:landmarkInfo>
           <f:title >
             <f:DynamicPageTitle >
@@ -156,7 +158,7 @@
             </f:DynamicPageTitle>
          </f:title> 
         <f:content>
-        <form:Form editable="true" ariaLabelledBy="ItemSelected">
+        <form:Form editable="true">
          <form:layout>
 				<form:ResponsiveGridLayout
 					labelSpanXL="3"
@@ -174,7 +176,7 @@
 					singleContainerFullSize="false" />
 			</form:layout>
       <form:formContainers>
-            <form:FormContainer ariaLabelledBy="Title2">
+            <form:FormContainer >
               <form:formElements>
               <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
