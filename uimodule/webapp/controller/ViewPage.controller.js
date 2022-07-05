@@ -16,22 +16,22 @@ sap.ui.define([
       // leggere i modelli che ci servono
       var tabs = [
         {
-          Nome: "Materiali",
+          Nome: "MATERIALI",
           Descrizione: "Tabella Materiali",
           Tipo: "PMO",
         },
         {
-          Nome: "Servizi",
+          Nome: "SERVIZI",
           Descrizione: "Tabella Servizi",
           Tipo: "PMO",
         },
         {
-          Nome: "Strategia",
+          Nome: "STRATEGIA",
           Descrizione: "Tabella Strategia",
           Tipo: "PMO",
         },
         {
-          Nome: "SedeTecnica",
+          Nome: "SEDE TECNICA TIPO",
           Descrizione: "Tabella Sede Tecnica Tipo",
           Tipo: "PMO",
         },

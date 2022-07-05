@@ -29,7 +29,7 @@
                   <OverflowToolbar  >
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
                       <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd" tooltip="Home" ariaLabelledBy="ActionHome"/>
-                      <Title text="{i18n>TitoloAZT}" class="sapUiTinyMarginTop"/>
+                      <Title text="{i18n>TitoloVAOA}" class="sapUiTinyMarginTop"/>
                     </HBox>
                   </OverflowToolbar>
                 </f:content>

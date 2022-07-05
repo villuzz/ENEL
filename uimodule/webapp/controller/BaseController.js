@@ -149,7 +149,7 @@ sap.ui.define([
                 ),
                 contentHeight: "50%",
                 contentWidth: "50%",
-                verticalScrolling: false
+                verticalScrolling: true
             });
         },
         formatUzeit: function (duration) {
@@ -659,6 +659,19 @@ sap.ui.define([
                 });
             });
         },
+        _removeHanaNoError: function (URL) {
+          var xsoDataModelReport = this.getView().getModel();
+          return new Promise(function (resolve, reject) {
+              xsoDataModelReport.remove(URL, {
+                  success: function () {
+                      resolve();
+                  },
+                  error: function (err) {
+                      resolve();
+                  }
+              });
+          });
+      },
         _removeHana: function (URL) {
             var xsoDataModelReport = this.getView().getModel();
             return new Promise(function (resolve, reject) {
