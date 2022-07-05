@@ -288,16 +288,6 @@ sap.ui.define([
             };
             return rValue;
         },
-        componiURL: function (line) {
-            var sURL = `/T_ACT_CL(Werks='${
-                line.Werks
-            }',Sistema='${
-                line.Sistema
-            }',Classe='${
-                line.Classe
-            }')`;
-            return sURL;
-        },
         handleChangeCb: function (oEvent) {
             var oValidatedComboBox = oEvent.getSource(),
                 sSelectedKey = oValidatedComboBox.getSelectedKey(),

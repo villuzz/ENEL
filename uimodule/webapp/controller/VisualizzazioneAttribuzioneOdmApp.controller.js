@@ -29,14 +29,14 @@ sap.ui.define([
             oModel.setData(sData);
             this.getView().setModel(oModel, "sFilter");
 
-           // var oinIndex = this.getView().byId("inIndex");
+           var oinIndex = this.getView().byId("inIndex");
             var oinAzioni = this.getView().byId("IContActEl");
             var fnValidator = function (args) {
                 var text = args.text;
 
                 return new Token({key: text, text: text});
             };
-           // oinIndex.addValidator(fnValidator);
+            oinIndex.addValidator(fnValidator);
             oinAzioni.addValidator(fnValidator);
 
         },
@@ -104,7 +104,7 @@ sap.ui.define([
             var aSelIndici = "",
                 aSelInd = [];
 
-            /*if (this.getView().byId("inIndex").getTokens().length > 0) {
+            if (this.getView().byId("inIndex").getTokens().length > 0) {
                 aSelIndici = this.getView().byId("inIndex").getTokens();
                 aSelInd = [];
                 for (var i = 0; i < aSelIndici.length; i++) {
@@ -113,7 +113,7 @@ sap.ui.define([
                 tempFilter = this.multiFilterText(aSelInd, "IndexOdm");
                 aFilters = aFilters.concat(tempFilter);
 
-            }*/
+            }
             if (this.getView().byId("IContActEl").getTokens().length > 0) {
                 aSelIndici = this.getView().byId("IContActEl").getTokens();
                 aSelInd = [];

@@ -41,6 +41,12 @@
                     <fb:FilterBar useToolbar="true" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
+                            <fb:FilterGroupItem id="FIINDEX" visible="true" groupName="__$INTERNAL$" name="FYINDEX" label="{i18n>INDEX}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                    <MultiInput id="inIndex" type="Number" showValueHelp="false" />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
                             <fb:FilterGroupItem id="FIIContActEl" visible="true" groupName="__$INTERNAL$" name="FYIContActEl" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true">
                                 <fb:control>
                                     <MultiInput id="IContActEl" type="Number" showValueHelp="false"/>
@@ -89,6 +95,7 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbVisualizzazioneAttribuzioneOdmApp" items="{path: 'T_APP_WO>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" selectionChange="onSelectRow">
                   <columns>
+                        <Column width="15em" id="col68" app:property="IndexOdm"><Text text="{i18n>IndexOdm}"/></Column>
                         <Column width="15em" id="col69" app:property="Zcount"><Text text="{i18n>Cont}"/></Column>
                         <Column width="15em" id="col71" app:property="Appuntam"><Text text="{i18n>Appuntamenti}"/></Column>
                         <Column width="15em" id="col72" app:property="Aufnr"><Text text="{i18n>Odm}"/></Column>
@@ -111,6 +118,7 @@
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
                             <cells>
+                                <Text text="{ parts:[{path:'T_APP_WO>IndexOdm'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{ parts:[{path:'T_APP_WO>Zcount'}], formatter: '.LocalFormatter.alphaOutput'}"/> 
                                 <Text text="{T_APP_WO>Appuntam}"/>
                                 <Text text="{T_APP_WO>Aufnr}"/>
@@ -206,6 +214,12 @@
           <form:formContainers>
             <form:FormContainer >
               <form:formElements>
+
+                <form:FormElement label="{i18n>IndexOdm}">
+                  <form:fields>
+                   <Input value="{sSelect>/IndexOdm}" type="Number" maxLength="12" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
+                  </form:fields>
+                </form:FormElement>
 
                 <form:FormElement label="{i18n>Cont}">
                   <form:fields>

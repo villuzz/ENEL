@@ -249,12 +249,12 @@ sap.ui.define([
         ControlloExcelModel: function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
+                Werks: (sValue[oResources.getText("NWerks")] === undefined) ? "" : sValue[oResources.getText("NWerks")].toString(),
                 Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? "" : sValue[oResources.getText("Sistema")].toString(),
                 Classe: (sValue[oResources.getText("Classe")] === undefined) ? "" : sValue[oResources.getText("Classe")].toString(),
-                ProgAggr: (sValue[oResources.getText("NProAggre")] === undefined) ? "" : sValue[oResources.getText("NProAggre")].toString(),
-                AggrActTitle: (sValue[oResources.getText("TitoloAzioneAggregativo")] === undefined) ? "" : sValue[oResources.getText("TitoloAzioneAggregativo")].toString(),
-                AggrActComponent: (sValue[oResources.getText("ComponenteAzioneAggregativo")] === undefined) ? "" : sValue[oResources.getText("ComponenteAzioneAggregativo")].toString()
+                ProgAggr: (sValue[oResources.getText("NProgAggr")] === undefined) ? "" : sValue[oResources.getText("NProgAggr")].toString(),
+                AggrActTitle: (sValue[oResources.getText("NAggrActTitle")] === undefined) ? "" : sValue[oResources.getText("NAggrActTitle")].toString(),
+                AggrActComponent: (sValue[oResources.getText("NAggrActComponent")] === undefined) ? "" : sValue[oResources.getText("NAggrActComponent")].toString()
             };
             return rValue;
         },

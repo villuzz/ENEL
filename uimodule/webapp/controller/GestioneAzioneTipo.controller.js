@@ -11,7 +11,8 @@ sap.ui.define([
     "PM030/APP1/util/Validator",
     'sap/ui/model/Filter',
     'sap/ui/model/FilterOperator',
-], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, coreLibrary, Validator, Filter, FilterOperator) {
+    "sap/m/MessageToast",
+], function (Controller, JSONModel, MessageBox, TablePersoController, Spreadsheet, exportLibrary, History, manutenzioneTable, coreLibrary, Validator, Filter, FilterOperator, MessageToast) {
     "use strict";
     var oResource;
     oResource = new sap.ui.model.resource.ResourceModel({bundleName: "PM030.APP1.i18n.i18n"}).getResourceBundle();
@@ -52,6 +53,7 @@ sap.ui.define([
             sData.TIPO_GESTIONE_1 = await this._getTableNoError("/T_TP_MAN1");
             sData.TIPO_GESTIONE_2 = await this._getTableNoError("/T_TP_MAN2");
             sData.PROG_AGGR = await this._getTableNoError("/T_AGGREG");
+            sData.MEINS = await this.Shpl("H_T006", "SH");
 
             oModelHelp.setData(sData);
             this.getView().setModel(oModelHelp, "sHelp");
@@ -67,82 +69,93 @@ sap.ui.define([
             var aFilters = [],
                 tempFilter = [];
 
-            if (sFilter.InizioVal !== "" && sFilter.InizioVal !== undefined) {
-                aFilters.push(new Filter("InizioVal", FilterOperator.GE, sFilter.InizioVal));
-            }
-            if (sFilter.FineVal !== "" && sFilter.FineVal !== undefined) {
-                aFilters.push(new Filter("FineVal", FilterOperator.LE, sFilter.FineVal));
-            }
-
             if (sFilter.Divisione !== undefined) {
                 if (sFilter.Divisione.length !== 0) {
                     tempFilter = this.multiFilterText(sFilter.Divisione, "Divisione");
                     aFilters = aFilters.concat(tempFilter);
                 }
-            }
-            if (sFilter.Sistema !== undefined) {
-                if (sFilter.Sistema.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Sistema, "Sistema");
-                    aFilters = aFilters.concat(tempFilter);
-                }
-            }
-            if (sFilter.Progres !== undefined) {
-                if (sFilter.Progres.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Progres, "Progres");
-                    aFilters = aFilters.concat(tempFilter);
-                }
-            }
-            if (sFilter.Classe !== undefined) {
-                if (sFilter.Classe.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Classe, "Classe");
-                    aFilters = aFilters.concat(tempFilter);
-                }
-            }
 
-            if (sFilter.TipoGestione !== undefined) {
-                if (sFilter.TipoGestione.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.TipoGestione, "TipoGestione");
-                    aFilters = aFilters.concat(tempFilter);
+
+                if (sFilter.InizioVal !== "" && sFilter.InizioVal !== undefined) {
+                    aFilters.push(new Filter("InizioVal", FilterOperator.GE, sFilter.InizioVal));
                 }
-            }
-            if (sFilter.TipoGestione1 !== undefined) {
-                if (sFilter.TipoGestione1.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.TipoGestione1, "TipoGestione1");
-                    aFilters = aFilters.concat(tempFilter);
+                if (sFilter.FineVal !== "" && sFilter.FineVal !== undefined) {
+                    aFilters.push(new Filter("FineVal", FilterOperator.LE, sFilter.FineVal));
                 }
-            }
-            if (sFilter.TipoGestione2 !== undefined) {
-                if (sFilter.TipoGestione2.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.TipoGestione2, "TipoGestione2");
-                    aFilters = aFilters.concat(tempFilter);
+
+
+                if (sFilter.Sistema !== undefined) {
+                    if (sFilter.Sistema.length !== 0) {
+                        tempFilter = this.multiFilterText(sFilter.Sistema, "Sistema");
+                        aFilters = aFilters.concat(tempFilter);
+                    }
                 }
-            }
+                if (sFilter.Progres !== undefined) {
+                    if (sFilter.Progres.length !== 0) {
+                        tempFilter = this.multiFilterText(sFilter.Progres, "Progres");
+                        aFilters = aFilters.concat(tempFilter);
+                    }
+                }
+                if (sFilter.Classe !== undefined) {
+                    if (sFilter.Classe.length !== 0) {
+                        tempFilter = this.multiFilterText(sFilter.Classe, "Classe");
+                        aFilters = aFilters.concat(tempFilter);
+                    }
+                }
 
-            if (sFilter.FlagAttivo === "0" && sFilter.FlagAttivo !== undefined) {
-                aFilters.push(new Filter("FlagAttivo", FilterOperator.EQ, ""));
-            }
-            if (sFilter.FlagAttivo === "X" && sFilter.FlagAttivo !== undefined) {
-                aFilters.push(new Filter("FlagAttivo", FilterOperator.EQ, "X"));
-            }
+                if (sFilter.TipoGestione !== undefined) {
+                    if (sFilter.TipoGestione.length !== 0) {
+                        tempFilter = this.multiFilterText(sFilter.TipoGestione, "TipoGestione");
+                        aFilters = aFilters.concat(tempFilter);
+                    }
+                }
+                if (sFilter.TipoGestione1 !== undefined) {
+                    if (sFilter.TipoGestione1.length !== 0) {
+                        tempFilter = this.multiFilterText(sFilter.TipoGestione1, "TipoGestione1");
+                        aFilters = aFilters.concat(tempFilter);
+                    }
+                }
+                if (sFilter.TipoGestione2 !== undefined) {
+                    if (sFilter.TipoGestione2.length !== 0) {
+                        tempFilter = this.multiFilterText(sFilter.TipoGestione2, "TipoGestione2");
+                        aFilters = aFilters.concat(tempFilter);
+                    }
+                }
 
-            if (sFilter.ComponentTipo !== "" && sFilter.ComponentTipo !== undefined) {
-                aFilters.push(new Filter("ComponentTipo", FilterOperator.EQ, sFilter.ComponentTipo));
-            }
+                if (sFilter.ComponentTipo !== "" && sFilter.ComponentTipo !== undefined) {
+                    aFilters.push(new Filter("ComponentTipo", FilterOperator.EQ, sFilter.ComponentTipo));
+                }
 
-            if (sFilter.ProgAggr !== "" && sFilter.ProgAggr !== undefined) {
-                aFilters.push(new Filter("ProgAggr", FilterOperator.EQ, sFilter.ProgAggr));
-            }
+                if (sFilter.ProgAggr !== undefined) {
+                    if (sFilter.ProgAggr.length !== 0) {
+                        tempFilter = this.multiFilterText(sFilter.ProgAggr, "ProgAggr");
+                        aFilters = aFilters.concat(tempFilter);
+                    }
+                }
 
-            var model = this.getView().getModel("T_ACT_TYPE");
-            var tableFilters = await this._getTableNoError("/T_ACT_TYPE", aFilters);
-            if (tableFilters.length === 0) {
-                MessageBox.error("Nessun record trovato");
-                model.setData({});
+                var aFilterFE = [];
+                if (sFilter.FlagAttivo === "" || sFilter.FlagAttivo === undefined) {
+                    aFilterFE.push(new Filter("FlagAttivo", FilterOperator.EQ, "X"));
+                }
+
+                var model = this.getView().getModel("T_ACT_TYPE");
+                var tableFilters = await this._getTableNoError("/T_ACT_TYPE", aFilters);
+                if (tableFilters.length === 0) {
+                    MessageBox.error("Nessun record trovato");
+                    model.setData({});
+                } else {
+                    for (let i = 0; i < tableFilters.length; i++) {
+                        tableFilters[i].Uzeit = this.formatUzeit(tableFilters[i].Uzeit.ms);
+                    }
+                    model.setData(tableFilters);
+                    this.byId("tbGestioneAzioneTipo").getBinding("items").filter(aFilterFE);
+                }
+
             } else {
-                model.setData(tableFilters);
+                MessageToast.show("Inserire Campi obbligatori");
             } sap.ui.core.BusyIndicator.hide();
         },
-        onDataExport: function () {
+        onDataExport: async function () {
             var selectedTab = this.byId("tbGestioneAzioneTipo");
             var selIndex = this.getView().byId("tbGestioneAzioneTipo").getSelectedItems();
 
@@ -157,6 +170,7 @@ sap.ui.define([
                 var aArray = [];
                 for (let i = 0; i < selIndex.length; i++) {
                     var oContext = selIndex[i].getBindingContext("T_ACT_TYPE").getObject();
+                    oContext.DesEstesa = await this.onTestoEsteso(oContext);
                     aArray.push(oContext);
                 }
                 oSettings = {
@@ -169,6 +183,9 @@ sap.ui.define([
                 };
             } else {
                 var aFilters = oRowBinding.aIndices.map((i) => selectedTab.getBinding("items").oList[i]);
+                for (let i = 0; i < aFilters.length; i++) {
+                    aFilters[i].DesEstesa = await this.onTestoEsteso(aFilters[i]);
+                }
                 oSettings = {
                     workbook: {
                         columns: aCols
@@ -183,9 +200,9 @@ sap.ui.define([
             });
         },
         handleUploadPress: function () {
-          this.handleUploadGenerico("/T_ACT_TYPE");
+            this.handleUploadGenerico("/T_ACT_TYPE");
         },
-        ControlloExcelModel: function (sValue) {
+        ControlloExcelModel: async function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
                 InizioVal: (sValue[oResources.getText("InizioVal")] === undefined) ? "" : sValue[oResources.getText("InizioVal")].toString(),
@@ -194,8 +211,6 @@ sap.ui.define([
                 Sistema: (sValue[oResources.getText("Sistema")] === undefined) ? "" : sValue[oResources.getText("Sistema")].toString(),
                 Progres: (sValue[oResources.getText("Progres")] === undefined) ? "" : sValue[oResources.getText("Progres")].toString(),
                 Classe: (sValue[oResources.getText("Classe")] === undefined) ? "" : sValue[oResources.getText("Classe")].toString(),
-                Uzeit: (sValue[oResources.getText("Uzeit")] === undefined) ? "" : sValue[oResources.getText("Uzeit")].toString(),
-                CodAzione: (sValue[oResources.getText("CodAzione")] === undefined) ? "" : sValue[oResources.getText("CodAzione")].toString(),
                 ComponentTipo: (sValue[oResources.getText("ComponentTipo")] === undefined) ? "" : sValue[oResources.getText("ComponentTipo")].toString(),
                 DesBreve: (sValue[oResources.getText("DesBreve")] === undefined) ? "" : sValue[oResources.getText("DesBreve")].toString(),
                 DesEstesa: (sValue[oResources.getText("DesEstesa")] === undefined) ? "" : sValue[oResources.getText("DesEstesa")].toString(),
@@ -205,13 +220,21 @@ sap.ui.define([
                 TipoGestione: (sValue[oResources.getText("TipoGestione")] === undefined) ? "" : sValue[oResources.getText("TipoGestione")].toString(),
                 TipoGestione1: (sValue[oResources.getText("TipoGestione1")] === undefined) ? "" : sValue[oResources.getText("TipoGestione1")].toString(),
                 TipoGestione2: (sValue[oResources.getText("TipoGestione2")] === undefined) ? "" : sValue[oResources.getText("TipoGestione2")].toString(),
-                Datum: (sValue[oResources.getText("Datum")] === undefined) ? "" : sValue[oResources.getText("Datum")].toString(),
-                Uname: (sValue[oResources.getText("Uname")] === undefined) ? "" : sValue[oResources.getText("Uname")].toString(),
-                ProgAggr: (sValue[oResources.getText("ProgAggr")] === undefined) ? "" : sValue[oResources.getText("ProgAggr")].toString(),
-                AggrActTitle: (sValue[oResources.getText("AggrActTitle")] === undefined) ? "" : sValue[oResources.getText("AggrActTitle")].toString(),
-                AggrActComponent: (sValue[oResources.getText("AggrActComponent")] === undefined) ? "" : sValue[oResources.getText("AggrActComponent")].toString(),
-                ClassActType: (sValue[oResources.getText("ClassActType")] === undefined) ? "" : sValue[oResources.getText("ClassActType")].toString()
+                ProgAggr: (sValue[oResources.getText("ProgAggr")] === undefined) ? "" : sValue[oResources.getText("ProgAggr")].toString()
             };
+
+            rValue.InizioVal = new Date();
+            rValue.FineVal = new Date("12-31-9999");
+            rValue.Uzeit = this.createUzeit();
+
+            if (rValue.DesEstesa !== "" && rValue.DesEstesa !== undefined) {
+                await this.creaTestoEsteso(rValue);
+            }
+            rValue.DesEstesa = (rValue.DesEstesa === "") ? "" : "X";
+
+            var sURL = this.componiURL(rValue);
+            await this._removeHana(sURL);
+
             return rValue;
         },
 
@@ -221,6 +244,10 @@ sap.ui.define([
                 var typ = EdmType.String;
                 // var prop = c.mAggregations.header.getText();
                 var prop = c.getCustomData()[0].getValue();
+
+                if (prop === "InizioVal" || prop === "FineVal" || prop === "Datum") {
+                    typ = EdmType.Date;
+                }
                 return {
                     label: c.getHeader().getText(),
                     property: prop,
@@ -261,6 +288,9 @@ sap.ui.define([
             var oModel = new sap.ui.model.json.JSONModel();
             var items = this.initModel();
             items.stato = "N";
+            items.InizioVal = new Date();
+            items.FineVal = new Date("12-31-9999");
+            items.Datum = null;
             oModel.setData(items);
             this.getView().setModel(oModel, "sSelect");
 
@@ -268,14 +298,20 @@ sap.ui.define([
 
             sap.ui.core.BusyIndicator.hide();
         },
-        onModify: function () {
+        onModify: async function () {
             sap.ui.core.BusyIndicator.show();
             Validator.clearValidation();
             var items = this.getView().byId("tbGestioneAzioneTipo").getSelectedItems();
             if (items.length === 1) {
+                var line = JSON.stringify(items[0].getBindingContext("T_ACT_TYPE").getObject());
+                this.lineSelected = JSON.parse(line);
+
                 var oModel = new sap.ui.model.json.JSONModel();
                 items = items[0].getBindingContext("T_ACT_TYPE").getObject();
                 items.stato = "M";
+                items.DesEstesa = await this.onTestoEsteso(items);
+                items.InizioVal = new Date();
+
                 oModel.setData(items);
                 this.getView().setModel(oModel, "sSelect");
                 this.byId("navCon").to(this.byId("Detail"));
@@ -283,20 +319,43 @@ sap.ui.define([
                 MessageToast.show("Seleziona una riga");
             } sap.ui.core.BusyIndicator.hide();
         },
-        onCopy: function () {
+        onCopy: async function () {
             sap.ui.core.BusyIndicator.show();
             Validator.clearValidation();
             var items = this.getView().byId("tbGestioneAzioneTipo").getSelectedItems();
             if (items.length === 1) {
+                var line = JSON.stringify(items[0].getBindingContext("T_ACT_TYPE").getObject());
+                this.lineSelected = JSON.parse(line);
+
                 var oModel = new sap.ui.model.json.JSONModel();
                 items = items[0].getBindingContext("T_ACT_TYPE").getObject();
                 items.stato = "C";
+                items.DesEstesa = await this.onTestoEsteso(items);
+                items.InizioVal = new Date();
                 oModel.setData(items);
                 this.getView().setModel(oModel, "sSelect");
                 this.byId("navCon").to(this.byId("Detail"));
             } else {
                 MessageToast.show("Seleziona una riga");
             } sap.ui.core.BusyIndicator.hide();
+        },
+        onTestoEsteso: async function (line) {
+            if (line.DesEstesa === "X") {
+                var aFilter = [];
+                var vNome = "Z" + this.formatDate(line.InizioVal) + this.formatDate(line.FineVal) + line.Divisione + line.Sistema + line.Progres + line.Classe + line.Uzeit.replaceAll(":", "");
+                aFilter.push(new Filter("Tdname", FilterOperator.EQ, vNome));
+                aFilter.push(new Filter("Tdid", FilterOperator.EQ, "ST"));
+                aFilter.push(new Filter("Tdspras", FilterOperator.EQ, "I"));
+                aFilter.push(new Filter("Tdobject", FilterOperator.EQ, "TEXT"));
+                var result = await this._getLinenoError("/TestiEstesi", aFilter);
+                if (result === undefined) {
+                    return "";
+                } else {
+                    return result.Testo;
+                }
+            } else {
+                return "";
+            }
         },
         onSave: async function () {
             var ControlValidate = Validator.validateView();
@@ -304,31 +363,91 @@ sap.ui.define([
                 var line = JSON.stringify(this.getView().getModel("sSelect").getData());
                 line = JSON.parse(line);
                 var msg = await this.ControlIndex(line);
+                if (line.stato !== "M") {
+                    var sFilter = this.componiFilter(line);
+                    var result = await this._getLinenoError("/T_ACT_TYPE", sFilter);
+                    if (result !== undefined) {
+                        msg = "Chiave gia esistente";
+                    }
+                }
+
                 if (msg !== "") {
                     MessageBox.error(msg);
                 } else {
-                    if (line.stato === "M") {
-                        var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
+                    if (line.stato === "M") { // rimuovi le righe vecchie
+                        var sURL = this.componiURL(line);
+                        await this._removeHana(sURL);
+
                         delete line.stato;
                         delete line.__metadata;
-                        //delete line.Uzeit;
-                        await this._updateHana(sURL, line);
-                    } else {
-                        delete line.stato;
-                        delete line.__metadata;
-                        //delete line.Uzeit;
+                        line.Uzeit = this.createUzeit();
+                        line.Uzeit = this.createUzeit();
+                        if (line.DesEstesa !== "" && line.DesEstesa !== undefined) {
+                            await this.creaTestoEsteso(line);
+                        }
+                        line.DesEstesa = (line.DesEstesa === "") ? "" : "X";
                         await this._saveHana("/T_ACT_TYPE", line);
+
+                    } else { // rimuovi le righe vecchie
+
+                        delete line.stato;
+                        delete line.__metadata;
+                        line.Uzeit = this.createUzeit();
+                        if (line.DesEstesa !== "" && line.DesEstesa !== undefined) {
+                            await this.creaTestoEsteso(line);
+                        }
+                        line.DesEstesa = (line.DesEstesa === "") ? "" : "X";
+                        line.FlagAttivo = "X";
+                        await this._saveHana("/T_ACT_TYPE", line);
+
                     } MessageBox.success("Dati salvati con successo");
                     this.onSearchFilters();
                     this.byId("navCon").back();
                 }
             }
         },
-        componiURL: function (line) {
-            var sURL = "/T_ACT_TYPE(" + "Divisione=" + "'" + line.Divisione + "'," + "Sistema=" + "'" + line.Sistema + "'" + "Progres=" + "'" + line.Progres + "'" + "Classe=" + "'" + line.Classe + "'" + ")";
+        createUzeit: function () {
+            var aDate = new Date();
 
+            var hours = aDate.getHours(),
+                minutes = aDate.getMinutes(),
+                seconds = aDate.getSeconds();
+
+            hours = (hours < 10) ? "0" + hours : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+            return hours + ":" + minutes + ":" + seconds;
+        },
+        creaTestoEsteso: async function (line) {
+            var Tdname = "Z" + this.formatDate(line.InizioVal) + this.formatDate(line.FineVal) + line.Divisione + line.Sistema + line.Progres + line.Classe + line.Uzeit.replaceAll(":", "");
+            var sTestoAzioni = {
+                "Tdname": Tdname,
+                "Tdid": "ST",
+                "Tdspras": "I",
+                "Tdobject": "TEXT",
+                "Overwrite": "X",
+                "Testo": line.DesEstesa
+            };
+            var result = await this._saveHanaNoError("/TestiEstesi", sTestoAzioni);
+            if (result !== "") {
+                var sUrl = "/TestiEstesi(Testo='" + line.DesEstesa + "')";
+                delete sTestoAzioni.Testo;
+                await this._updateHanaNoError(sUrl, sTestoAzioni);
+            }
+        },
+        componiURL: function (line) {
+            var sURL = "/T_ACT_TYPE(Divisione='" + line.Divisione + "',Progres='" + line.Progres + "',Classe='" + line.Classe + "',Sistema='" + line.Sistema + "')";
             return sURL;
         },
+        componiFilter: function (line) {
+          var aFilter = [];
+          aFilter.push(new Filter("Divisione", FilterOperator.EQ, line.Divisione));
+          aFilter.push(new Filter("Progres", FilterOperator.EQ, line.Progres));
+          aFilter.push(new Filter("Classe", FilterOperator.EQ, line.Classe));
+          aFilter.push(new Filter("Sistema", FilterOperator.EQ, line.Sistema));
+          return aFilter;
+      },
         onBackDetail: function () {
             this.byId("navCon").back();
         },
@@ -378,9 +497,6 @@ sap.ui.define([
             if (sData.FineVal === "" || sData.FineVal === undefined || sData.FineVal === null) {
                 return "Inserire Fine Val";
             }
-            if (sData.InizioVal === "" || sData.InizioVal === undefined || sData.InizioVal === null) {
-                return "Inserire InizioVal";
-            }
             if (sData.Divisione === "" || sData.Divisione === undefined || sData.Divisione === null) {
                 return "Inserire Divisione";
             }
@@ -392,6 +508,9 @@ sap.ui.define([
             }
             if (sData.Classe === "" || sData.Classe === undefined || sData.Classe === null) {
                 return "Inserire Classe";
+            }
+            if (sData.ProgAggr === "" || sData.ProgAggr === undefined || sData.ProgAggr === null) {
+                return "Inserire Aggregativo";
             }
             return "";
         }

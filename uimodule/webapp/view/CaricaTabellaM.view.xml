@@ -113,9 +113,6 @@
                         <Column width="15em" id="col95" app:property="Meins" ><Text text="{i18n>Unita}"/></Column>
                         <Column width="15em" id="col96" app:property="Lgort"><Text text="{i18n>Magazzino}"/></Column>
                         <Column width="15em" id="col97" app:property="Werks"><Text text="{i18n>Divisione}"/></Column>
-                        <Column width="15em" id="col98" app:property="Charg"><Text text="{i18n>Partita}"/></Column>
-                        <Column width="15em" id="col99" app:property="Tbtwr"><Text text="{i18n>PrezzoLordo}"/></Column>
-                        <Column width="15em" id="col100" app:property="Waers"><Text text="{i18n>Divisa}"/></Column>
                         <Column width="15em" id="col101" app:property="Ekgrp"><Text text="{i18n>GrupAcq}"/></Column>
                         <Column width="15em" id="col102" app:property="Ekorg"><Text text="{i18n>OrgAcq}"/></Column>
                         <Column width="15em" id="col103" app:property="Afnam"><Text text="{i18n>Richiedente}"/></Column>
@@ -131,9 +128,6 @@
                                 <Text text="{T_PMO_M>Meins}"/>
                                 <Text text="{T_PMO_M>Lgort}"/>
                                 <Text text="{T_PMO_M>Werks}"/>
-                                <Text text="{T_PMO_M>Charg}"/>
-                                <Text text="{T_PMO_M>Tbtwr}"/>
-                                <Text text="{T_PMO_M>Waers}"/>
                                 <Text text="{T_PMO_M>Ekgrp}"/>
                                 <Text text="{T_PMO_M>Ekorg}"/>
                                 <Text text="{T_PMO_M>Afnam}"/>

@@ -115,12 +115,12 @@
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
                 <Table id="tbTabellaAggregazioniAzioniTipo" items="{path: 'T_AGGREG>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
                   <columns>
-                        <Column width="15em" id="col51" app:property="Werks"><Text text="{i18n>Divisione}"/></Column>
+                        <Column width="15em" id="col51" app:property="Werks"><Text text="{i18n>NWerks}"/></Column>
                         <Column width="15em" id="col52" app:property="Sistema"><Text text="{i18n>Sistema}"/></Column>
                         <Column width="15em" id="col53" app:property="Classe"><Text text="{i18n>Classe}"/></Column>
-                        <Column width="15em" id="col54" app:property="ProgAggr"><Text text="{i18n>NProAggr}"/></Column>
-                        <Column width="15em" id="col55" app:property="AggrActTitle"><Text text="{i18n>TitoloAzioneAggregativo1}"/></Column>
-                        <Column width="15em" id="col56" app:property="AggrActComponent"><Text text="{i18n>ComponenteAzioneAggregativo1}"/></Column>
+                        <Column width="15em" id="col54" app:property="ProgAggr"><Text text="{i18n>NProgAggr}"/></Column>
+                        <Column width="15em" id="col55" app:property="AggrActTitle"><Text text="{i18n>NAggrActTitle}"/></Column>
+                        <Column width="15em" id="col56" app:property="AggrActComponent"><Text text="{i18n>NAggrActComponent}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">

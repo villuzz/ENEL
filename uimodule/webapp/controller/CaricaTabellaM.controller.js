@@ -284,16 +284,15 @@ sap.ui.define([
             this.onSearchFilters();
         },
         componiURL: function (line) {
-            var sURL = "/T_PMO_M(" + "IndexPmo=" + "'" + line.IndexPmo + "'," + "Cont=" + "'" + line.Cont + "'" + "'," + "Matnr=" + "'" + line.Matnr.padStart(18, "0") + "'" + "'," + "Maktx=" + "'" + line.Maktx + "'" + ")";
+            var sURL = "/T_PMO_M(IndexPmo='" + line.IndexPmo + "',Cont='" + line.Cont + "',Matnr='" + line.Matnr.padStart(18, "0") + "',Maktx='" + line.Maktx + "')";
             return sURL;
         },
         handleUploadPress: function () {
           this.handleUploadGenerico("/T_PMO_M");
         },
-        ControlloExcelModel: function (sValue) {
+        ControlloExcelModel: async function (sValue) {
             var oResources = this.getResourceBundle();
             var rValue = {
-                IndexPmo: (sValue[oResources.getText("IndexPmo")] === undefined) ? "" : sValue[oResources.getText("IndexPmo")].toString(),
                 Cont: (sValue[oResources.getText("Cont")] === undefined) ? "" : sValue[oResources.getText("Cont")].toString(),
                 Matnr: (sValue[oResources.getText("Materiale")] === undefined) ? "" : sValue[oResources.getText("Materiale")].toString().padStart(18, "0"),
                 Maktx: (sValue[oResources.getText("TestoBreveMat")] === undefined) ? "" : sValue[oResources.getText("TestoBreveMat")].toString(),
@@ -301,14 +300,17 @@ sap.ui.define([
                 Meins: (sValue[oResources.getText("Unita")] === undefined) ? "" : sValue[oResources.getText("Unita")].toString(),
                 Lgort: (sValue[oResources.getText("Magazzino")] === undefined) ? "" : sValue[oResources.getText("Magazzino")].toString(),
                 Werks: (sValue[oResources.getText("Divisione")] === undefined) ? "" : sValue[oResources.getText("Divisione")].toString(),
-                Charg: (sValue[oResources.getText("Partita")] === undefined) ? "" : sValue[oResources.getText("Partita")].toString(),
-                Tbtwr: (sValue[oResources.getText("PrezzoLordo")] === undefined) ? "" : sValue[oResources.getText("PrezzoLordo")].toString(),
-                Waers: (sValue[oResources.getText("Divisa")] === undefined) ? "" : sValue[oResources.getText("Divisa")].toString(),
                 Ekgrp: (sValue[oResources.getText("GrupAcq")] === undefined) ? "" : sValue[oResources.getText("GrupAcq")].toString(),
                 Ekorg: (sValue[oResources.getText("OrgAcq")] === undefined) ? "" : sValue[oResources.getText("OrgAcq")].toString(),
                 Afnam: (sValue[oResources.getText("Richiedente")] === undefined) ? "" : sValue[oResources.getText("Richiedente")].toString(),
                 Matkl: (sValue[oResources.getText("GrupMerci")] === undefined) ? "" : sValue[oResources.getText("GrupMerci")].toString()
             };
+
+            var aFilter = [];
+            aFilter.push(new Filter("Cont", FilterOperator.EQ, rValue.Cont)); // fisso IT - todo
+            var result = await this._getLine("/T_ACT_EL", aFilter);
+            rValue.IndexPmo = result.IndexPmo;            
+            
             return rValue;
         },
         initModel: function () {
@@ -344,15 +346,15 @@ sap.ui.define([
         },
         ControlIndex: function (sData) {
             if (sData.stato !== "M") {
-                if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
+                /*if (sData.IndexPmo === "" || sData.IndexPmo === undefined || sData.IndexPmo === null) {
                     return "Inserire Indice";
-                }
+                }*/
                 if (sData.Cont === "" || sData.Cont === undefined || sData.Cont === null) {
                     return "Inserire Contatore";
                 }
-                /*if (sData.Matnr === "" || sData.Matnr === undefined || sData.Matnr === null) {
+                if (sData.Matnr === "" || sData.Matnr === undefined || sData.Matnr === null || Number(sData.Matnr) === 0) {
                     return "Inserire Materiale";
-                }*/
+                }
             }
             return "";
         },

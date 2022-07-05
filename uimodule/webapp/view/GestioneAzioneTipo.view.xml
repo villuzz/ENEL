@@ -62,7 +62,7 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="Divisione" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Divisione}" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
+                                <MultiComboBox selectedKeys="{sFilter>/Divisione}" required="true" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -115,18 +115,6 @@ class="navContainerControl sapUiSmallMarginBottom">
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
-
-                            <fb:FilterGroupItem id="FlagAttivo" visible="true" groupName="__$INTERNAL$" name="FlagAttivo" label="{i18n>FlagAttivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                              <fb:control>
-                                <Select xmlns="sap.m" id="onlyActive" selectedKey="{sFilter>/FlagAttivo}">
-                                  <items>
-                                    <core:ListItem xmlns:core="sap.ui.core" key="" text="" />
-                                    <core:ListItem xmlns:core="sap.ui.core" key="X" icon="sap-icon://accept" text="Attivo" />
-                                    <core:ListItem xmlns:core="sap.ui.core" key="0" icon="sap-icon://decline" text="Disattivo"/>
-                                  </items>
-                                </Select>
-                              </fb:control>
-                            </fb:FilterGroupItem>
                
                             <fb:FilterGroupItem id="ComponentTipo" visible="true" groupName="__$INTERNAL$" name="ComponentTipo" label="{i18n>ComponentTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
@@ -136,7 +124,20 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="ProgAggr" visible="true" groupName="__$INTERNAL$" name="ProgAggr" label="{i18n>ProgAggr}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <Input value="{sFilter>/ProgAggr}" maxLength="5"/>
+                                <MultiComboBox selectedKeys="{sFilter>/ProgAggr}" items="{ path: 'sHelp>/PROG_AGGR', sorter: [{ path: 'ProgAggr', descending: false, group:false }] }" >
+                                  <core:ListItem key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}" />
+                                </MultiComboBox>
+                              </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem id="FlagAttivo" visible="true" groupName="__$INTERNAL$" name="FlagAttivo" label="{i18n>FlagAttivo}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                              <fb:control>
+                                <Select xmlns="sap.m" id="onlyActive" selectedKey="{sFilter>/FlagAttivo}">
+                                  <items>
+                                    <core:ListItem xmlns:core="sap.ui.core" key="" icon="sap-icon://accept" text="Attivo" />
+                                    <core:ListItem xmlns:core="sap.ui.core" key="X" icon="sap-icon://decline" text="Tutti"/>
+                                  </items>
+                                </Select>
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -155,30 +156,31 @@ class="navContainerControl sapUiSmallMarginBottom">
         </f:header>
         <f:content>
             <ScrollContainer width="100%" height="100%" vertical="true" horizontal="true" >
-                <Table id="tbGestioneAzioneTipo" items="{path: 'T_ACT_TYPE>/'}"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                <Table id="tbGestioneAzioneTipo" items="{path: 'T_ACT_TYPE>/' }"  mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders" selectionChange="onSelectRow">
+                  <!--, filters : [ { path : 'FlagAttivo', operator : 'EQ', value1 : 'X'} ]-->
                   <columns>
                         <Column width="15em" id="col31" app:property="InizioVal"><Text text="{i18n>InizioVal}"/></Column>
                         <Column width="15em" id="col32" app:property="FineVal"><Text text="{i18n>FineVal}"/></Column>
                         <Column width="15em" id="col33" app:property="Divisione"><Text text="{i18n>Divisione}"/></Column>
                         <Column width="15em" id="col34" app:property="Sistema"><Text text="{i18n>Sistema}"/></Column>
-                        <Column width="15em" id="col35" app:property="Progres"><Text text="{i18n>Progres}"/></Column>
                         <Column width="15em" id="col36" app:property="Classe"><Text text="{i18n>Classe}"/></Column>
-                        <Column width="15em" id="col38" app:property="CodAzione"><Text text="{i18n>CodAzione}"/></Column>
-                        <Column width="15em" id="col39" app:property="ComponentTipo"><Text text="{i18n>ComponentTipo}"/></Column>
+                        <Column width="15em" id="col35" app:property="Progres"><Text text="{i18n>Progres}"/></Column>
+                        <Column width="30em" id="col39" app:property="ComponentTipo"><Text text="{i18n>ComponentTipo}"/></Column>
                         <Column width="15em" id="col40" app:property="DesBreve"><Text text="{i18n>DesBreve}"/></Column>
-                        <Column width="15em" id="col41" app:property="DesEstesa"><Text text="{i18n>DesEstesa}"/></Column>
                         <Column width="15em" id="col42" app:property="DurataCiclo"><Text text="{i18n>DurataCiclo}"/></Column>
                         <Column width="15em" id="col43" app:property="Frequenza"><Text text="{i18n>Frequenza}"/></Column>
                         <Column width="15em" id="col44" app:property="FlagAttivo"><Text text="{i18n>FlagAttivo}"/></Column>
                         <Column width="15em" id="col45" app:property="TipoGestione"><Text text="{i18n>TipoGestione}"/></Column>
                         <Column width="15em" id="col46" app:property="TipoGestione1"><Text text="{i18n>TipoGestione1}"/></Column>
                         <Column width="15em" id="col47" app:property="TipoGestione2"><Text text="{i18n>TipoGestione2}"/></Column>
-                        <Column width="15em" id="col48" app:property="Datum"><Text text="{i18n>Datum}"/></Column>
-                        <Column width="15em" id="col49" app:property="Uname"><Text text="{i18n>Uname}"/></Column>
+                        
                         <Column width="15em" id="col50" app:property="ProgAggr"><Text text="{i18n>ProgAggr}"/></Column>
-                        <Column width="15em" id="col51" app:property="AggrActTitle"><Text text="{i18n>AggrActTitle}"/></Column>
-                        <Column width="15em" id="col52" app:property="AggrActComponent"><Text text="{i18n>AggrActComponent}"/></Column>
-                        <Column width="15em" id="col53" app:property="ClassActType"><Text text="{i18n>ClassActType}"/></Column>
+                        <Column width="15em" id="col41" app:property="DesEstesa"><Text text="{i18n>DesEstesa}"/></Column>
+                        <Column width="15em" id="col49" app:property="Uname" visible="false"><Text text="{i18n>Uname}"/></Column>
+                        <Column width="15em" id="col48" app:property="Datum" visible="false"><Text text="{i18n>Datum}"/></Column>
+                        
+                        <Column width="15em" id="col38" app:property="Uzeit" visible="false"><Text text="{i18n>Uzeit}"/></Column>                        
+                        
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
@@ -187,24 +189,25 @@ class="navContainerControl sapUiSmallMarginBottom">
                                 <Text text="{path: 'T_ACT_TYPE>FineVal', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' }}"/>
                                 <Text text="{T_ACT_TYPE>Divisione}"/>
                                 <Text text="{T_ACT_TYPE>Sistema}"/>
-                                <Text text="{T_ACT_TYPE>Progres}"/>
                                 <Text text="{T_ACT_TYPE>Classe}"/>
-                                <Text text="{T_ACT_TYPE>CodAzione}"/>
+                                <Text text="{T_ACT_TYPE>Progres}"/>
                                 <Text text="{T_ACT_TYPE>ComponentTipo}"/>
                                 <Text text="{T_ACT_TYPE>DesBreve}"/>
-                                <Text text="{T_ACT_TYPE>DesEstesa}"/>
+                                
                                 <Text text="{T_ACT_TYPE>DurataCiclo}"/>
                                 <Text text="{T_ACT_TYPE>Frequenza}"/>
                                 <Text text="{T_ACT_TYPE>FlagAttivo}"/>
                                 <Text text="{T_ACT_TYPE>TipoGestione}"/>
                                 <Text text="{T_ACT_TYPE>TipoGestione1}"/>
                                 <Text text="{T_ACT_TYPE>TipoGestione2}"/>
-                                <Text text="{path: 'T_ACT_TYPE>Datum', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' }}"/>
-                                <Text text="{T_ACT_TYPE>Uname}"/>
+                                
                                 <Text text="{T_ACT_TYPE>ProgAggr}"/>
-                                <Text text="{T_ACT_TYPE>AggrActTitle}"/>
-                                <Text text="{T_ACT_TYPE>AggrActComponent}"/>
-                                <Text text="{T_ACT_TYPE>ClassActType}"/>
+
+                                <Text text="{T_ACT_TYPE>DesEstesa}"/>
+                                <Text text="{T_ACT_TYPE>Uname}"/>
+                                <Text text="{path: 'T_ACT_TYPE>Datum', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' }}"/>
+                                <Text text="{T_ACT_TYPE>Uzeit}"/>
+                                
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -269,12 +272,12 @@ class="navContainerControl sapUiSmallMarginBottom">
               <form:formElements>
                 <form:FormElement label="{i18n>InizioVal}">
                   <form:fields>
-                    <DatePicker id="DateP1" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/InizioVal}"  enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}"/>
+                    <DatePicker id="DateP1" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/InizioVal}"  enabled="false"/>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>FineVal}" >
                   <form:fields>
-                    <DatePicker id="DateP2" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/FineVal}"  enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}"/>
+                    <DatePicker id="DateP2" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/FineVal}"  enabled="false"/>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Divisione}">
@@ -291,13 +294,6 @@ class="navContainerControl sapUiSmallMarginBottom">
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Progres}">
-                  <form:fields>
-                     <ComboBox selectedKey="{sSelect>/Progres}"  valueStateText="{i18n>valueState} {i18n>Progres}" items="{ path: 'sHelp>/PROGRES', sorter: [{ path: 'Progres', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
-                      <core:ListItem key="{sHelp>Progres}" text="{sHelp>Progres}" additionalText="{sHelp>Txt}"/>
-                    </ComboBox>
-                  </form:fields>
-                </form:FormElement>
                 <form:FormElement label="{i18n>Classe}">
                   <form:fields>
                     <ComboBox selectedKey="{sSelect>/Classe}"  valueStateText="{i18n>valueState} {i18n>Classe}" items="{ path: 'sHelp>/CLASSE', sorter: [{ path: 'Classe', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
@@ -305,11 +301,14 @@ class="navContainerControl sapUiSmallMarginBottom">
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>CodAzione}">
+                <form:FormElement label="{i18n>Progres}">
                   <form:fields>
-                    <Input value="{sSelect>/CodAzione}" maxLength="4"/>
+                     <ComboBox selectedKey="{sSelect>/Progres}"  valueStateText="{i18n>valueState} {i18n>Progres}" items="{ path: 'sHelp>/PROGRES', sorter: [{ path: 'Progres', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                      <core:ListItem key="{sHelp>Progres}" text="{sHelp>Progres}" additionalText="{sHelp>Txt}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
+                
                 <form:FormElement label="{i18n>ComponentTipo}">
                   <form:fields>
                     <Input value="{sSelect>/ComponentTipo}" maxLength="80"/>
@@ -322,33 +321,19 @@ class="navContainerControl sapUiSmallMarginBottom">
                 </form:FormElement>
                 <form:FormElement label="{i18n>DesEstesa}">
                   <form:fields>
-                    <Input value="{sSelect>/DesEstesa}" maxLength="1"/>
+                    <TextArea value="{sSelect>/DesEstesa}" showExceededText="true" maxLength="255" height="12em" valueState="{= ${/value}.length > 255 ? 'Warning' : 'None' }"/>                        
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DurataCiclo}">
                   <form:fields>
-                    <Input value="{sSelect>/DurataCiclo}" maxLength="4"/>
+                    <Input value="{sSelect>/DurataCiclo}" maxLength="4" type="Number"/>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Frequenza}">
                   <form:fields>
-                     <Select xmlns="sap.m" selectedKey="{sSelect>/Frequenza}">
-                        <items>
-                          <core:ListItem xmlns:core="sap.ui.core" key="" text="" />
-                          <core:ListItem xmlns:core="sap.ui.core" key="C" text="C" />
-                          <core:ListItem xmlns:core="sap.ui.core" key="T" text="T"/>
-                        </items>
-                      </Select>
-                  </form:fields>
-                </form:FormElement>
-                <form:FormElement label="{i18n>FlagAttivo}">
-                  <form:fields>
-                     <Select xmlns="sap.m" selectedKey="{sSelect>/FlagAttivo}">
-                        <items>
-                          <core:ListItem xmlns:core="sap.ui.core" key="X" icon="sap-icon://accept" text="Attivo" />
-                          <core:ListItem xmlns:core="sap.ui.core" key="" icon="sap-icon://decline" text="Disattivo"/>
-                        </items>
-                      </Select>
+                    <ComboBox  selectedKey="{sSelect>/Frequenza}" valueStateText="{i18n>valueState} {i18n>Frequenza}" items="{ path: 'sHelp>/MEINS' }" change="handleChangeCb" showSecondaryValues= "true" >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TipoGestione}">
@@ -372,16 +357,6 @@ class="navContainerControl sapUiSmallMarginBottom">
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>Datum}" >
-                  <form:fields>
-                    <DatePicker id="DateP3" placeholder="Inserisci giorno" class="sapUiSmallMarginBottom" displayFormat="dd-MM-YYYY" dateValue="{sSelect>/Datum}"/>
-                  </form:fields>
-                </form:FormElement>
-                <form:FormElement label="{i18n>Uname}">
-                  <form:fields>
-                    <Input value="{sSelect>/Uname}" maxLength="12"/>
-                  </form:fields>
-                </form:FormElement>
                 <form:FormElement label="{i18n>ProgAggr}">
                   <form:fields>
                     <ComboBox selectedKey="{sSelect>/ProgAggr}"  valueStateText="{i18n>valueState} {i18n>ProgAggr}" items="{ path: 'sHelp>/PROG_AGGR', sorter: [{ path: 'ProgAggr', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" >
@@ -389,21 +364,7 @@ class="navContainerControl sapUiSmallMarginBottom">
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
-                <form:FormElement label="{i18n>AggrActTitle}">
-                  <form:fields>
-                    <Input value="{sSelect>/AggrActTitle}" maxLength="40"/>
-                  </form:fields>
-                </form:FormElement>
-                <form:FormElement label="{i18n>AggrActComponent}">
-                  <form:fields>
-                    <Input value="{sSelect>/AggrActComponent}" maxLength="60"/>
-                  </form:fields>
-                </form:FormElement>
-                <form:FormElement label="{i18n>ClassActType}">
-                  <form:fields>
-                    <Input value="{sSelect>/ClassActType}" maxLength="1"/>
-                  </form:fields>
-                </form:FormElement>
+                
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>
