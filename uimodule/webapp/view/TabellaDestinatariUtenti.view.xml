@@ -17,9 +17,11 @@
 					</f:heading>
 					<f:navigationActions>
 						<Link href="https://www.w3.org/WAI/eval/report-tool/" target="_blank" text="{i18n>accessibility}" />
-					  <Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" tooltip="{i18n>NewButton}" ariaLabelledBy="ActionNew" ariaDescribedBy="ButtonNew"/>
-                      <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" tooltip="{i18n>CancelButton}" ariaLabelledBy="ActionCancel" ariaDescribedBy="ButtonCancel"/>    
-            </f:navigationActions>
+					 	<Button text="Nuovo"  icon="sap-icon://document" press="onNuovo" tooltip="{i18n>NewButton}" ariaLabelledBy="ActionNew" ariaDescribedBy="ButtonNew"/>
+            <Button text="Modifica" icon="sap-icon://edit" press="onModify" class="sapUiTinyMarginBegin" tooltip="{i18n>ModifyButton}" ariaLabelledBy="ActionModify" ariaDescribedBy="ButtonModify"/>
+            <Button text="Copia" icon="sap-icon://copy" press="onCopy" class="sapUiTinyMarginBegin" tooltip="{i18n>CopyButton}" ariaLabelledBy="ActionCopy" ariaDescribedBy="ButtonCopy"/>
+            <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" tooltip="{i18n>CancelButton}" ariaLabelledBy="ActionCancel" ariaDescribedBy="ButtonCancel"/>   
+             </f:navigationActions>
 				</f:DynamicPageTitle>
 			</f:title>
         <f:header>
