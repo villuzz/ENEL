@@ -81,3 +81,19 @@ height: 100% !important;
   justify-content: space-between !important;
 }
 
+.linkRef{
+  margin-left: auto !important;
+}
+.toolbarHeader{
+flex-wrap: wrap !important;
+height: auto !important;
+}
+.sapFDynamicPageTitle .sapFDynamicPageTitleMain{
+  flex-wrap: wrap !important;
+}
+.titleText{
+  font-size: medium !important;
+}
+html.sap-desktop .sapFDynamicPage.sapFDynamicPageWithScroll .sapFDynamicPageTitleWrapper{
+  height: auto !important;
+}
