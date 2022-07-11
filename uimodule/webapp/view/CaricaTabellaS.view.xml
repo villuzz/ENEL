@@ -23,13 +23,13 @@
          <f:landmarkInfo>
             <f:DynamicPageAccessibleLandmarkInfo rootRole="Region" contentRole="Main" headerRole="Banner" rootLabel="{i18n>Overview_rootLabel}" contentLabel="{i18n>Overview_contentLabel}" headerLabel="{i18n>Overview_headerLabel}"/>
           </f:landmarkInfo>
-          <f:title >
-            <f:DynamicPageTitle >
+          <f:title>
+            <f:DynamicPageTitle>
                 <f:content >
-                  <OverflowToolbar  >
+                  <OverflowToolbar>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
-                      <Button type="Emphasized" text="Home"  press="onBack" class="sapUiSmallMarginEnd" tooltip="Home" ariaLabelledBy="ActionHome"/>
-                      <Title text="{i18n>TitoloCTZTPS}" class="sapUiTinyMarginTop"/>
+                      <Button type="Emphasized" text="Home" press="onBack" class="sapUiSmallMarginEnd" tooltip="Home" ariaLabelledBy="ActionHome" ariaDescribedBy="ButtonHome"/>
+                      <Title text="{i18n>TitoloCTZTPS}" class="sapUiTinyMarginTop"/> 
                     </HBox>
                     <HBox height="100%" alignItems="Center" alignContent="Center" justifyContent="Center">
                       <Link href="https://www.w3.org/WAI/eval/report-tool/" target="_blank" text="{i18n>accessibility}" class="sapUiSmallMarginEnd"/>
@@ -39,6 +39,7 @@
                       <Button text="Cancella" icon="sap-icon://delete" press="onCancel" class="sapUiTinyMarginBegin" tooltip="{i18n>CancelButton}" ariaLabelledBy="ActionCancel" ariaDescribedBy="ButtonCancel"/>   
                     </HBox>
                   </OverflowToolbar>
+                  <core:InvisibleText id="ActionHome" text="Edit Button Label"/>
                 </f:content>
             </f:DynamicPageTitle>
           </f:title> 
@@ -57,7 +58,7 @@
 
                             <fb:FilterGroupItem id="FIIContActEl" visible="true" groupName="__$INTERNAL$" name="FYIContActEl" label="{i18n>Cont}" partOfCurrentVariant="true" visibleInFilterBar="true" labelTooltip="contatore" >
                                 <fb:control>
-                                    <MultiInput id="IContActEl" type="Number" showValueHelp="false" ariaLabelledBy="Contatore" showSuggestion="true"/>
+                                    <MultiInput id="IContActEl" showValueHelp="false" ariaLabelledBy="Contatore" showSuggestion="true"/>
                                 </fb:control>
                             </fb:FilterGroupItem>
 

@@ -24,7 +24,7 @@
         <f:landmarkInfo>
          <f:DynamicPageAccessibleLandmarkInfo rootRole="Region" contentRole="Main" headerRole="Banner" rootLabel="{i18n>Overview_rootLabel}" contentLabel="{i18n>Overview_contentLabel}" headerLabel="{i18n>Overview_headerLabel}"/>
           </f:landmarkInfo>
-          <f:title >
+          <f:title>
             <f:DynamicPageTitle>
                 <f:content>
                     <OverflowToolbar>
