@@ -168,7 +168,6 @@ sap.ui.define([
             var oCols = this.byId("tbCaricaTabellaM").getColumns().map((c) => {
                 var templ = "";
                 var typ = EdmType.String;
-                // var prop = c.mAggregations.header.getText();
                 var prop = c.getCustomData()[0].getValue();
                 return {
                     label: c.getHeader().getText(),

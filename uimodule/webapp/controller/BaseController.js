@@ -59,13 +59,8 @@ sap.ui.define([
             } else {
                 sap.ui.core.BusyIndicator.show();
                 var aReturn = [];
-                var sURL,
-                    msg = "";
+                var sURL;
                 var rows = this.getView().getModel("uploadModel").getData();
-                if (msg !== "") {
-                    sap.ui.core.BusyIndicator.hide(0);
-                    MessageBox.error(msg);
-                }
                 for (var i = 0; i < rows.length; i++) {
                     var sAzioni = await this.ControlloExcelModel(rows[i]);
                     sURL = await this.componiURL(sAzioni);

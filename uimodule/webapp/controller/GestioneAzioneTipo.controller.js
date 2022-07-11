@@ -291,7 +291,6 @@ sap.ui.define([
             var oCols = this.byId("tbGestioneAzioneTipo").getColumns().map((c) => {
                 var templ = "";
                 var typ = EdmType.String;
-                // var prop = c.mAggregations.header.getText();
                 var prop = c.getCustomData()[0].getValue();
 
                 if (prop === "InizioVal" || prop === "FineVal" || prop === "Datum") {
@@ -471,7 +470,7 @@ sap.ui.define([
             return hours + ":" + minutes + ":" + seconds;
         },
         creaTestoEsteso: async function (line) {
-            var Tdname = "Z" + this.formatDate(line.InizioVal) + this.formatDate(line.FineVal) + line.Divisione + line.Sistema + line.Progres + line.Classe + line.Uzeit.replaceAll(":", "");
+            var Tdname = "Z" + this.formatDate(line.InizioVal) + this.formatDate(line.FineVal) + line.Divisione + line.Sistema + line.Progres.padStart(5, "0") + line.Classe + line.Uzeit.replaceAll(":", "");
             var sTestoAzioni = {
                 "Tdname": Tdname,
                 "Tdid": "ST",

@@ -100,10 +100,10 @@
                         <Column width="15em" id="col93" app:property="Asktx"><Text text="{i18n>Asktx}"/></Column>
                         <Column width="15em" id="col94" app:property="Menge"><Text text="{i18n>Menge}"/></Column>
                         <Column width="15em" id="col95" app:property="Meins" ><Text text="{i18n>Meins}"/></Column>
-                        <Column width="15em" id="col101" app:property="Ekgrp"><Text text="{i18n>GrupAcq}"/></Column>
-                        <Column width="15em" id="col102" app:property="Ekorg"><Text text="{i18n>OrgAcq}"/></Column>
-                        <Column width="15em" id="col103" app:property="Afnam"><Text text="{i18n>Richiedente}"/></Column>
-                        <Column width="15em" id="col104" app:property="Matkl"><Text text="{i18n>GrupMerci}"/></Column>
+                        <Column width="15em" id="col101" app:property="Ekgrp"><Text text="{i18n>Ekgrp}"/></Column>
+                        <Column width="15em" id="col102" app:property="Ekorg"><Text text="{i18n>Ekorg}"/></Column>
+                        <Column width="15em" id="col103" app:property="Afnam"><Text text="{i18n>Afnam}"/></Column>
+                        <Column width="15em" id="col104" app:property="Matkl"><Text text="{i18n>Matkl}"/></Column>
                     </columns>
                     <items>
                         <ColumnListItem vAlign="Middle" type="Active" press="onPressLine">
