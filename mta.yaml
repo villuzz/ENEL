@@ -1,6 +1,6 @@
 ID: APP1
 _schema-version: 3.2.0
-version: 0.0.1
+version: 0.0.2
 parameters:
   enable-parallel-deployments: true
 modules:
@@ -16,11 +16,6 @@ modules:
       - name: APP1_html5_repo_runtime
       - name: APP1_uaa
       - name: APP1_connectivity
-    build-parameters:
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:ui --prefix ..
   - name: webapp_deployer1
     type: com.sap.application.content
     path: deployer

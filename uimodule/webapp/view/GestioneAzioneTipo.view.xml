@@ -63,7 +63,7 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="Divisione" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Divisione}" required="true" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
+                                <MultiComboBox selectedKeys="{sFilter>/Divisione}" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -79,9 +79,7 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="Progres" visible="true" groupName="__$INTERNAL$" name="Progres" label="{i18n>Progres}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Progres}" items="{ path: 'sHelp>/PROGRES', sorter: [{ path: 'Progres', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Progres}" text="{sHelp>Progres}" />
-                                </MultiComboBox>
+                                <Input value="{sFilter>/Progres}" type="Number" maxLength="5"/>
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -204,7 +202,7 @@ class="navContainerControl sapUiSmallMarginBottom">
                                 
                                 <Text text="{T_ACT_TYPE>ProgAggr}"/>
 
-                                <Text text="{T_ACT_TYPE>DesEstesa}"/>
+                                <Button icon="sap-icon://document-text" visible="{T_ACT_TYPE>Esteso}" type="Transparent" press="handleTesto" />
                                 <Text text="{T_ACT_TYPE>Uname}"/>
                                 <Text text="{path: 'T_ACT_TYPE>Datum', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' }}"/>
                                 <Text text="{T_ACT_TYPE>Uzeit}"/>
@@ -222,6 +220,7 @@ class="navContainerControl sapUiSmallMarginBottom">
             </OverflowToolbar>
         </f:footer>
         <f:dependents>
+        <core:Fragment fragmentName="PM030.APP1.view.fragment.TestoEsteso" type="XML"></core:Fragment>
           <core:Fragment fragmentName="PM030.APP1.view.fragment.Variant" type="XML"></core:Fragment>
           <core:Fragment fragmentName="PM030.APP1.view.fragment.SaveVariant" type="XML"></core:Fragment>
       <core:Fragment fragmentName="PM030.APP1.view.fragment.UploadTable" type="XML"></core:Fragment>
@@ -307,9 +306,7 @@ class="navContainerControl sapUiSmallMarginBottom">
                 </form:FormElement>
                 <form:FormElement label="{i18n>Progres}">
                   <form:fields>
-                     <ComboBox selectedKey="{sSelect>/Progres}"  valueStateText="{i18n>valueState} {i18n>Progres}" items="{ path: 'sHelp>/PROGRES', sorter: [{ path: 'Progres', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
-                      <core:ListItem key="{sHelp>Progres}" text="{sHelp>Progres}" additionalText="{sHelp>Txt}"/>
-                    </ComboBox>
+                    <Input value="{sSelect>/Progres}" type="Number" maxLength="5"/>
                   </form:fields>
                 </form:FormElement>
                 
@@ -343,21 +340,21 @@ class="navContainerControl sapUiSmallMarginBottom">
                 <form:FormElement label="{i18n>TipoGestione}">
                   <form:fields>
                     <ComboBox selectedKey="{sSelect>/TipoGestione}"  valueStateText="{i18n>valueState} {i18n>TipoGestione}" items="{ path: 'sHelp>/TIPO_GESTIONE', sorter: [{ path: 'TipoGestione', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" >
-                      <core:ListItem key="{sHelp>TipoGestione}" text="{sHelp>TipoGestione}" additionalText="{sHelp>Txt}"/>
+                      <core:ListItem key="{sHelp>TipoGestione}" text="{sHelp>TipoGestione}" additionalText="{sHelp>Divisione} - {sHelp>DesTipoGest}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TipoGestione1}">
                   <form:fields>
                     <ComboBox selectedKey="{sSelect>/TipoGestione1}"  valueStateText="{i18n>valueState} {i18n>TipoGestione1}" items="{ path: 'sHelp>/TIPO_GESTIONE_1', sorter: [{ path: 'TipoGestione1', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" >
-                      <core:ListItem key="{sHelp>TipoGestione1}" text="{sHelp>TipoGestione1}" additionalText="{sHelp>Txt}"/>
+                      <core:ListItem key="{sHelp>TipoGestione1}" text="{sHelp>TipoGestione1}" additionalText="{sHelp>Divisione} - {sHelp>DesTipoGest1}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>TipoGestione2}">
                   <form:fields>
                     <ComboBox selectedKey="{sSelect>/TipoGestione2}"  valueStateText="{i18n>valueState} {i18n>TipoGestione2}" items="{ path: 'sHelp>/TIPO_GESTIONE_2', sorter: [{ path: 'TipoGestione2', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" >
-                      <core:ListItem key="{sHelp>TipoGestione2}" text="{sHelp>TipoGestione2}" additionalText="{sHelp>Txt}"/>
+                      <core:ListItem key="{sHelp>TipoGestione2}" text="{sHelp>TipoGestione2}" additionalText="{sHelp>Divisione} - {sHelp>DesTipoGest2}"/>
                     </ComboBox>
                   </form:fields>
                 </form:FormElement>
