@@ -43,16 +43,16 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="Divisione" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Divisione}" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" />
-                                </MultiComboBox>
+                                <MultiComboBox showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKeys="{sFilter>/Divisione}" >
+                                <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                              </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Sistema" visible="true" groupName="__$INTERNAL$" name="Sistema" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Sistema}" items="{ path: 'sHelp>/SISTEMA', sorter: [{ path: 'Sistema', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}" />
+                                 <MultiComboBox showSecondaryValues= "true" items="{ path: 'sHelp>/SISTEMA', length:4000 }" selectedKeys="{sFilter>/Sistema}" >
+                                  <core:ListItem key="{sHelp>Sistema}" text="{sHelp>Sistema}" additionalText="{sHelp>Txt}"/>
                                 </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
@@ -65,7 +65,7 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="Classe" visible="true" groupName="__$INTERNAL$" name="Classe" label="{i18n>Classe}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Classe}" items="{ path: 'sHelp>/CLASSE', sorter: [{ path: 'Classe', descending: false, group:false }] }" > 
+                                <MultiComboBox selectedKeys="{sFilter>/Classe}" items="{ path: 'sHelp>/CLASSE', length:4000 , sorter: [{ path: 'Classe', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>Classe}" text="{sHelp>Classe}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -73,7 +73,7 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="TipoGestione" visible="true" groupName="__$INTERNAL$" name="TipoGestione" label="{i18n>TipoGestione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/TipoGestione}" items="{ path: 'sHelp>/TIPO_GESTIONE', sorter: [{ path: 'TipoGestione', descending: false, group:false }] }" > 
+                                <MultiComboBox selectedKeys="{sFilter>/TipoGestione}" items="{ path: 'sHelp>/TIPO_GESTIONE', length:4000 , sorter: [{ path: 'TipoGestione', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>TipoGestione}" text="{sHelp>TipoGestione}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -81,7 +81,7 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="TipoGestione1" visible="true" groupName="__$INTERNAL$" name="TipoGestione1" label="{i18n>TipoGestione1}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/TipoGestione1}" items="{ path: 'sHelp>/TIPO_GESTIONE_1', sorter: [{ path: 'TipoGestione1', descending: false, group:false }] }" > 
+                                <MultiComboBox selectedKeys="{sFilter>/TipoGestione1}" items="{ path: 'sHelp>/TIPO_GESTIONE_1', length:4000 , sorter: [{ path: 'TipoGestione1', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>TipoGestione1}" text="{sHelp>TipoGestione1}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -89,7 +89,7 @@ class="navContainerControl sapUiSmallMarginBottom">
 
                             <fb:FilterGroupItem id="TipoGestione2" visible="true" groupName="__$INTERNAL$" name="TipoGestione2" label="{i18n>TipoGestione2}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/TipoGestione2}" items="{ path: 'sHelp>/TIPO_GESTIONE_2', sorter: [{ path: 'TipoGestione2', descending: false, group:false }] }" > 
+                                <MultiComboBox selectedKeys="{sFilter>/TipoGestione2}" items="{ path: 'sHelp>/TIPO_GESTIONE_2', length:4000 , sorter: [{ path: 'TipoGestione2', descending: false, group:false }] }" > 
                                   <core:Item key="{sHelp>TipoGestione2}" text="{sHelp>TipoGestione2}" />
                                 </MultiComboBox>
                               </fb:control>
@@ -97,15 +97,13 @@ class="navContainerControl sapUiSmallMarginBottom">
                
                             <fb:FilterGroupItem id="ComponentTipo" visible="true" groupName="__$INTERNAL$" name="ComponentTipo" label="{i18n>ComponentTipo}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <Input value="{sFilter>/ComponentTipo}" maxLength="5"/>
+                                <Input value="{sFilter>/ComponentTipo}" maxLength="80"/>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="ProgAggr" visible="true" groupName="__$INTERNAL$" name="ProgAggr" label="{i18n>ProgAggr}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/ProgAggr}" items="{ path: 'sHelp>/PROG_AGGR', sorter: [{ path: 'ProgAggr', descending: false, group:false }] }" >
-                                  <core:ListItem key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}" />
-                                </MultiComboBox>
+                                <Input value="{sFilter>/ProgAggr}" maxLength="5" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -340,12 +338,9 @@ class="navContainerControl sapUiSmallMarginBottom">
                 </form:FormElement>
                 <form:FormElement label="{i18n>ProgAggr}">
                   <form:fields>
-                    <ComboBox selectedKey="{sSelect>/ProgAggr}"  valueStateText="{i18n>valueState} {i18n>ProgAggr}" items="{ path: 'sHelp>/PROG_AGGR', sorter: [{ path: 'ProgAggr', descending: false, group:false }] }" change="handleChangeCb" showSecondaryValues= "true" >
-                      <core:ListItem key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}" additionalText="{sHelp>AggrActTitle}"/>
-                    </ComboBox>
+                  <Input value="{sSelect>/ProgAggr}" maxLength="5"/>
                   </form:fields>
                 </form:FormElement>
-                
               </form:formElements>
             </form:FormContainer>
           </form:formContainers>

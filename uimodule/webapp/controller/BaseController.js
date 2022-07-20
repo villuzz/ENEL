@@ -64,9 +64,9 @@ sap.ui.define([
                 for (var i = 0; i < rows.length; i++) {
                     var sAzioni = await this.ControlloExcelModel(rows[i]);
                     sURL = await this.componiURL(sAzioni);
-                    var result = await this._saveHanaShowError(Table, sAzioni);
+                    var result = await this._updateHanaShowError(sURL, sAzioni);
                     if (result !== "") {
-                        result = await this._updateHanaShowError(sURL, sAzioni);
+                      result = await this._saveHanaShowError(Table, sAzioni);
                     }
                     if (result !== "") {
                         aReturn.push({

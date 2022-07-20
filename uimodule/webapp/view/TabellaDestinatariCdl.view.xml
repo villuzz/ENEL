@@ -34,49 +34,61 @@
 
                             <fb:FilterGroupItem id="Werks" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/DIVISIONE', sorter: [{ path: 'Werks', length:4000 }] }" > 
-                                  <core:Item key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}"/>
-                                </MultiComboBox>
+                                <MultiComboBox showSecondaryValues="true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKeys="{sFilter>/Werks}" >
+                                            <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                                        </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Arbpl" visible="true" groupName="__$INTERNAL$" name="Arbpl" label="{i18n>Arbpl}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Arbpl}" items="{ path: 'sHelp>/Arbpl', sorter: [{ path: 'Arbpl', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Arbpl}" text="{sHelp>Arbpl}"/>
-                                </MultiComboBox>
+                                <Input showSuggestion="true" value="{sFilter>/Arbpl}" suggestionRows="{sHelp>/ARBPL}" suggest=".onSuggestARBPL" >
+                      <suggestionColumns>
+                              <Column>
+                                <Label text="{i18n>Arbpl}" />
+                              </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                              <ColumnListItem>
+                                <Label text="{sHelp>Arbpl}" />
+                              </ColumnListItem>
+                      </suggestionRows>
+                    </Input>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Destinatario" visible="true" groupName="__$INTERNAL$" name="Destinatario" label="{i18n>Destinatario}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Destinatario}" items="{ path: 'sHelp>/Destinatario', sorter: [{ path: 'Destinatario', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Destinatario}" text="{sHelp>Destinatario}"/>
-                                </MultiComboBox>
+                                  <Input showSuggestion="true" value="{sFilter>/Destinatario}" suggestionRows="{sHelp>/DEST}" suggest=".onSuggestDest" >
+                      <suggestionColumns>
+                              <Column>
+                                <Label text="{i18n>Destinatario}" />
+                              </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                              <ColumnListItem>
+                                <Label text="{sHelp>Destinatario}" />
+                              </ColumnListItem>
+                      </suggestionRows>
+                    </Input>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Txt" visible="true" groupName="__$INTERNAL$" name="Txt" label="{i18n>Txt}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Txt}" items="{ path: 'sHelp>/Txt', sorter: [{ path: 'Txt', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Txt}" text="{sHelp>Txt}"/>
-                                </MultiComboBox>
+                                <Input value="{sFilter>/Txt}" maxLength="60" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Raggruppamento" visible="true" groupName="__$INTERNAL$" name="Raggruppamento" label="{i18n>Raggruppamento}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Raggruppamento}" items="{ path: 'sHelp>/Raggruppamento', sorter: [{ path: 'Raggruppamento', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Raggruppamento}" text="{sHelp>Raggruppamento}"/>
-                                </MultiComboBox>
+                                <Input value="{sFilter>/Raggruppamento}" maxLength="10" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Mail" visible="true" groupName="__$INTERNAL$" name="Mail" label="{i18n>Mail}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Mail}" items="{ path: 'sHelp>/Mail', sorter: [{ path: 'Mail', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Mail}" text="{sHelp>Mail}"/>
-                                </MultiComboBox>
+                                <Input value="{sFilter>/Mail}" maxLength="241" type="Email" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -187,22 +199,42 @@
                 </form:FormElement>
                 <form:FormElement label="{i18n>CentroDiLavoro}" >
                   <form:fields>
-                  <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Arbpl}" items="{ path: 'sHelp>/ARBPL', length:4000 }" selectedKey="{sSelect>/Arbpl}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
-                      <core:ListItem key="{sHelp>Arbpl}" text="{sHelp>Arbpl}" />
-                    </ComboBox>
+                  <Input showSuggestion="true" value="{sSelect>/Arbpl}" suggestionRows="{sHelp>/ARBPL}" suggest=".onSuggestARBPL" >
+                      <suggestionColumns>
+                              <Column>
+                                <Label text="{i18n>Arbpl}" />
+                              </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                              <ColumnListItem>
+                                <Label text="{sHelp>Arbpl}" />
+                              </ColumnListItem>
+                      </suggestionRows>
+                    </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Destinatario}">
                   <form:fields>
-                   <Input type="Email" value="{sSelect>/Destinatario}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" />
+                     <Input showSuggestion="true" value="{sSelect>/Destinatario}" suggestionRows="{sHelp>/DEST}" suggest=".onSuggestDest" >
+                      <suggestionColumns>
+                              <Column>
+                                <Label text="{i18n>Destinatario}" />
+                              </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                              <ColumnListItem>
+                                <Label text="{sHelp>Destinatario}" />
+                              </ColumnListItem>
+                      </suggestionRows>
+                    </Input>
                   </form:fields>
                 </form:FormElement>
                 <form:FormElement label="{i18n>DescrizioneDestinatario}">
-                   <Input type="Email" value="{sSelect>/Txt}"/>
+                   <Input type="Text" value="{sSelect>/Txt}"/>
                 </form:FormElement>
                 <form:FormElement label="{i18n>Raggruppamento}">
                   <form:fields>
-                   <Input type="Email" value="{sSelect>/Raggruppamento}"/>
+                   <Input type="Text" value="{sSelect>/Raggruppamento}"/>
                   </form:fields>
                 </form:FormElement>
                  <form:FormElement label="{i18n>Email}">

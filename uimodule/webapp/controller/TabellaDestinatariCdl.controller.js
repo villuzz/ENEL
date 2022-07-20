@@ -49,12 +49,12 @@ sap.ui.define([
 
             var T_DEST = await this._getTable("/T_DEST", []);
 
-            sData.Werks = this.distinctBy(T_DEST, "Werks");
+            /*sData.Werks = this.distinctBy(T_DEST, "Werks");
             sData.Arbpl = this.distinctBy(T_DEST, "Arbpl");
             sData.Destinatario = this.distinctBy(T_DEST, "Destinatario");
             sData.Txt = this.distinctBy(T_DEST, "Txt");
-            sData.Raggruppamento = this.distinctBy(T_DEST, "Raggruppamento");
-            sData.Mail = this.distinctBy(T_DEST, "Mail");
+            sData.Raggruppamento = this.distinctBy(T_DEST, "Raggruppamento");*/
+            //sData.Mail = this.distinctBy(T_DEST, "Mail");
 
             sData.DIVISIONE = await this.Shpl("H_T001W", "SH");
             sData.ARBPL = sData.Arbpl;
@@ -83,38 +83,33 @@ sap.ui.define([
                     aFilters = aFilters.concat(tempFilter);
                 }
             }
-            if (sFilter.Arbpl !== undefined) {
-                if (sFilter.Arbpl.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Arbpl, "Arbpl");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+            if (sFilter.Arbpl !== undefined && sFilter.Arbpl !== "") {
+              aFilters.push(new Filter("Arbpl", FilterOperator.Contains, sFilter.Arbpl));
             }
-            if (sFilter.Destinatario !== undefined) {
-                if (sFilter.Destinatario.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Destinatario, "Destinatario");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+            if (sFilter.Destinatario !== undefined && sFilter.Destinatario !== "") {
+              aFilters.push(new Filter("Destinatario", FilterOperator.Contains, sFilter.Destinatario));
             }
-            if (sFilter.Txt !== undefined) {
-                if (sFilter.Txt.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Txt, "Txt");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+            if (sFilter.Txt !== undefined && sFilter.Txt !== "") {
+              aFilters.push(new Filter("Txt", FilterOperator.Contains, sFilter.Txt));
             }
-            if (sFilter.Raggruppamento !== undefined) {
-                if (sFilter.Raggruppamento.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Raggruppamento, "Raggruppamento");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+
+            var aFilterFE = [];
+            if (sFilter.Raggruppamento !== undefined && sFilter.Raggruppamento !== "") {
+              aFilterFE.push(new Filter("Raggruppamento", FilterOperator.Contains, sFilter.Raggruppamento));
             }
+          if (sFilter.Mail !== undefined && sFilter.Mail !== "") {
+            aFilterFE.push(new Filter("Mail", FilterOperator.Contains, sFilter.Mail));
+          }
             var model = this.getView().getModel("T_DEST");
             var tableFilters = await this._getTableNoError("/T_DEST", aFilters);
             if (tableFilters.length === 0) {
-                MessageBox.error("Nessun record trovato");
-                model.setData({});
-            } else {
-                model.setData(tableFilters);
-            } sap.ui.core.BusyIndicator.hide();
+              MessageBox.error("Nessun record trovato");
+              model.setData({});
+          } else {
+              model.setData(tableFilters);
+              this.byId("tbTabellaDestinatariCdl").getBinding("items").filter(aFilterFE);
+          }
+             sap.ui.core.BusyIndicator.hide();
         },
         onDataExport: function () {
             var selectedTab = this.byId("tbTabellaDestinatariCdl");
@@ -183,6 +178,55 @@ sap.ui.define([
                 this.getRouter().navTo("ViewPage", {}, true);
             }
         },
+        onSuggestDest: async function (oEvent) {
+          if (this.getModel("sSelect")){
+            var sSelect = this.getModel("sSelect").getData();
+          } else {
+            var sSelect = this.getModel("sFilter").getData();
+          }
+          if (oEvent.getParameter("suggestValue").length > 0 || (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null)) {
+
+              var aFilter = [];
+              if (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null) {
+                  aFilter.push(new Filter("Werks", FilterOperator.EQ, sSelect.Werks));
+              }
+              if (sSelect.Arbpl !== "" && sSelect.Arbpl !== undefined && sSelect.Arbpl !== null) {
+                aFilter.push(new Filter("Arbpl", FilterOperator.EQ, sSelect.Arbpl));
+              }
+              if (oEvent.getParameter("suggestValue").length >= 0) {
+                  aFilter.push(new Filter("Destinatario", FilterOperator.Contains, oEvent.getParameter("suggestValue")));
+              }
+
+              var sHelp = this.getView().getModel("sHelp").getData();
+              sHelp.DEST = await this._getTableNoError("/T_DEST", aFilter);
+              this.getView().getModel("sHelp").refresh();
+          }
+      },
+      onSuggestARBPL: async function (oEvent) {
+        if (this.getModel("sSelect")){
+          var sSelect = this.getModel("sSelect").getData();
+        } else {
+          var sSelect = this.getModel("sFilter").getData();
+        }
+        
+        if (oEvent.getParameter("suggestValue").length > 0 || (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null)) {
+
+            var aFilter = [];
+            if (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null) {
+                aFilter.push(new Filter("Werks", FilterOperator.EQ, sSelect.Werks));
+            }
+            if (sSelect.Destinatario !== "" && sSelect.Destinatario !== undefined && sSelect.Destinatario !== null) {
+              aFilter.push(new Filter("Destinatario", FilterOperator.EQ, sSelect.Destinatario));
+            }
+            if (oEvent.getParameter("suggestValue").length >= 0) {
+                aFilter.push(new Filter("Arbpl", FilterOperator.Contains, oEvent.getParameter("suggestValue")));
+            }
+
+            var sHelp = this.getView().getModel("sHelp").getData();
+            sHelp.ARBPL = await this._getTableNoError("/T_DEST", aFilter);
+            this.getView().getModel("sHelp").refresh();
+        }
+    },
         onPersoButtonPressed: function () {
             this._oTPC.openDialog();
         },

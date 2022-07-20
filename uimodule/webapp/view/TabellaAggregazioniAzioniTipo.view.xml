@@ -29,51 +29,52 @@
                     <fb:FilterBar id="filterbarPiste" useToolbar="false" search="onSearchResult" showRestoreButton="true" showClearButton="true">
                         <fb:filterGroupItems>
 
+
+
+             
+                   
+    
+                   
+
                             <fb:FilterGroupItem id="Werks" visible="true" groupName="__$INTERNAL$" name="Werks" label="{i18n>Divisione}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Werks}" items="{ path: 'sHelp>/Werks', sorter: [{ path: 'Werks', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Werks}" text="{sHelp>Werks}"/>
-                                </MultiComboBox>
+                              <MultiComboBox showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKeys="{sFilter>/Werks}" >
+                                <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                              </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Sistema" visible="true" groupName="__$INTERNAL$" name="Sistema" label="{i18n>Sistema}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Sistema}" items="{ path: 'sHelp>/Sistema', sorter: [{ path: 'Sistema', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Sistema}" text="{sHelp>Sistema}"/>
-                                </MultiComboBox>
+                                <MultiComboBox showSecondaryValues= "true" items="{ path: 'sHelp>/SISTEMA', length:4000 }" selectedKeys="{sFilter>/Sistema}" >
+                      <core:ListItem key="{sHelp>Sistema}" text="{sHelp>Sistema}" additionalText="{sHelp>Txt}"/>
+                    </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="Classe" visible="true" groupName="__$INTERNAL$" name="Classe" label="{i18n>Classe}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Classe}" items="{ path: 'sHelp>/Classe', sorter: [{ path: 'Classe', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Classe}" text="{sHelp>Classe}"/>
-                                </MultiComboBox>
+                                <MultiComboBox showSecondaryValues= "true" items="{ path: 'sHelp>/CLASSE', length:4000 }" selectedKeys="{sFilter>/Classe}"  >
+                      <core:ListItem key="{sHelp>Classe}" text="{sHelp>Classe}" additionalText="{sHelp>Txt}"/>
+                    </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="ProgAggr" visible="true" groupName="__$INTERNAL$" name="ProgAggr" label="{i18n>ProgAggr}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/ProgAggr}" items="{ path: 'sHelp>/ProgAggr', sorter: [{ path: 'ProgAggr', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>ProgAggr}" text="{sHelp>ProgAggr}"/>
-                                </MultiComboBox>
+                                <Input value="{sFilter>/ProgAggr}" maxLength="5" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="AggrActTitle" visible="true" groupName="__$INTERNAL$" name="AggrActTitle" label="{i18n>AggrActTitle}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/AggrActTitle}" items="{ path: 'sHelp>/AggrActTitle', sorter: [{ path: 'AggrActTitle', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>AggrActTitle}" text="{sHelp>AggrActTitle}"/>
-                                </MultiComboBox>
+                                <Input value="{sFilter>/AggrActTitle}" maxLength="40" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
                             <fb:FilterGroupItem id="AggrActComponent" visible="true" groupName="__$INTERNAL$" name="AggrActComponent" label="{i18n>AggrActComponent}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/AggrActComponent}" items="{ path: 'sHelp>/AggrActComponent', sorter: [{ path: 'AggrActComponent', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>AggrActComponent}" text="{sHelp>AggrActComponent}"/>
-                                </MultiComboBox>
+                                <Input value="{sFilter>/AggrActComponent}" maxLength="60" />
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -178,7 +179,7 @@
               <form:formElements>
                 <form:FormElement label="{i18n>Divisione}">
                   <form:fields>
-                  <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
+                    <ComboBox change="handleChangeCb" valueStateText="{i18n>valueState} {i18n>Divisione}" showSecondaryValues= "true" items="{ path: 'sHelp>/DIVISIONE', length:4000 }" selectedKey="{sSelect>/Werks}" enabled="{ parts:[{path:'sSelect>/stato'}], formatter: '.LocalFormatter.statoEnabled'}" >
                       <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
                     </ComboBox>
                   </form:fields>

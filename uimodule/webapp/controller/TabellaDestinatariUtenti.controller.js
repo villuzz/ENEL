@@ -46,17 +46,17 @@ sap.ui.define([
 
             var T_DEST_USR = await this._getTable("/T_DEST_USR", []);
 
-            sData.Werks = this.distinctBy(T_DEST_USR, "Werks");
+            /*sData.Werks = this.distinctBy(T_DEST_USR, "Werks");
             sData.Arbpl = this.distinctBy(T_DEST_USR, "Arbpl");
             sData.Destinatario = this.distinctBy(T_DEST_USR, "Destinatario");
             sData.Raggruppamento = this.distinctBy(T_DEST_USR, "Raggruppamento");
             sData.Uname = this.distinctBy(T_DEST_USR, "Uname");
             sData.Object = this.distinctBy(T_DEST_USR, "Object");
             sData.Id = this.distinctBy(T_DEST_USR, "Id");
-            sData.Auto = this.distinctBy(T_DEST_USR, "Auto");
+            sData.Auto = this.distinctBy(T_DEST_USR, "Auto");*/
 
             sData.T_RAGGR = await this._getTable("/T_RAGGR", []);
-            sData.T_DEST = await this._getTable("/T_DEST", []);
+            //sData.T_DEST = await this._getTable("/T_DEST", []);
             sData.DIVISIONE = await this.Shpl("H_T001W", "SH");
             // sData.SISTEMA = await this._getTableNoError("/T_ACT_SYST");
 
@@ -68,7 +68,54 @@ sap.ui.define([
             this.getView().setModel(oModelHelp, "sHelp");
             sap.ui.core.BusyIndicator.hide();
         },
+        onSuggestDest: async function (oEvent) {
+          if (this.getModel("sSelect")){
+            var sSelect = this.getModel("sSelect").getData();
+          } else {
+            var sSelect = this.getModel("sFilter").getData();
+          }
+          if (oEvent.getParameter("suggestValue").length > 0 || (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null)) {
 
+              var aFilter = [];
+              if (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null) {
+                  aFilter.push(new Filter("Werks", FilterOperator.EQ, sSelect.Werks));
+              }
+              if (sSelect.Arbpl !== "" && sSelect.Arbpl !== undefined && sSelect.Arbpl !== null) {
+                aFilter.push(new Filter("Arbpl", FilterOperator.EQ, sSelect.Arbpl));
+              }
+              if (oEvent.getParameter("suggestValue").length >= 0) {
+                  aFilter.push(new Filter("Destinatario", FilterOperator.Contains, oEvent.getParameter("suggestValue")));
+              }
+
+              var sHelp = this.getView().getModel("sHelp").getData();
+              sHelp.DEST = await this._getTableNoError("/T_DEST", aFilter);
+              this.getView().getModel("sHelp").refresh();
+          }
+      },
+      onSuggestARBPL: async function (oEvent) {
+        if (this.getModel("sSelect")){
+          var sSelect = this.getModel("sSelect").getData();
+        } else {
+          var sSelect = this.getModel("sFilter").getData();
+        }
+        if (oEvent.getParameter("suggestValue").length > 0 || (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null)) {
+
+            var aFilter = [];
+            if (sSelect.Werks !== "" && sSelect.Werks !== undefined && sSelect.Werks !== null) {
+                aFilter.push(new Filter("Werks", FilterOperator.EQ, sSelect.Werks));
+            }
+            if (sSelect.Destinatario !== "" && sSelect.Destinatario !== undefined && sSelect.Destinatario !== null) {
+              aFilter.push(new Filter("Destinatario", FilterOperator.EQ, sSelect.Destinatario));
+            }
+            if (oEvent.getParameter("suggestValue").length >= 0) {
+                aFilter.push(new Filter("Arbpl", FilterOperator.Contains, oEvent.getParameter("suggestValue")));
+            }
+
+            var sHelp = this.getView().getModel("sHelp").getData();
+            sHelp.ARBPL = await this._getTableNoError("/T_DEST", aFilter);
+            this.getView().getModel("sHelp").refresh();
+        }
+    },
         onSearchResult: function () {
             this.onSearchFilters();
         },
@@ -85,45 +132,30 @@ sap.ui.define([
                     aFilters = aFilters.concat(tempFilter);
                 }
             }
-            if (sFilter.Arbpl !== undefined) {
-                if (sFilter.Arbpl.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Arbpl, "Arbpl");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+
+
+
+            if (sFilter.Arbpl !== undefined && sFilter.Arbpl !== "") {
+              aFilters.push(new Filter("Arbpl", FilterOperator.Contains, sFilter.Arbpl));
             }
-            if (sFilter.Destinatario !== undefined) {
-                if (sFilter.Destinatario.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Destinatario, "Destinatario");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+            if (sFilter.Destinatario !== undefined && sFilter.Destinatario !== "") {
+              aFilters.push(new Filter("Destinatario", FilterOperator.Contains, sFilter.Destinatario));
+            }
+            if (sFilter.Auto !== undefined && sFilter.Auto !== "") {
+              aFilters.push(new Filter("Auto", FilterOperator.Contains, sFilter.Auto));
+            }
+            if (sFilter.Id !== undefined && sFilter.Id !== "") {
+              aFilters.push(new Filter("Id", FilterOperator.Contains, sFilter.Id));
+            }
+            if (sFilter.Object !== undefined && sFilter.Object !== "") {
+              aFilters.push(new Filter("Object", FilterOperator.Contains, sFilter.Object));
+            }
+            if (sFilter.Uname !== undefined && sFilter.Uname !== "") {
+              aFilters.push(new Filter("Uname", FilterOperator.Contains, sFilter.Uname));
             }
             if (sFilter.Raggruppamento !== undefined) {
                 if (sFilter.Raggruppamento.length !== 0) {
                     tempFilter = this.multiFilterText(sFilter.Raggruppamento, "Raggruppamento");
-                    aFilters = aFilters.concat(tempFilter);
-                }
-            }
-            if (sFilter.Uname !== undefined) {
-                if (sFilter.Uname.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Uname, "Uname");
-                    aFilters = aFilters.concat(tempFilter);
-                }
-            }
-            if (sFilter.Object !== undefined) {
-                if (sFilter.Object.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Object, "Object");
-                    aFilters = aFilters.concat(tempFilter);
-                }
-            }
-            if (sFilter.Id !== undefined) {
-                if (sFilter.Id.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Id, "Id");
-                    aFilters = aFilters.concat(tempFilter);
-                }
-            }
-            if (sFilter.Auto !== undefined) {
-                if (sFilter.Auto.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Auto, "Auto");
                     aFilters = aFilters.concat(tempFilter);
                 }
             }

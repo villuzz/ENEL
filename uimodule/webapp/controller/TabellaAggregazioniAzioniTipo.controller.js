@@ -47,12 +47,12 @@ sap.ui.define([
 
             var T_AGGREG = await this._getTable("/T_AGGREG", []);
 
-            sData.Werks = this.distinctBy(T_AGGREG, "Werks");
+            /*sData.Werks = this.distinctBy(T_AGGREG, "Werks");
             sData.Sistema = this.distinctBy(T_AGGREG, "Sistema");
-            sData.Classe = this.distinctBy(T_AGGREG, "Classe");
-            sData.ProgAggr = this.distinctBy(T_AGGREG, "ProgAggr");
+            sData.Classe = this.distinctBy(T_AGGREG, "Classe");*/
+            /*sData.ProgAggr = this.distinctBy(T_AGGREG, "ProgAggr");
             sData.AggrActTitle = this.distinctBy(T_AGGREG, "AggrActTitle");
-            sData.AggrActComponent = this.distinctBy(T_AGGREG, "AggrActComponent");
+            sData.AggrActComponent = this.distinctBy(T_AGGREG, "AggrActComponent");*/
 
             sData.DIVISIONE = await this.Shpl("H_T001W", "SH");
             sData.SISTEMA = await this._getTableNoError("/T_ACT_SYST");
@@ -96,24 +96,16 @@ sap.ui.define([
                     aFilters = aFilters.concat(tempFilter);
                 }
             }
-            if (sFilter.ProgAggr !== undefined) {
-                if (sFilter.ProgAggr.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.ProgAggr, "ProgAggr");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+
+            if (sFilter.ProgAggr !== undefined && sFilter.ProgAggr !== "") {
+              aFilters.push(new Filter("ProgAggr", FilterOperator.EQ, sFilter.ProgAggr));
             }
-            if (sFilter.AggrActTitle !== undefined) {
-                if (sFilter.AggrActTitle.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.AggrActTitle, "AggrActTitle");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+            if (sFilter.AggrActTitle !== undefined && sFilter.AggrActTitle !== "") {
+              aFilters.push(new Filter("AggrActTitle", FilterOperator.Contains, sFilter.AggrActTitle));
             }
-            if (sFilter.AggrActComponent !== undefined) {
-              if (sFilter.AggrActComponent.length !== 0) {
-                  tempFilter = this.multiFilterText(sFilter.AggrActComponent, "AggrActComponent");
-                  aFilters = aFilters.concat(tempFilter);
-              }
-          }
+            if (sFilter.AggrActComponent !== undefined && sFilter.AggrActComponent !== "") {
+              aFilters.push(new Filter("AggrActComponent", FilterOperator.Contains, sFilter.AggrActComponent));
+            }
             var model = this.getView().getModel("T_AGGREG");
             var tableFilters = await this._getTableNoError("/T_AGGREG", aFilters);
             if (tableFilters.length === 0) {

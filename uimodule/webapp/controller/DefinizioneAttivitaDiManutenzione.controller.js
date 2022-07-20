@@ -50,7 +50,7 @@ sap.ui.define([
 
           sData.Spras = this.distinctBy(T_ATTPM, "Spras");
           sData.Ilart = this.distinctBy(T_ATTPM, "Ilart");
-          sData.Ilatx = this.distinctBy(T_ATTPM, "Ilatx");
+          //sData.Ilatx = this.distinctBy(T_ATTPM, "Ilatx");
 
           sData.SPRAS = await this.Shpl("T002", "CH");
 
@@ -86,21 +86,20 @@ sap.ui.define([
                   aFilters = aFilters.concat(tempFilter);
               }
           }
-          if (sFilter.Ilatx !== undefined) {
-              if (sFilter.Ilatx.length !== 0) {
-                  tempFilter = this.multiFilterText(sFilter.Ilatx, "Ilatx");
-                  aFilters = aFilters.concat(tempFilter);
-              }
+          var aFilterFE = [];
+          if (sFilter.Ilatx !== "" && sFilter.Ilatx !== undefined) {
+            aFilterFE.push(new Filter("Ilatx", FilterOperator.Contains, sFilter.Ilatx));
           }
 
           var model = this.getView().getModel("T_ATTPM");
           var tableFilters = await this._getTableNoError("/T_ATTPM", aFilters);
           if (tableFilters.length === 0) {
-              MessageBox.error("Nessun record trovato");
-              model.setData({});
-          } else {
-              model.setData(tableFilters);
-          } sap.ui.core.BusyIndicator.hide();
+            MessageBox.error("Nessun record trovato");
+            model.setData({});
+        } else {
+            model.setData(tableFilters);
+            this.byId("tbDefinizioneAttivitaDiManutenzione").getBinding("items").filter(aFilterFE);
+        } sap.ui.core.BusyIndicator.hide();
         },
         onDataExport: function () {
             var selectedTab = this.byId("tbDefinizioneAttivitaDiManutenzione");

@@ -129,11 +129,8 @@ sap.ui.define([
             aFilterFE.push(new Filter("ComponentTipo", FilterOperator.Contains, sFilter.ComponentTipo));
           }
 
-          if (sFilter.ProgAggr !== undefined) {
-              if (sFilter.ProgAggr.length !== 0) {
-                  tempFilter = this.multiFilterText(sFilter.ProgAggr, "ProgAggr");
-                  aFilterFE = aFilterFE.concat(tempFilter);
-              }
+          if (sFilter.ProgAggr !== undefined && sFilter.ProgAggr !== "") {
+            aFilterFE.push(new Filter("ProgAggr", FilterOperator.EQ, sFilter.ProgAggr.padStart(5, "0")));
           }
 
             var model = this.getView().getModel("T_ACT_TYPE");
@@ -479,12 +476,9 @@ sap.ui.define([
                 "Overwrite": "X",
                 "Testo": line.DesEstesa
             };
-            var result = await this._saveHanaNoError("/TestiEstesi", sTestoAzioni);
-            if (result === []) {
-                var sUrl = "/TestiEstesi(Testo='" + line.DesEstesa + "')";
-                delete sTestoAzioni.Testo;
-                await this._updateHanaNoError(sUrl, sTestoAzioni);
-            }
+          var sURL = "/TestiEstesiDelete(Tdname='" + Tdname + "',Tdid='ST',Tdspras='I',Tdobject='TEXT')";
+          await this._removeHanaNoError(sURL);
+          await this._saveHanaNoError("/TestiEstesi", sTestoAzioni);
         },
         componiURL: function (line) {
             var sURL = "/T_ACT_TYPE(Divisione='" + line.Divisione + "',Progres='" + line.Progres + "',Classe='" + line.Classe + "',Sistema='" + line.Sistema + "')";
@@ -567,7 +561,7 @@ sap.ui.define([
             aFilters.push(new Filter("Sistema", FilterOperator.EQ, sData.Sistema));
             aFilters.push(new Filter("Progres", FilterOperator.EQ, sData.Progres));
             var result = await this._getTableNoError("/T_ACT_PROG", aFilters);
-            if (result === []) {
+            if (result.length === 0) {
                 return "Combinazione Sistema Classe inesistente"
             }
             return "";

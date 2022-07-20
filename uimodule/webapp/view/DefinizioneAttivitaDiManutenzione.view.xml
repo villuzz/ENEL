@@ -31,9 +31,9 @@
 
                             <fb:FilterGroupItem id="Spras" visible="true" groupName="__$INTERNAL$" name="Spras" label="{i18n>Lingua}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Spras}" items="{ path: 'sHelp>/Spras', sorter: [{ path: 'Spras', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Spras}" text="{sHelp>Spras}"/>
-                                </MultiComboBox>
+                                <MultiComboBox showSecondaryValues= "true" items="{ path: 'sHelp>/SPRAS', length:4000 }" selectedKeys="{sFilter>/Spras}"  >
+                      <core:ListItem key="{sHelp>Fieldname1}" text="{sHelp>Fieldname1}" additionalText="{sHelp>Fieldname2}"/>
+                    </MultiComboBox>
                               </fb:control>
                             </fb:FilterGroupItem>
 
@@ -47,9 +47,7 @@
 
                             <fb:FilterGroupItem id="Ilatx" visible="true" groupName="__$INTERNAL$" name="Ilatx" label="{i18n>DescrizioneTPAttivitaPM}" partOfCurrentVariant="true" visibleInFilterBar="true">
                               <fb:control>
-                                <MultiComboBox selectedKeys="{sFilter>/Ilatx}" items="{ path: 'sHelp>/Ilatx', sorter: [{ path: 'Ilatx', descending: false, group:false }] }" > 
-                                  <core:Item key="{sHelp>Ilatx}" text="{sHelp>Ilatx}"/>
-                                </MultiComboBox>
+                              <Input value="{sFilter>/Ilatx}" maxLength="80"/>
                               </fb:control>
                             </fb:FilterGroupItem>
 

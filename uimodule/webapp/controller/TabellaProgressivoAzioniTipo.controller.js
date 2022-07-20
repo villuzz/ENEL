@@ -47,11 +47,11 @@ sap.ui.define([
 
             var T_ACT_PROG = await this._getTable("/T_ACT_PROG", []);
 
-            sData.Werks = this.distinctBy(T_ACT_PROG, "Werks");
+            /*sData.Werks = this.distinctBy(T_ACT_PROG, "Werks");
             sData.Sistema = this.distinctBy(T_ACT_PROG, "Sistema");
             sData.Progres = this.distinctBy(T_ACT_PROG, "Progres");
             sData.Txt = this.distinctBy(T_ACT_PROG, "Txt");
-            sData.ComponentTipo = this.distinctBy(T_ACT_PROG, "ComponentTipo");
+            sData.ComponentTipo = this.distinctBy(T_ACT_PROG, "ComponentTipo");*/
             sData.DIVISIONE = await this.Shpl("H_T001W", "SH");
             sData.SISTEMA = await this._getTableNoError("/T_ACT_SYST");
 
@@ -87,23 +87,20 @@ sap.ui.define([
                     aFilters = aFilters.concat(tempFilter);
                 }
             }
-            if (sFilter.Progres !== undefined) {
+            /*if (sFilter.Progres !== undefined) {
                 if (sFilter.Progres.length !== 0) {
                     tempFilter = this.multiFilterText(sFilter.Progres, "Progres");
                     aFilters = aFilters.concat(tempFilter);
                 }
+            }*/
+            if (sFilter.Progres !== undefined && sFilter.Progres !== "") {
+              aFilters.push(new Filter("Progres", FilterOperator.EQ, sFilter.Progres.padStart(5, "0")));
             }
-            if (sFilter.Txt !== undefined) {
-                if (sFilter.Txt.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.Txt, "Txt");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+            if (sFilter.ComponentTipo !== undefined && sFilter.ComponentTipo !== "") {
+              aFilters.push(new Filter("ComponentTipo", FilterOperator.Contains, sFilter.ComponentTipo));
             }
-            if (sFilter.ComponentTipo !== undefined) {
-                if (sFilter.ComponentTipo.length !== 0) {
-                    tempFilter = this.multiFilterText(sFilter.ComponentTipo, "ComponentTipo");
-                    aFilters = aFilters.concat(tempFilter);
-                }
+            if (sFilter.Txt !== undefined && sFilter.Txt !== "") {
+              aFilters.push(new Filter("Txt", FilterOperator.Contains, sFilter.Txt));
             }
 
             var model = this.getView().getModel("T_ACT_PROG");
@@ -281,6 +278,7 @@ sap.ui.define([
                 if (msg !== "") {
                     MessageBox.error(msg);
                 } else {
+                  line.Progres = line.Progres.padStart(5, "0");
                     if (line.stato === "M") {
                         var sURL = "/" + line.__metadata.uri.split("/")[line.__metadata.uri.split("/").length - 1];
                         delete line.stato;
